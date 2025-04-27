@@ -16,7 +16,7 @@ Vamos a manejar tres tipos de ramas:
 
 - Solo se van a integrar cambios a main mediante un **Pull Request (PR)**, una vez que la entrega correspondiente haya sido aprobada.
 
-2. **Ramas de entrega (ENTREGA_N)** `
+2. **Ramas de entrega (ENTREGA_N)**
 
 - Para cada entrega, vamos a crear una rama nueva a partir de `main`, con el nombre `ENTREGA_N` (donde `N` es el número de entrega).
 
