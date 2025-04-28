@@ -26,7 +26,7 @@ export class Alojamiento {
 
   estaDisponibleEn(rangoDeFechas) {
     const reserva = this.reservas.find((reserva) =>
-      reserva.rangoDeFechas.seSuperponeCon(rangoDeFechas)
+      reserva.estaVigenteEn(rangoDeFechas)
     );
     return reserva === undefined
     //return !reserva;
