@@ -8,8 +8,7 @@ export class Alojamiento {
     horarioCheckIn,
     horarioCheckOut,
     direccion,
-    cantHuespedesMax
-    //TODO hace falta inicializar reservas, fotos y caracteristicas?....
+    cantHuespedesMax,
   ) {
     this.anfitrion = anfitrion;
     this.nombre = nombre;
@@ -29,11 +28,8 @@ export class Alojamiento {
     const reserva = this.reservas.find((reserva) =>
       reserva.rangoDeFechas.seSuperponeCon(rangoDeFechas)
     );
-    return Boolean(reserva);
-    /*
-      return reserva === undefined
-      return !!reserva 
-    */
+    return reserva === undefined
+    //return !reserva;
   }
 
   suPrecioEstaDentroDe(valorMinimo, valorMaximo) {
