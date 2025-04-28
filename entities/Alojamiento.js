@@ -42,7 +42,7 @@ export class Alojamiento {
     return this.caracteristicas.includes(caracteristica);
   }
 
-  puedenAlojarse(cantHuespedes) {
+  tieneCapacidadPara(cantHuespedes) {
     return cantHuespedes <= this.cantHuespedesMax;
   }
 
