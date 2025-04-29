@@ -1,6 +1,6 @@
 const Notificacion = require('./Notificacion');
 
-class FactoryNotificacion {
+class NotificacionFactory {
     static crearNotificacionReservaCreada(reserva) {
       const mensaje = `Nueva reserva de ${reserva.huespedReservador.nombre}.`;
       return new Notificacion(reserva.alojamiento.anfitrion, mensaje)
@@ -16,7 +16,7 @@ class FactoryNotificacion {
       return new Notificacion(reserva.alojamiento.anfitrion, mensaje);
     }
 }
-module.exports = FactoryNotificacion;
+module.exports = NotificacionFactory;
 
   
   
