@@ -27,4 +27,8 @@ class Reserva {
   actualizarEstado(estadoReserva) {
     this.estado = estadoReserva;
   }
+
+  estaVigenteEn(rangoDeFechas) {
+    return this.rangoFechas.seSuperponeCon(rangoDeFechas);
+  }
 }
