@@ -15,7 +15,6 @@ app.get('/', (req, res) => {
 
 // Health Check Endpoint
 app.use('/', health);
-app.use('/api', notificacionRoutes);
 
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
