@@ -1,7 +1,6 @@
 import express from "express";
 
 import health from "./routes/Health.js";
-import notificacionRoutes from "./routes/notificacionRoutes.js";
 
 const app = express();
 const PORT = 3000;

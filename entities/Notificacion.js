@@ -9,11 +9,7 @@ class Notificacion {
     this.leida = false;
     this.fechaLeida = null;
   }
-
-  enviarNotificacion() {
-    this.usuario.recibirNotificacion(this);
-  }
-
+  
   marcarComoLeida() {
     this.leida = true;
     this.fechaLeida = new Date();
