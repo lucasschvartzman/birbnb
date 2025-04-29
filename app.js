@@ -1,6 +1,7 @@
 import express from "express";
 
 import health from "./routes/Health.js";
+import notificacionRoutes from "./routes/notificacionRoutes.js";
 
 const app = express();
 const PORT = 3000;
@@ -13,7 +14,7 @@ app.get('/', (req, res) => {
 })
 
 // Health Check Endpoint
-app.use('/',health);
+app.use('/', health);
 
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
