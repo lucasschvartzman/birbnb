@@ -25,11 +25,9 @@ export class Alojamiento {
   }
 
   estaDisponibleEn(rangoDeFechas) {
-    const reserva = this.reservas.find((reserva) =>
-      reserva.estaVigenteEn(rangoDeFechas)
-    );
-    return reserva === undefined
-    //return !reserva;
+    const ningunaVigente = this.reservas.every((reserva) => !reserva.estaVigenteEn(rangoDeFechas));
+    return ningunaVigente
+
   }
 
   suPrecioEstaDentroDe(valorMinimo, valorMaximo) {
