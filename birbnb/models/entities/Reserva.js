@@ -32,3 +32,5 @@ class Reserva {
     return this.rangoFechas.seSuperponeCon(rangoDeFechas);
   }
 }
+
+export { Reserva };

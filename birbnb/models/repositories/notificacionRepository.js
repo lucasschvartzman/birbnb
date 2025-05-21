@@ -1,8 +1,14 @@
-class NotificacionRepository {
+import {NotificacionModel} from "../schemas/notificacionSchema.js";
+
+export class NotificacionRepository {
+
   constructor() {
+    this.model = NotificacionModel;
     this.notificaciones = [];
     this.nextId = 1;
   }
+
+  // TODO: Pasar los metodos a Mongo
 
   findAll() {
     return this.notificaciones;
@@ -29,5 +35,3 @@ class NotificacionRepository {
     return true;
   }
 }
-
-export { NotificacionRepository };
