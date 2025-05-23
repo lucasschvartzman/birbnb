@@ -1,23 +1,31 @@
 export class NotificacionService {
-
   constructor(notificacionRepository) {
     this.notificacionRepository = notificacionRepository;
   }
 
-  async obtenerNotificacionesSinLeer(usuarioId) {
-    return this.notificacionRepository.findAll(usuarioId, false);
+  async obtenerNotificaciones(filters) {
+    try {
+      return await this.notificacionRepository.findAll(filters);
+    } catch (error) {
+      throw new Error('Error al obtener notificaciones: ' + error.message);
+    }
   }
 
-  async obtenerNotificacionesLeidas(usuarioId) {
-    return this.notificacionRepository.findAll(usuarioId, true);
-  }
+  async marcarComoLeida(notificacionId) {
+    try {
+      const notificacionActualizada = await this.notificacionRepository.save({
+        id: notificacionId,
+        leida: true,
+        fechaLeida: new Date()
+      });
 
-  async marcarNotificacionComoLeida(notificacionId) {
-  const resultado = await this.notificacionRepository.save({ id: notificacionId, leida: true });
-  if (!resultado) {
-    throw new Error('Notificación no encontrada');
-  }
-  return resultado;
-}
+      if (!notificacionActualizada) {
+        throw new Error(`Notificación con id ${notificacionId} no encontrada`);
+      }
 
+      return notificacionActualizada;
+    } catch (error) {
+      throw new Error('Error al marcar como leída: ' + error.message);
+    }
+  }
 }

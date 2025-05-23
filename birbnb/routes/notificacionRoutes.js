@@ -1,7 +1,6 @@
 import { NotificacionController } from "../controllers/notificacionController.js";
 
-export function registerNotificacion(app) {
-  const controller = new NotificacionController();
+export function registerNotificacion(app, getController) {
 
   /**
    * @swagger
@@ -22,7 +21,7 @@ export function registerNotificacion(app) {
    *         description: Lista de notificaciones no leídas
    */
   app.get('/notificaciones/sin-leer/:usuarioId', (req, res) => {
-    controller.obtenerNotificacionesSinLeer(req, res);
+    getController(NotificacionController).findAll(req, res);
   });
 
   /**
@@ -44,7 +43,7 @@ export function registerNotificacion(app) {
    *         description: Lista de notificaciones leídas
    */
   app.get('/notificaciones/leidas/:usuarioId', (req, res) => {
-    controller.obtenerNotificacionesLeidas(req, res);
+    getController(NotificacionController).findAll(req, res);
   });
 
   /**
@@ -67,7 +66,8 @@ export function registerNotificacion(app) {
    *       404:
    *         description: Notificación no encontrada
    */
-  app.put('/notificaciones/:notificacionId/marcar-leida', (req, res) => {
-    controller.marcarNotificacionComoLeida(req, res);
-  });
+  app.put('/notificaciones/:notificacionId/marcar-leida', (req, res, next) => 
+  getController(NotificacionController).marcarComoLeida(req, res, next)
+  );
+
 }

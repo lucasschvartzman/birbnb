@@ -1,41 +1,36 @@
 export class NotificacionController {
-
   constructor(notificacionService) {
     this.notificacionService = notificacionService;
   }
 
-  async obtenerNotificacionesSinLeer(req, res) {
+  async findAll(req, res, next) {
     try {
-      const usuarioId = req.params.usuarioId;
-      const notificaciones = await this.notificacionService.obtenerNotificacionesSinLeer(usuarioId);
-      res.status(200).json(notificaciones);
+      const filters = {};
+      if (req.params.usuarioId) {
+        filters.idUsuario = req.params.usuarioId;
+      }
+      if (req.path.includes('sin-leer')) {
+        filters.leida = false;
+      } else if (req.path.includes('leidas')) {
+        filters.leida = true;
+      }
+      const notificaciones = await this.notificacionService.findAll(filters);
+      res.json(notificaciones);
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      next(error);
     }
   }
 
-  async obtenerNotificacionesLeidas(req, res) {
-    try {
-      const usuarioId = req.params.usuarioId;
-      const notificaciones = await this.notificacionService.obtenerNotificacionesLeidas(usuarioId);
-      res.status(200).json(notificaciones);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  }
+  async marcarComoLeida(notificacionId) {
+    const notificacionActualizada = await this.notificacionRepository.save({
+      id: notificacionId,
+      leida: true,
+      fechaLeida: new Date()});
 
-  async marcarNotificacionComoLeida(req, res) {
-  try {
-    const notificacionId = req.params.notificacionId; 
-    const resultado = await this.notificacionService.marcarNotificacionComoLeida(notificacionId);
-    
-    if (!resultado) {
-      return res.status(404).json({ error: 'Notificación no encontrada' });
+    if (!notificacionActualizada) {
+      throw new Error(`Notificación con id ${notificacionId} no encontrada`);
     }
-    res.status(200).json({ mensaje: 'Notificación marcada como leída' });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+  return notificacionActualizada;
   }
-}
-
+  
 }
