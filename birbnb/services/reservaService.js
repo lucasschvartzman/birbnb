@@ -32,8 +32,7 @@ export class ReservaService {
   async modificarReserva(id, cambios) {
     // Verifico existencia y fechas libres (excluyo esta reserva)
     const reserva = await this.repo.obtenerPorId(id);
-    const ok = await this.repo.alojamientoEstaDisponible(
-      cambios.alojamiento || reserva.alojamiento,
+    const ok = reserva.estaVigenteEn(
       cambios.rangoFechas
     ); // es una validacion 
     if (!ok) throw new ReservaInvalida("Fechas no disponibles para modificación");
