@@ -35,9 +35,9 @@ const reservaRepository = new ReservaRepository();
 const reservaService = new ReservaService(reservaRepository);
 const reservaController = new ReservaController(reservaService);
 
-server.setController(alojamientoController);
-server.setController(notificacionController);
-server.setController(reservaController);
+server.setController(AlojamientoController, alojamientoController);
+server.setController(NotificacionController, notificacionController);
+server.setController(ReservaController, reservaController);
 
 server.configureRoutes();
 server.launch();
