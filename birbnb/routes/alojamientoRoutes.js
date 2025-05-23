@@ -59,8 +59,48 @@ export function registerAlojamiento(app, getController) {
    *         description: las características deseadas del alojamiento, separadas por comas
    *     description: 
    *     responses:
+   *       500:
+   *         description: Error interno del servicio.
    *       200:
    *         description: Alojamientos que cumplen los requisitos.
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: array
+   *               items:
+   *                 type: object
+   *                 properties: 
+   *                   nombre:
+   *                     type: string
+   *                   descripcion:
+   *                     type: string
+   *                   ciudad:
+   *                     type: string
+   *                   calle:
+   *                     type: string
+   *                   altura:
+   *                     type: number
+   *                   coordenadas:
+   *                     type: object
+   *                     properties: 
+   *                       latitud:
+   *                         type: number
+   *                       longitud:
+   *                         type: number
+   *                   precioPorNoche:
+   *                     type: number
+   *                   cantHuespedesMax:
+   *                     type: number
+   *                   moneda:
+   *                     type: string
+   *                   horarioCheckIn:
+   *                     type: string
+   *                   horarioCheckOut:
+   *                     type: string
+   *                   caracteristicas:
+   *                     type: array
+   *                     items:
+   *                       type: string
    */
   app.get("/buscarAlojamientos", async (req, res, next) => {
     try {
