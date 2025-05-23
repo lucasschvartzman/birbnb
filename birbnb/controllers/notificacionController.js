@@ -22,7 +22,7 @@ export class NotificacionController {
   }
 
   async marcarComoLeida(notificacionId) {
-    const notificacionActualizada = await this.notificacionRepository.save({
+    const notificacionActualizada = await this.notificacionService.marcarComoLeida({
       id: notificacionId,
       leida: true,
       fechaLeida: new Date()});
@@ -32,5 +32,5 @@ export class NotificacionController {
     }
   return notificacionActualizada;
   }
-  
+
 }

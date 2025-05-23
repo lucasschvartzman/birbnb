@@ -3,12 +3,8 @@ export class NotificacionService {
     this.notificacionRepository = notificacionRepository;
   }
 
-  async obtenerNotificaciones(filters) {
-    try {
-      return await this.notificacionRepository.findAll(filters);
-    } catch (error) {
-      throw new Error('Error al obtener notificaciones: ' + error.message);
-    }
+  async findAll(filters) {
+    return this.notificacionRepository.findAll(filters);
   }
 
   async marcarComoLeida(notificacionId) {
