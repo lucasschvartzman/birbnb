@@ -4,7 +4,11 @@ export class NotificacionService {
   }
 
   async findAll(filters) {
-    return this.notificacionRepository.findAll(filters);
+    try {
+      return await this.notificacionRepository.findAll(filters);
+    } catch (error) {
+      throw new Error('Error al obtener notificaciones: ' + error.message);
+    }  
   }
 
   async marcarComoLeida(notificacionId) {
