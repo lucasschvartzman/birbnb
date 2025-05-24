@@ -1,5 +1,5 @@
 import { jest } from '@jest/globals';
-import { NotificacionService } from '../services/notificacionService';
+import { NotificacionService } from '../birbnb/services/notificacionService.js';
 
 describe('NotificacionService - con array de notificaciones', () => {
   let service;
