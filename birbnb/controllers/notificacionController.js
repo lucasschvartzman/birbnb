@@ -21,16 +21,22 @@ export class NotificacionController {
     }
   }
 
-  async marcarComoLeida(notificacionId) {
+  async marcarComoLeida(req, res, next) {
+  try {
+    const notificacionId = req.params.id;
     const notificacionActualizada = await this.notificacionService.marcarComoLeida({
       id: notificacionId,
       leida: true,
-      fechaLeida: new Date()});
+      fechaLeida: new Date()
+    });
 
     if (!notificacionActualizada) {
-      throw new Error(`Notificación con id ${notificacionId} no encontrada`);
+      return res.status(404).json({ error: `Notificación con id ${notificacionId} no encontrada` });
     }
-  return notificacionActualizada;
-  }
 
+    res.status(200).json(notificacionActualizada);
+  } catch (error) {
+    next(error);
+  }
+  }
 }
