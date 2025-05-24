@@ -57,12 +57,12 @@ const deRepoARest = (alojamiento) => {
     return {
         nombre: alojamiento.nombre,
         descripcion: alojamiento.descripcion,
-        ciudad: alojamiento.direccion.ciudad, //si busco por ciudad, omitir la busqueda por pais
-        calle: alojamiento.direccion.calle,
-        altura: alojamiento.direccion.altura,
+        ciudad: alojamiento.direccion?.ciudad,
+        calle: alojamiento.direccion?.calle,
+        altura: alojamiento.direccion?.altura,
         coordenadas: {
-            latitud: alojamiento.direccion.latitud,
-            longitud: alojamiento.direccion.longitud},
+            latitud: alojamiento.direccion?.latitud,
+            longitud: alojamiento.direccion?.longitud},
         precioPorNoche: alojamiento.precioPorNoche,
         cantHuespedesMax: alojamiento.cantHuespedesMax,
         moneda: alojamiento.moneda,
