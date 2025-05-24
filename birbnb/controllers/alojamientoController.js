@@ -84,7 +84,7 @@ export class AlojamientoController {
             const criterios = deRestARepo(req.query)
             const pagina = req.query.pagina || 1
             const tamanioPagina = req.query.tamanioPagina || 25
-            const alojamientos = alojamientoRepository.buscarAlojamiento(criterios, pagina, tamanioPagina)
+            const alojamientos = await alojamientoRepository.buscarAlojamiento(criterios, pagina, tamanioPagina)
             const jsonRespuesta = alojamientos.map(deRepoARest(alojamientos))
             res.status(200).json(jsonRespuesta)
         } catch (error) {
