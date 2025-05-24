@@ -1,5 +1,6 @@
 // controllers/reservaController.js
 import { ReservaInvalida, ReservaNoExiste } from "../excepciones/reservas.js";
+import { RangoFechas } from "../models/entities/RangoFechas.js";
 
 // —————— DTOs ——————
 //ACA DEVOLVERIA UN OBJETO SE PUEDE USAR LA FUNCION DE LUCAS!!
@@ -18,23 +19,23 @@ const aReservaRest = (reserva) => ({
 });
 
 const deReservaRest = (body) => {
-
   return {
     huespedReservador: body.huespedReservador,
     cantidadHuespedes: body.cantidadHuespedes,
     alojamiento: body.alojamientoId,
-    rangoFechas: {
-      desde: new Date(body.rangoFechas.desde),
-      hasta: new Date(body.rangoFechas.hasta),
-    },
+    rangoFechas: new RangoFechas(
+      body.rangoFechas.desde,
+      body.rangoFechas.hasta
+    ),
     precioPorNoche: body.precioPorNoche,
   };
 };
 
 // —————— CONTROLADOR ——————
 
+// TODO: El DTO esta devolviendo demasiada información. Habría que usar el toDto de otros controllers.
 export class ReservaController {
-  reservaService
+  reservaService;
 
   constructor(reservaService) {
     this.reservaService = reservaService;
@@ -57,11 +58,8 @@ export class ReservaController {
 
   async cancelarReserva(req, res) {
     try {
-      await this.reservaService.cancelarReserva(
-        req.params.id,
-        req.body.motivo
-      );
-      res.status(204).send();
+      const reserva = await this.reservaService.cancelarReserva(req.params.id, req.query.motivo);
+      res.status(200).json(aReservaRest(reserva));
     } catch (error) {
       console.error(error);
       if (error instanceof ReservaInvalida) {
@@ -69,7 +67,7 @@ export class ReservaController {
       } else if (error instanceof ReservaNoExiste) {
         res.status(404).json({ error: error.message });
       } else {
-        res.status(500).json({ error: "Error interno :___(" });
+        res.status(500).json({ error: "Error interno" });
       }
     }
   }
@@ -97,13 +95,12 @@ export class ReservaController {
   async historialUsuario(req, res) {
     try {
       const lista = await this.reservaService.obtenerHistorialPorUsuario(
-        req.params.email
+        req.params.idUsuario
       );
       res.status(200).json(lista.map(aReservaRest));
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: "Error interno pipipi :___(" });
+      res.status(500).json({ error: "Error interno" });
     }
   }
 }
-

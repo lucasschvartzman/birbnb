@@ -5,6 +5,9 @@ import { Caracteristica } from "../entities/Caracteristica.js";
 import { Direccion } from "../entities/Direccion.js";
 import { Foto } from "../entities/Foto.js";
 
+import "./ciudadSchema.js";
+import "./paisSchema.js";
+
 const fotoSchema = new mongoose.Schema({
   descripcion: String,
   path: String,
