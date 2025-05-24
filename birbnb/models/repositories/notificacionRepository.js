@@ -1,37 +1,31 @@
-import {NotificacionModel} from "../schemas/notificacionSchema.js";
+import { NotificacionModel } from "../schemas/notificacionSchema.js";
 
 export class NotificacionRepository {
 
   constructor() {
     this.model = NotificacionModel;
-    this.notificaciones = [];
-    this.nextId = 1;
   }
 
-  // TODO: Pasar los metodos a Mongo
+  async save(notificacion) {
+    const query = notificacion.id
+      ? { _id: notificacion.id }
+      : { _id: new this.model()._id };
 
-  findAll() {
-    return this.notificaciones;
+    return this.model
+      .findOneAndUpdate(query, notificacion, { new: true, upsert: true })
+      .populate("usuario");
   }
 
-  findById(id) {
-    return this.notificaciones.find(n => n.id === id);
+  async findAll(filters = {}) {
+    const query = {};
+    if (filters.idUsuario) {
+      query.usuario = filters.idUsuario;
+    }
+    if (filters.leida !== undefined) {
+      query.leida = filters.leida;
+    }
+    return this.model.find(query).populate("usuario");
   }
 
-  findByUsuario(usuario) {
-    return this.notificaciones.filter(n => n.usuario === usuario);
-  }
-
-  save(notificacion) {
-    notificacion.id = this.nextId++;
-    this.notificaciones.push(notificacion);
-    return notificacion;
-  }
-
-  deleteById(id) {
-    const index = this.notificaciones.findIndex(n => n.id === id);
-    if (index === -1) return false;
-    this.notificaciones.splice(index, 1);
-    return true;
-  }
 }
+

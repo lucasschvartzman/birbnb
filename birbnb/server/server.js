@@ -1,5 +1,6 @@
 import express from "express";
 import {registerRoutes} from "../routes/index.js";
+import { setSwagger as initializeSwagger } from "../config/swaggerConfig.js";
 
 export class Server {
     #controllers = {};
@@ -27,6 +28,10 @@ export class Server {
     configureRoutes() {
         registerRoutes(this.#app,this.getController.bind(this));
         // NOTA: El Middleware se pone aca.
+    }
+
+    setSwagger() {
+        initializeSwagger(this.#app);
     }
 
     launch() {

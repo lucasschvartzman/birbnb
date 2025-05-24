@@ -1,4 +1,4 @@
-class Direccion {
+export class Direccion {
     calle;
     altura;
     ciudad;
