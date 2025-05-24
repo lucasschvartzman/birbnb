@@ -10,7 +10,7 @@ import { NotificacionService } from "./birbnb/services/notificacionService.js";
 import { NotificacionController } from "./birbnb/controllers/notificacionController.js";
 
 import { AlojamientoRepository } from "./birbnb/models/repositories/alojamientoRepository.js";
-import { AlojamientoService } from "./birbnb/services/alojamientoService.js";
+//import { AlojamientoService } from "./birbnb/services/alojamientoService.js";
 import { AlojamientoController } from "./birbnb/controllers/alojamientoController.js";
 
 import { ReservaRepository } from "./birbnb/models/repositories/reservaRepository.js";
@@ -24,8 +24,8 @@ const server = new Server(app,port);
 ClienteMongoDB.conectar();
 
 const alojamientoRepository = new AlojamientoRepository();
-const alojamientoService = new AlojamientoService(alojamientoRepository);
-const alojamientoController = new AlojamientoController(alojamientoService);
+//const alojamientoService = new AlojamientoService(alojamientoRepository);
+const alojamientoController = new AlojamientoController(alojamientoRepository/* alojamientoService */);
 
 const notificacionRepository = new NotificacionRepository();
 const notificacionService = new NotificacionService(notificacionRepository);
