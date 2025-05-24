@@ -34,6 +34,10 @@ class Reserva {
   estaVigenteEn(rangoDeFechas) {
     return this.rangoFechas.seSuperponeCon(rangoDeFechas);
   }
+
+  estaIniciada(fecha) {
+    return this.rangoFechas.incluye(fecha);
+  }
 }
 
 export { Reserva };

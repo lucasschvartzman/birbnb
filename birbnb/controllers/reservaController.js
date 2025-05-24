@@ -1,5 +1,6 @@
 // controllers/reservaController.js
 import { ReservaInvalida, ReservaNoExiste } from "../excepciones/reservas.js";
+import { RangoFechas } from "../models/entities/RangoFechas.js";
 
 // —————— DTOs ——————
 //ACA DEVOLVERIA UN OBJETO SE PUEDE USAR LA FUNCION DE LUCAS!!
@@ -18,15 +19,14 @@ const aReservaRest = (reserva) => ({
 });
 
 const deReservaRest = (body) => {
-
   return {
     huespedReservador: body.huespedReservador,
     cantidadHuespedes: body.cantidadHuespedes,
     alojamiento: body.alojamientoId,
-    rangoFechas: {
-      desde: new Date(body.rangoFechas.desde),
-      hasta: new Date(body.rangoFechas.hasta),
-    },
+    rangoFechas: new RangoFechas(
+      body.rangoFechas.desde,
+      body.rangoFechas.hasta
+    ),
     precioPorNoche: body.precioPorNoche,
   };
 };
@@ -34,7 +34,7 @@ const deReservaRest = (body) => {
 // —————— CONTROLADOR ——————
 
 export class ReservaController {
-  reservaService
+  reservaService;
 
   constructor(reservaService) {
     this.reservaService = reservaService;
@@ -57,10 +57,7 @@ export class ReservaController {
 
   async cancelarReserva(req, res) {
     try {
-      await this.reservaService.cancelarReserva(
-        req.params.id,
-        req.body.motivo
-      );
+      await this.reservaService.cancelarReserva(req.params.id, req.body.motivo);
       res.status(204).send();
     } catch (error) {
       console.error(error);
@@ -97,7 +94,7 @@ export class ReservaController {
   async historialUsuario(req, res) {
     try {
       const lista = await this.reservaService.obtenerHistorialPorUsuario(
-        req.params.email
+        req.params.id
       );
       res.status(200).json(lista.map(aReservaRest));
     } catch (error) {
@@ -106,4 +103,3 @@ export class ReservaController {
     }
   }
 }
-

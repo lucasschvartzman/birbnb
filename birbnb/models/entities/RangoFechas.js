@@ -10,4 +10,8 @@ export class RangoFechas {
       this.fechaFin > rangoDeFechas.fechaInicio
     );
   }
+
+  incluye(fecha) {
+    return fecha >= this.fechaInicio && fecha <= this.fechaFin;
+  }
 }
