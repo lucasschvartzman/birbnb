@@ -9,6 +9,9 @@ export class Alojamiento {
     horarioCheckOut,
     direccion,
     cantHuespedesMax,
+    caracteristicas,
+    reservas,
+    fotos
   ) {
     this.anfitrion = anfitrion;
     this.nombre = nombre;

@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
-import { Ciudad } from "../entities/Ciudad";
+import { Ciudad} from "../entities/Ciudad.js";
+import "./paisSchema.js"
 
 const ciudadSchema = new mongoose.Schema(
   {

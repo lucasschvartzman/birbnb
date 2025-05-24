@@ -3,7 +3,7 @@ import { Caracteristica } from "../models/entities/Caracteristica.js";
 const mapearCaracteristicas = (caracteristicas) => {
     if (!caracteristicas) 
         return caracteristicas
-    const caracteristicasValidas = Object.values(Caracteristica).map((c => c.nombre))
+    const caracteristicasValidas = Caracteristica.getAllAsString();
     const arrayDeCaracteristicas = caracteristicas.trim().split(",");
     return arrayDeCaracteristicas.filter((c) => caracteristicasValidas.includes(c.trim()))
 }
@@ -18,17 +18,17 @@ const esNumeroPositivo = (valor) => {
 
 const validarParametros = (queryParameters) => {
     const errores = []
-    if (queryParameters.ciudad && !esStringValido(queryParameters.ciudad)) 
+    if (queryParameters.idCiudad && !esStringValido(queryParameters.idCiudad))
         errores.push('El parámetro "ciudad" debe ser un string válido')
-    if (queryParameters.pais && !esStringValido(queryParameters.pais)) 
+    if (queryParameters.idPais && !esStringValido(queryParameters.idPais))
         errores.push('El parámetro "pais" debe ser un string válido')
     if (queryParameters.precioMinimo && !esNumeroPositivo(queryParameters.precioMinimo))
         errores.push('El parámetro "precioMinimo" debe ser un número positivo');
     if (queryParameters.precioMaximo && !esNumeroPositivo(queryParameters.precioMaximo))
         errores.push('El parámetro "precioMaximo" debe ser un número positivo'); 
-    if (queryParameters.coordLatitud && isNaN(queryParameters.coordLatitud) )
+    if (queryParameters.latitud && isNaN(queryParameters.latitud) )
         errores.push(mensajeErrorStringInvalido("coordLatitud"))  
-    if (queryParameters.coordLongitud && isNaN(queryParameters.coordLongitud)) 
+    if (queryParameters.longitud && isNaN(queryParameters.latitud))
         errores.push(mensajeErrorStringInvalido("coordLongitud"))
     if (queryParameters.huespedes && (!esNumeroPositivo(queryParameters.huespedes||!Number.isInteger(queryParameters.huespedes))))
         errores.push('El parámetro "huespedes" debe ser un número entero positivo');
@@ -43,12 +43,12 @@ const validarParametros = (queryParameters) => {
 
 const deRestARepo = (queryParameters) => {
     return {
-        ciudad: queryParameters.ciudad, //si busco por ciudad, omitir la busqueda por pais
-        pais: queryParameters.pais,
-        latitud: queryParameters.coordLatitud,
-        longitud: queryParameters.coordLongitud,
+        idCiudad: queryParameters.idCiudad, //si busco por ciudad, omitir la busqueda por pais
+        idPais: queryParameters.idPais,
+        latitud: queryParameters.latitud,
+        longitud: queryParameters.longitud,
         precioMinimo: queryParameters.precioMinimo,
-        precoMaximo: queryParameters.precioMaximo,
+        precioMaximo: queryParameters.precioMaximo,
         huespedes: queryParameters.huespedes,
         caracteristicas: mapearCaracteristicas(queryParameters.caracteristicas),
     }
@@ -73,9 +73,8 @@ const deRepoARest = (alojamiento) => {
 }
 export class AlojamientoController {
     
-    constructor(alojamientoRepository/* alojamientoService */) {
-        this.alojamientoRepository = alojamientoRepository
-        /* this.alojamientoService = alojamientoService; */
+    constructor(alojamientoRepository ) {
+        this.alojamientoRepository = alojamientoRepository;
     }
 
     async buscarAlojamientosConFiltros(req, res) {
@@ -84,8 +83,8 @@ export class AlojamientoController {
             const criterios = deRestARepo(req.query)
             const pagina = req.query.pagina || 1
             const tamanioPagina = req.query.tamanioPagina || 25
-            const alojamientos = await alojamientoRepository.buscarAlojamiento(criterios, pagina, tamanioPagina)
-            const jsonRespuesta = alojamientos.map(deRepoARest(alojamientos))
+            const alojamientos = await this.alojamientoRepository.findAll(criterios, {pagina, tamanioPagina})
+            const jsonRespuesta = alojamientos.map(deRepoARest)
             res.status(200).json(jsonRespuesta)
         } catch (error) {
             console.error(error)

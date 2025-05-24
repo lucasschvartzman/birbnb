@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { Pais } from "../entities/Pais";
+import { Pais } from "../entities/Pais.js";
 
 const paisSchema = new mongoose.Schema(
   {
