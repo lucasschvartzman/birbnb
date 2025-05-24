@@ -1,4 +1,5 @@
 export class Caracteristica {
+
   constructor(nombre) {
     this.nombre = nombre;
   }

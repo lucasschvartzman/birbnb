@@ -1,4 +1,5 @@
 export class EstadoReserva {
+
   constructor(nombre) {
     this.nombre = nombre;
   }
