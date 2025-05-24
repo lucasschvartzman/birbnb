@@ -1,6 +1,7 @@
 import { NotificacionModel } from "../schemas/notificacionSchema.js";
 
 export class NotificacionRepository {
+
   constructor() {
     this.model = NotificacionModel;
   }
@@ -25,4 +26,6 @@ export class NotificacionRepository {
     }
     return this.model.find(query).populate("usuario");
   }
+
 }
+

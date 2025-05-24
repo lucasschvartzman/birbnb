@@ -40,4 +40,5 @@ server.setController(NotificacionController, notificacionController);
 server.setController(ReservaController, reservaController);
 
 server.configureRoutes();
+server.setSwagger();
 server.launch();
