@@ -33,7 +33,7 @@ const validarParametros = (queryParameters) => {
     if (queryParameters.huespedes && (!esNumeroPositivo(queryParameters.huespedes||!Number.isInteger(queryParameters.huespedes))))
         errores.push('El parámetro "huespedes" debe ser un número entero positivo');
     if (queryParameters.caracteristicas && !esStringValido(queryParameters.caracteristicas)) 
-        errores.push('El parámetro "cicaracteristicasudad" debe ser un string válido')
+        errores.push('El parámetro "caracteristicas" debe ser un string válido')
     if (errores.length > 0) {
         throw new Error(`Errores de validación en los parámetros: ${JSON.stringify(errores)}`);
     }
@@ -56,6 +56,7 @@ const deRestARepo = (queryParameters) => {
 const deRepoARest = (alojamiento) => {
     return {
         nombre: alojamiento.nombre,
+        descripcion: alojamiento.descripcion,
         ciudad: alojamiento.direccion.ciudad, //si busco por ciudad, omitir la busqueda por pais
         calle: alojamiento.direccion.calle,
         altura: alojamiento.direccion.altura,
