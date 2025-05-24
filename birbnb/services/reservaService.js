@@ -10,7 +10,7 @@ export class ReservaService {
 
   async crearReserva(datos) {
     const alojamiento = await this.alojamientoRepository.findById(
-      datos.alojamientoId
+      datos.alojamiento
     );
     if (!alojamiento) {
       // FIXME NO usar ReservaNoExiste cuando lo q no existe es un alojamiento
@@ -42,15 +42,19 @@ export class ReservaService {
     } else {
       // TODO CREAR NOTIFICACION CANCELACION
       reserva.actualizarEstado(EstadoReserva.CANCELADA.nombre);
+
+      const reservaObj = reserva.toObject();
+      delete reservaObj._id;
       return this.reservaRepository.save({
-        ...reserva,
+        ...reservaObj,
+        id: reserva.id,
       });
     }
   }
 
   async modificarReserva(id, cambios) {
     const alojamiento = await this.alojamientoRepository.findById(
-      cambios.alojamientoId
+      cambios.alojamiento
     );
     if (!alojamiento) {
       // FIXME NO usar ReservaNoExiste cuando lo q no existe es un alojamiento

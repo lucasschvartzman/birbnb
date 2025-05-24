@@ -13,6 +13,6 @@ export function registerReserva(app, getController) {
   app.put("/reservas/:id", controller.modificarReserva.bind(controller));
 
   // Historial de reservas por usuario por email podria ser por ID
-  app.get("/reservas/usuario/:email", controller.historialUsuario.bind(controller));
+  app.get("/reservas/usuario/:idUsuario", controller.historialUsuario.bind(controller));
 }
 

@@ -33,6 +33,7 @@ const deReservaRest = (body) => {
 
 // —————— CONTROLADOR ——————
 
+// TODO: El DTO esta devolviendo demasiada información. Habría que usar el toDto de otros controllers.
 export class ReservaController {
   reservaService;
 
@@ -57,8 +58,8 @@ export class ReservaController {
 
   async cancelarReserva(req, res) {
     try {
-      await this.reservaService.cancelarReserva(req.params.id, req.body.motivo);
-      res.status(204).send();
+      const reserva = await this.reservaService.cancelarReserva(req.params.id, req.query.motivo);
+      res.status(200).json(aReservaRest(reserva));
     } catch (error) {
       console.error(error);
       if (error instanceof ReservaInvalida) {
@@ -94,7 +95,7 @@ export class ReservaController {
   async historialUsuario(req, res) {
     try {
       const lista = await this.reservaService.obtenerHistorialPorUsuario(
-        req.params.id
+        req.params.idUsuario
       );
       res.status(200).json(lista.map(aReservaRest));
     } catch (error) {
