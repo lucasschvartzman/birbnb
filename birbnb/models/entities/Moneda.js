@@ -1,10 +1,23 @@
-class Moneda {
-    nombre;
-    constructor(nombre) {
-        this.nombre = nombre;
-    }
-}
+export class Moneda {
+  constructor(nombre) {
+    this.nombre = nombre;
+  }
 
-Moneda.DOLAR_USA = new Moneda("DOLAR_USA");
-Moneda.PESO_ARG = new Moneda("PESO_ARG");
-Moneda.REALES = new Moneda("REALES");
+  static DOLAR_USA = new Moneda("DOLAR_USA");
+  static PESO_ARG = new Moneda("PESO_ARG");
+  static REALES = new Moneda("REALES");
+
+  static #valores = new Map([
+    ["DOLAR_USA", Moneda.DOLAR_USA],
+    ["PESO_ARG", Moneda.PESO_ARG],
+    ["REALES", Moneda.REALES],
+  ]);
+
+  static getByNombre(nombre) {
+    return this.#valores.get(nombre) || null;
+  }
+
+  static getAllAsString() {
+    return Array.from(this.#valores.keys());
+  }
+}

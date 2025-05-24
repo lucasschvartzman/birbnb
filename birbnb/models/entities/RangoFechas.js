@@ -6,8 +6,8 @@ export class RangoFechas {
 
   seSuperponeCon(rangoDeFechas) {
     return (
-      this.fechaInicio <= rangoDeFechas.fechaFin &&
-      this.fechaFin >= rangoDeFechas.fechaInicio
+      this.fechaInicio < rangoDeFechas.fechaFin &&
+      this.fechaFin > rangoDeFechas.fechaInicio
     );
   }
 }
