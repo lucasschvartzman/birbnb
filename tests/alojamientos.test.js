@@ -23,10 +23,18 @@ describe('estaDisponibleEn', () => {
         expect(disponible).toBe(true);
     });
 
-    test('si hay reservas que coincidan en el rango, NO esta disponible', () => {
+    test('si hay reservas que coincidan parcialmente en el rango, NO esta disponible', () => {
         const alojamiento = new Alojamiento()
         alojamiento.agregarReserva(mockReserva);
         const rangoDeFechas = new RangoFechas('2025-01-05','2025-01-15')
+        const disponible = alojamiento.estaDisponibleEn(rangoDeFechas);
+        expect(disponible).toBe(false);
+    });
+    
+    test('si hay reservas que coincidan totalmente con el rango, NO esta disponible', () => {
+        const alojamiento = new Alojamiento()
+        alojamiento.agregarReserva(mockReserva);
+        const rangoDeFechas = new RangoFechas('2025-01-01','2025-01-10')
         const disponible = alojamiento.estaDisponibleEn(rangoDeFechas);
         expect(disponible).toBe(false);
     });
