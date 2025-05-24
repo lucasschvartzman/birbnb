@@ -1,4 +1,4 @@
-class Ciudad{
+export class Ciudad{
     nombre;
     pais;
     constructor(nombre,pais){
