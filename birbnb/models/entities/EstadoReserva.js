@@ -1,4 +1,4 @@
-class EstadoReserva {
+export class EstadoReserva {
   nombre;
 
   constructor(nombre) {

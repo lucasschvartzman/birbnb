@@ -1,3 +1,5 @@
+import { EstadoReserva } from "./EstadoReserva.js";
+
 class Reserva {
   fechaAlta;
   huespedReservador;
