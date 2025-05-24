@@ -1,12 +1,11 @@
 import { NotificacionController } from "../controllers/notificacionController.js";
 
 export function registerNotificacion(app, getController) {
-
   /**
    * @swagger
-   * /notificaciones/sin-leer/{usuarioId}:
+   * /notificaciones/{usuarioId}:
    *   get:
-   *     summary: Obtener notificaciones de un usuario segun parametros
+   *     summary: Obtener notificaciones de un usuario
    *     tags:
    *       - Notificaciones
    *     parameters:
@@ -16,11 +15,32 @@ export function registerNotificacion(app, getController) {
    *         schema:
    *           type: string
    *         description: ID del usuario
+   *       - in: query
+   *         name: leida
+   *         schema:
+   *           type: boolean
+   *         description: Filtro para ver si la notificación fue leída o no
    *     responses:
    *       200:
-   *         description: Lista de notificaciones no leídas
+   *         description: Lista de notificaciones filtradas
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: array
+   *               items:
+   *                 type: object
+   *                 properties:
+   *                   id:
+   *                     type: string
+   *                   mensaje:
+   *                     type: string
+   *                   leida:
+   *                     type: boolean
+   *                   fecha:
+   *                     type: string
+   *                     format: date-time
    */
-  app.get('/notificaciones/:usuarioId', (req, res) => {
+  app.get("/notificaciones/:usuarioId", (req, res) => {
     getController(NotificacionController).findAll(req, res);
   });
 
@@ -40,12 +60,11 @@ export function registerNotificacion(app, getController) {
    *         description: ID de la notificación
    *     responses:
    *       200:
-   *         description: Notificación marcada como leída
+   *         description: Notificación actualizada correctamente
    *       404:
    *         description: Notificación no encontrada
    */
-  app.patch('/notificaciones/:notificacionId/leida', (req, res) =>
-  getController(NotificacionController).marcarComoLeida(req, res)
+  app.patch("/notificaciones/:notificacionId/leida", (req, res) =>
+    getController(NotificacionController).marcarComoLeida(req, res)
   );
-
 }

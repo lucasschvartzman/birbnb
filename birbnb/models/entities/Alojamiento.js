@@ -22,9 +22,9 @@ export class Alojamiento {
     this.horarioCheckOut = horarioCheckOut;
     this.direccion = direccion;
     this.cantHuespedesMax = cantHuespedesMax;
-    this.caracteristicas = [];
-    this.reservas = [];
-    this.fotos = [];
+    this.caracteristicas = caracteristicas;
+    this.reservas = reservas;
+    this.fotos = fotos;
   }
 
   estaDisponibleEn(rangoDeFechas) {

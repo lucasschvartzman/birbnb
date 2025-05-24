@@ -67,7 +67,7 @@ export class ReservaController {
       } else if (error instanceof ReservaNoExiste) {
         res.status(404).json({ error: error.message });
       } else {
-        res.status(500).json({ error: "Error interno :___(" });
+        res.status(500).json({ error: "Error interno" });
       }
     }
   }
@@ -100,7 +100,7 @@ export class ReservaController {
       res.status(200).json(lista.map(aReservaRest));
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: "Error interno pipipi :___(" });
+      res.status(500).json({ error: "Error interno" });
     }
   }
 }
