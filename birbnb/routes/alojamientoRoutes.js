@@ -3,9 +3,11 @@ import { AlojamientoController } from "../controllers/alojamientoController.js";
 export function registerAlojamiento(app, getController) {
   /**
    * @swagger
-   * /buscarAlojamientos:
+   * /alojamientos:
    *   get:
-   *     summary: buscar alojamientos con filtros
+   *     summary: Obtiene alojamientos según filtros
+   *     tags:
+   *     - Alojamientos
    *     parameters:
    *     - in: query
    *       name: pagina
@@ -102,7 +104,7 @@ export function registerAlojamiento(app, getController) {
    *                     items:
    *                       type: string
    */
-  app.get("/buscarAlojamientos", async (req, res, next) => {
+  app.get("/alojamientos", async (req, res, next) => {
     try {
       getController(AlojamientoController).buscarAlojamientosConFiltros(req, res);
     } catch (error) {
