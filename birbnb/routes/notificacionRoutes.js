@@ -6,7 +6,7 @@ export function registerNotificacion(app, getController) {
    * @swagger
    * /notificaciones/sin-leer/{usuarioId}:
    *   get:
-   *     summary: Obtener notificaciones no leídas de un usuario
+   *     summary: Obtener notificaciones de un usuario segun parametros
    *     tags:
    *       - Notificaciones
    *     parameters:
@@ -20,36 +20,14 @@ export function registerNotificacion(app, getController) {
    *       200:
    *         description: Lista de notificaciones no leídas
    */
-  app.get('/notificaciones/sin-leer/:usuarioId', (req, res) => {
+  app.get('/notificaciones/:usuarioId', (req, res) => {
     getController(NotificacionController).findAll(req, res);
   });
 
   /**
    * @swagger
-   * /notificaciones/leidas/{usuarioId}:
-   *   get:
-   *     summary: Obtener notificaciones leídas de un usuario
-   *     tags:
-   *       - Notificaciones
-   *     parameters:
-   *       - in: path
-   *         name: usuarioId
-   *         required: true
-   *         schema:
-   *           type: string
-   *         description: ID del usuario
-   *     responses:
-   *       200:
-   *         description: Lista de notificaciones leídas
-   */
-  app.get('/notificaciones/leidas/:usuarioId', (req, res) => {
-    getController(NotificacionController).findAll(req, res);
-  });
-
-  /**
-   * @swagger
-   * /notificaciones/{notificacionId}/marcar-leida:
-   *   put:
+   * /notificaciones/{notificacionId}/leida:
+   *   patch:
    *     summary: Marcar una notificación como leída
    *     tags:
    *       - Notificaciones
@@ -66,8 +44,8 @@ export function registerNotificacion(app, getController) {
    *       404:
    *         description: Notificación no encontrada
    */
-  app.put('/notificaciones/:notificacionId/marcar-leida', (req, res, next) => 
-  getController(NotificacionController).marcarComoLeida(req, res, next)
+  app.patch('/notificaciones/:notificacionId/leida', (req, res) =>
+  getController(NotificacionController).marcarComoLeida(req, res)
   );
 
 }

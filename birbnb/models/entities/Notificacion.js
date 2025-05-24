@@ -1,13 +1,11 @@
 class Notificacion {
-  mensaje;
-  usuario;
-  
-  constructor(usuario, mensaje) {
+
+  constructor(usuario, mensaje, fechaAlta, leida, fechaLeida) {
     this.mensaje = mensaje;
     this.usuario = usuario;
-    this.fechaAlta = new Date();
-    this.leida = false;
-    this.fechaLeida = null;
+    this.fechaAlta = fechaAlta;
+    this.leida = leida;
+    this.fechaLeida = fechaLeida;
   }
   
   marcarComoLeida() {

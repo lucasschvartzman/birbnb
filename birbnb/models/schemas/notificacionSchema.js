@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { Notificacion } from "../entities/Notificacion.js";
+import "./usuarioSchema.js";
 
 const notificacionSchema = new mongoose.Schema(
   {

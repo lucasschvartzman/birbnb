@@ -6,6 +6,10 @@ export class NotificacionRepository {
     this.model = NotificacionModel;
   }
 
+  async findById(notificacionId) {
+    return this.model.findById(notificacionId).populate("usuario");
+  }
+
   async save(notificacion) {
     const query = notificacion.id
       ? { _id: notificacion.id }
