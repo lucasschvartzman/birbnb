@@ -1,4 +1,4 @@
-class Pais{
+export class Pais{
     nombre
 
     constructor(nombre){

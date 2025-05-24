@@ -1,10 +1,22 @@
-class TipoUsuario {
+export class TipoUsuario {
+
     constructor(nombre) {
-      this.nombre = nombre;
+        this.nombre = nombre;
     }
-  }
-  
-  TipoUsuario.HUESPED = new TipoUsuario("HUESPED");
-  TipoUsuario.ANFITRION = new TipoUsuario("ANFITRION");
-  
-  export default TipoUsuario;
+
+    static HUESPED = new TipoUsuario("HUESPED");
+    static ANFITRION = new TipoUsuario("ANFITRION");
+
+    static #tipos = new Map([
+        ["HUESPED", TipoUsuario.HUESPED],
+        ["ANFITRION", TipoUsuario.ANFITRION],
+    ]);
+
+    static getByNombre(nombre) {
+        return TipoUsuario.#tipos.get(nombre) || null;
+    }
+
+    static getAllAsString() {
+        return Array.from(TipoUsuario.#tipos.keys());
+    }
+}
