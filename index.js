@@ -24,7 +24,7 @@ const server = new Server(app,port);
 ClienteMongoDB.conectar();
 
 const alojamientoRepository = new AlojamientoRepository();
-const alojamientoService = new AlojamientoService(alojamientoRepository);
+const alojamientoService = new AlojamientoService(alojamientoRepository);//ACA PUEDO PASARLE UN ALOJAMIENTO?
 const alojamientoController = new AlojamientoController(alojamientoService);
 
 const notificacionRepository = new NotificacionRepository();
@@ -35,9 +35,9 @@ const reservaRepository = new ReservaRepository();
 const reservaService = new ReservaService(reservaRepository);
 const reservaController = new ReservaController(reservaService);
 
-server.setController(alojamientoController);
-server.setController(notificacionController);
-server.setController(reservaController);
+server.setController(alojamientoController); ///ACA FALTA EL PARAMETRO DE LA BASE DE DATOS
+server.setController(notificacionController);///ACA FALTA EL PARAMETRO DE LA BASE DE DATOS
+server.setController(reservaController);///ACA FALTA EL PARAMETRO DE LA BASE DE DATOS
 
 server.configureRoutes();
 server.launch();

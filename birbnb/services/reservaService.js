@@ -2,9 +2,9 @@ import { ReservaInvalida, ReservaNoExiste } from "../excepciones/reservas.js";
 
 export class ReservaService {
   repo
-  alojRepo
+  //alojRepo
 
-  constructor(reservaRepo, alojamientoRepo) {
+  constructor(reservaRepo) {
     this.repo = reservaRepo;
     this.alojRepo = alojamientoRepo;
   }
