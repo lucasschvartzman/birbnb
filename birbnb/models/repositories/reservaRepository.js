@@ -20,21 +20,23 @@ export class ReservaRepository {
     return this.model
       .findOneAndUpdate(query, reserva, {
         new: true,
-        upsert: true,
+        upsert: true
       })
       .populate("huespedReservador")
       .populate("alojamiento");
   }
 
-  async findAll(filters = {}) {
+  #armarQuery(filtros) {
     const query = {};
-
-    if (filters.idUsuario) {
-      query.huespedReservador = filters.idUsuario;
+    if (filtros.idUsuario) {
+      query.huespedReservador = filtros.idUsuario;
     }
+    return query;
+  }
 
+  async findAll(filtros = {}) {
     return this.model
-      .find(query)
+      .find(this.#armarQuery(filtros))
       .populate("huespedReservador")
       .populate("alojamiento");
   }

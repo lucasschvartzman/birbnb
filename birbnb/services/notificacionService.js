@@ -16,7 +16,7 @@ export class NotificacionService {
 
       const notificacion = await this.notificacionRepository.findById(notificacionId);
 
-      if (notificacion.leida) {
+      if (notificacion.estaLeida()) {
         return notificacion;
       } else {
         notificacion.marcarComoLeida();

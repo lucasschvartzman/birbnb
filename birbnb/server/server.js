@@ -1,6 +1,8 @@
 import express from "express";
 import {registerRoutes} from "../routes/index.js";
 import { setSwagger as initializeSwagger } from "../config/swaggerConfig.js";
+import {notFoundHandler} from "../middlewares/notFoundHandler.js";
+import {exceptionHandler} from "../middlewares/exceptionHandler.js";
 
 export class Server {
     #controllers = {};
@@ -27,10 +29,12 @@ export class Server {
 
     configureRoutes() {
         registerRoutes(this.#app,this.getController.bind(this));
-        // NOTA: El Middleware se pone aca.
+        this.#setSwagger();
+        this.#app.use(notFoundHandler); // Middleware para rutas no encontradas.
+        this.#app.use(exceptionHandler); // Middleware para catcheo de excepciones.
     }
 
-    setSwagger() {
+    #setSwagger() {
         initializeSwagger(this.#app);
     }
 

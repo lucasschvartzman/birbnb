@@ -1,106 +1,74 @@
-// controllers/reservaController.js
-import { ReservaInvalida, ReservaNoExiste } from "../excepciones/reservas.js";
 import { RangoFechas } from "../models/entities/RangoFechas.js";
 
-// —————— DTOs ——————
-//ACA DEVOLVERIA UN OBJETO SE PUEDE USAR LA FUNCION DE LUCAS!!
-const aReservaRest = (reserva) => ({
-  id: reserva.id,
-  huespedReservador: reserva.huespedReservador,
-  cantidadHuespedes: reserva.cantidadHuespedes,
-  alojamiento: reserva.alojamiento,
-  rangoFechas: {
-    desde: reserva.rangoFechas.desde,
-    hasta: reserva.rangoFechas.hasta,
-  },
-  estado: reserva.estado,
-  precioPorNoche: reserva.precioPorNoche,
-  fechaAlta: reserva.fechaAlta,
-});
-
-const deReservaRest = (body) => {
+const fromDto = (body) => {
   return {
     huespedReservador: body.huespedReservador,
     cantidadHuespedes: body.cantidadHuespedes,
-    alojamiento: body.alojamientoId,
-    rangoFechas: new RangoFechas(
-      body.rangoFechas.desde,
-      body.rangoFechas.hasta
+    alojamiento: body.alojamiento,
+    rangoFechas:  new RangoFechas(
+        body.rangoFechas.fechaInicio,
+        body.rangoFechas.fechaFin
     ),
-    precioPorNoche: body.precioPorNoche,
-  };
-};
+    precioPorNoche: body.precioPorNoche
+  }
+}
 
-// —————— CONTROLADOR ——————
+const toDto = (reserva) => {
+  return {
+    fechaAlta: reserva.fechaAlta,
+    huespedReservadorId: reserva.huespedReservador._id,
+    cantidadHuespedes: reserva.cantidadHuespedes,
+    alojamientoId: reserva.alojamiento._id,
+    rangoFechas: {
+      fechaInicio: reserva.rangoFechas.fechaInicio,
+      fechaFin: reserva.rangoFechas.fechaFin
+    },
+    estado: reserva.estado.nombre,
+    precioPorNoche: reserva.precioPorNoche
+  }
+}
 
-// TODO: El DTO esta devolviendo demasiada información. Habría que usar el toDto de otros controllers.
 export class ReservaController {
-  reservaService;
 
   constructor(reservaService) {
     this.reservaService = reservaService;
   }
 
-  async crearReserva(req, res) {
+  async crearReserva(req, res, next) {
     try {
-      const dto = deReservaRest(req.body);
-      const nueva = await this.reservaService.crearReserva(dto);
-      res.status(201).json(aReservaRest(nueva));
+      const reservaDto = fromDto(req.body);
+      const nuevaReserva = await this.reservaService.crearReserva(reservaDto);
+      res.status(201).json(toDto(nuevaReserva));
     } catch (error) {
-      console.error(error);
-      if (error instanceof ReservaInvalida) {
-        res.status(400).json({ error: error.message });
-      } else {
-        res.status(500).json({ error: "Error interno" });
-      }
+      next(error);
     }
   }
 
-  async cancelarReserva(req, res) {
+  async cancelarReserva(req, res, next) {
     try {
-      const reserva = await this.reservaService.cancelarReserva(req.params.id, req.query.motivo);
-      res.status(200).json(aReservaRest(reserva));
+      const reserva = await this.reservaService.cancelarReserva(req.params.id, req.body.motivo);
+      res.status(204).json(toDto(reserva));
     } catch (error) {
-      console.error(error);
-      if (error instanceof ReservaInvalida) {
-        res.status(400).json({ error: error.message });
-      } else if (error instanceof ReservaNoExiste) {
-        res.status(404).json({ error: error.message });
-      } else {
-        res.status(500).json({ error: "Error interno" });
-      }
+      next(error);
     }
   }
 
-  async modificarReserva(req, res) {
+  async modificarReserva(req, res, next) {
     try {
-      const dto = deReservaRest(req.body);
-      const actualizada = await this.reservaService.modificarReserva(
-        req.params.id,
-        dto
-      );
-      res.status(200).json(aReservaRest(actualizada));
+      const reservaDto = fromDto(req.body);
+      const reservaActualizada = await this.reservaService.modificarReserva(req.params.id, reservaDto);
+      res.json(toDto(reservaActualizada));
     } catch (error) {
-      console.error(error);
-      if (error instanceof ReservaInvalida) {
-        res.status(400).json({ error: error.message });
-      } else if (error instanceof ReservaNoExiste) {
-        res.status(404).json({ error: error.message });
-      } else {
-        res.status(500).json({ error: "Error interno" });
-      }
+      next(error);
     }
   }
 
-  async historialUsuario(req, res) {
+  async obtenerHistorialUsuario(req, res, next) {
     try {
-      const lista = await this.reservaService.obtenerHistorialPorUsuario(
-        req.params.idUsuario
-      );
-      res.status(200).json(lista.map(aReservaRest));
+      const historialReservas = await this.reservaService.obtenerHistorialPorUsuario(req.params.idUsuario);
+      res.json(historialReservas.map(toDto));
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: "Error interno" });
+      next(error);
     }
   }
 }

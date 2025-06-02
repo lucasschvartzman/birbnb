@@ -12,6 +12,10 @@ class Notificacion {
     this.leida = true;
     this.fechaLeida = new Date();
   }
+
+  estaLeida() {
+    return this.leida;
+  }
 }
 
 export { Notificacion };

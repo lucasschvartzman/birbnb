@@ -1,22 +1,25 @@
-const Notificacion = require('./Notificacion');
+import { Notificacion } from "./Notificacion.js";
 
-class NotificacionFactory {
-    static crearNotificacionReservaCreada(reserva) {
-      const mensaje = `Nueva reserva de ${reserva.huespedReservador.nombre}.`;
-      return new Notificacion(reserva.alojamiento.anfitrion, mensaje)
+export class NotificacionFactory {
+
+    static crearNotificacionReservaCreada(datos) {
+        const mensaje =
+            `Nueva reserva realizada por ${datos.huesped} sobre el alojamiento ${datos.alojamiento} para el ${datos.fechaInicio} (${datos.cantidadDias} días).`;
+        return new Notificacion(datos.anfitrion, mensaje, new Date(),false,null);
     }
-  
-    static crearNotificacionReservaAceptada(reserva) {
-      const mensaje = `Tu reserva para el alojamiento "${reserva.alojamiento.nombre}" fue aceptada por el anfitrión.`;
-      return new Notificacion(reserva.huespedReservador, mensaje);
+
+    static crearNotificacionReservaCancelada(datos) {
+        const mensaje =
+            `El huésped ${datos.huesped} canceló la reserva del alojamiento ${datos.alojamiento} para el ${datos.fechaInicio}.\n` +
+            `Motivo: ${datos.motivo}.`;
+        return new Notificacion(datos.anfitrion, mensaje, new Date(),false,null);
     }
-  
-    static crearNotificacionReservaCancelada(reserva, motivo) {
-      const mensaje = `El huésped ${reserva.huespedReservador.nombre} canceló la reserva del alojamiento "${reserva.alojamiento.nombre}". Motivo: ${motivo || "No especificado"}.`;
-      return new Notificacion(reserva.alojamiento.anfitrion, mensaje);
+
+    static crearNotificacionReservaAceptada(datos) {
+      const mensaje = `Tu reserva para el alojamiento "${datos.alojamiento}" fue aceptada.`;
+      return new Notificacion(datos.huesped, mensaje);
     }
 }
-module.exports = NotificacionFactory;
 
   
   

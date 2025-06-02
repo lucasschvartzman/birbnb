@@ -32,7 +32,7 @@ const notificacionService = new NotificacionService(notificacionRepository);
 const notificacionController = new NotificacionController(notificacionService);
 
 const reservaRepository = new ReservaRepository();
-const reservaService = new ReservaService(reservaRepository, alojamientoRepository);
+const reservaService = new ReservaService(reservaRepository, alojamientoRepository, notificacionRepository);
 const reservaController = new ReservaController(reservaService);
 
 server.setController(AlojamientoController, alojamientoController);
@@ -40,5 +40,4 @@ server.setController(NotificacionController, notificacionController);
 server.setController(ReservaController, reservaController);
 
 server.configureRoutes();
-server.setSwagger();
 server.launch();

@@ -7,16 +7,16 @@ export class AlojamientoRepository {
   }
 
   async findById(id) {
-    return await this.model
-      .findById(id)
-      .populate({
-        path: "direccion.ciudad",
-        populate: {
-          path: "pais",
-        },
-      })
-      .populate("anfitrion")
-      .populate("reservas");
+    return this.model
+        .findById(id)
+        .populate({
+          path: "direccion.ciudad",
+          populate: {
+            path: "pais",
+          },
+        })
+        .populate("anfitrion")
+        .populate("reservas");
   }
 
   async findAll(filters = {}, paginado = {}) {

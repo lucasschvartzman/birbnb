@@ -28,9 +28,7 @@ export class Alojamiento {
   }
 
   estaDisponibleEn(rangoDeFechas) {
-    const ningunaVigente = this.reservas.every((reserva) => !reserva.estaVigenteEn(rangoDeFechas));
-    return ningunaVigente
-
+    return this.reservas.every(reserva => !reserva.estaVigenteEn(rangoDeFechas))
   }
 
   suPrecioEstaDentroDe(valorMinimo, valorMaximo) {
