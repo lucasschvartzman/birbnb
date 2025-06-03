@@ -5,7 +5,6 @@ import {
   ReservaNoExisteException,
 } from "../birbnb/exceptions/reservaExceptions.js";
 import { EstadoReserva } from "../birbnb/models/entities/EstadoReserva.js";
-import mongoose from "mongoose";
 
 describe("ReservaService", () => {
   let service;
@@ -15,10 +14,6 @@ describe("ReservaService", () => {
   let notificacionFactoryMock;
   let usuarioModelMock;
 
-  const objectIDs = {
-    idUsuarioUno: new mongoose.Types.ObjectId().toString()
-  }
-  
   const datosReservaEjemplo = {
     valida: {
       alojamiento: "alojamiento-123",
@@ -28,7 +23,7 @@ describe("ReservaService", () => {
         fechaInicio: new Date("2025-07-01"),
         cantidadDias: () => 2,
       },
-      huespedReservador: objectIDs.idUsuarioUno,
+      huespedReservador: "usuario-456",
       cantidadHuespedes: 2,
       precioPorNoche: 100,
     },
@@ -73,7 +68,7 @@ describe("ReservaService", () => {
     pendiente: {
       id: "reserva-1",
       estado: EstadoReserva.PENDIENTE.nombre,
-      huespedReservador: objectIDs.idUsuarioUno,
+      huespedReservador: "usuario-456",
       alojamiento: "alojamiento-123",
       rangoFechas: datosReservaEjemplo.valida.rangoFechas,
       estaIniciada: jest.fn().mockReturnValue(false),
@@ -93,7 +88,7 @@ describe("ReservaService", () => {
 
   const usuariosEjemplo = {
     huesped: {
-      id: objectIDs.idUsuarioUno,
+      id: "usuario-456",
       nombre: "Ana Rodríguez",
       email: "ana@ejemplo.com",
     },
@@ -371,7 +366,7 @@ describe("ReservaService", () => {
   });
 
   describe("obtenerHistorialPorUsuario", () => {
-    const idUsuario = objectIDs.idUsuarioUno;
+    const idUsuario = "usuario-456";
 
     describe("cuando se solicita el historial de un usuario", () => {
       test("debe retornar todas las reservas del usuario", async () => {
