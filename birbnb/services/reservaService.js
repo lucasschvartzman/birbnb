@@ -3,7 +3,7 @@ import {
   ReservaNoExisteException
 } from "../excepciones/reservaExceptions.js";
 import { EstadoReserva } from "../models/entities/EstadoReserva.js";
-import { NotificacionFactory } from "../models/entities/NotificacionFactory.js";
+import { NotificacionFactory } from "../models/factories/NotificacionFactory.js";
 import { UsuarioModel } from "../models/schemas/usuarioSchema.js";
 
 export class ReservaService {

@@ -1,36 +1,27 @@
+import {NotificacionNoExisteException} from "../excepciones/notificacionExceptions.js";
+
 export class NotificacionService {
   constructor(notificacionRepository) {
     this.notificacionRepository = notificacionRepository;
   }
 
-  async findAll(filters) {
-    try {
-      return await this.notificacionRepository.findAll(filters);
-    } catch (error) {
-      throw new Error('Error al obtener notificaciones: ' + error.message);
+  async obtenerNotificacionesUsuario(filtros) {
+    return await this.notificacionRepository.findAll(filtros);
+  }
+
+  #validarDatosNotificacion(idNotificacion, notificacion) {
+    if (notificacion == null) {
+      throw new NotificacionNoExisteException(idNotificacion);
     }
   }
 
-  async marcarComoLeida(notificacionId) {
-    try {
-
-      const notificacion = await this.notificacionRepository.findById(notificacionId);
-
-      if (notificacion.estaLeida()) {
-        return notificacion;
-      } else {
-        notificacion.marcarComoLeida();
-
-        const notificacionActualizada = await this.notificacionRepository.save(notificacion);
-
-        if (!notificacionActualizada) {
-          throw new Error(`Notificación con id ${notificacionId} no encontrada`);
-        }
-
-        return notificacionActualizada;
-      }
-    } catch (error) {
-      throw new Error('Error al marcar como leída: ' + error.message);
+  async marcarComoLeida(idNotificacion) {
+    const notificacion = await this.notificacionRepository.findById(idNotificacion);
+    this.#validarDatosNotificacion(idNotificacion,notificacion);
+    if (notificacion.estaLeida()) {
+      return notificacion; // Si ya está leída, no hacemos nada.
     }
+    notificacion.marcarComoLeida();
+    return await this.notificacionRepository.save(notificacion);
   }
 }

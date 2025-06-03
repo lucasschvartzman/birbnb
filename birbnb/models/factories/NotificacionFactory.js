@@ -1,4 +1,4 @@
-import { Notificacion } from "./Notificacion.js";
+import { Notificacion } from "../entities/Notificacion.js";
 
 export class NotificacionFactory {
 
@@ -10,11 +10,11 @@ export class NotificacionFactory {
 
     static crearNotificacionReservaCancelada(datos) {
         const mensaje =
-            `El huésped ${datos.huesped} canceló la reserva del alojamiento ${datos.alojamiento} para el ${datos.fechaInicio}.\n` +
-            `Motivo: ${datos.motivo}.`;
+            `El huésped ${datos.huesped} canceló la reserva del alojamiento ${datos.alojamiento} para el ${datos.fechaInicio}. Motivo: ${datos.motivo}.`;
         return new Notificacion(datos.anfitrion, mensaje, new Date(),false,null);
     }
 
+    // TODO: Esto seria necesario usarlo. No vi exactamente donde :s
     static crearNotificacionReservaAceptada(datos) {
       const mensaje = `Tu reserva para el alojamiento "${datos.alojamiento}" fue aceptada.`;
       return new Notificacion(datos.huesped, mensaje);

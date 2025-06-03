@@ -20,15 +20,19 @@ export class NotificacionRepository {
       .populate("usuario");
   }
 
-  async findAll(filters = {}) {
+  #armarQuery(filtros) {
     const query = {};
-    if (filters.idUsuario) {
-      query.usuario = filters.idUsuario;
+    if (filtros.idUsuario) {
+      query.usuario = filtros.idUsuario;
     }
-    if (filters.leida !== undefined) {
-      query.leida = filters.leida;
+    if (filtros.leida !== undefined) {
+      query.leida = filtros.leida;
     }
-    return this.model.find(query).populate("usuario");
+    return query;
+  }
+
+  async findAll(filtros = {}) {
+    return this.model.find(this.#armarQuery(filtros)).populate("usuario");
   }
 
 }

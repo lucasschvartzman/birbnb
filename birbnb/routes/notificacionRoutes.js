@@ -1,6 +1,7 @@
 import { NotificacionController } from "../controllers/notificacionController.js";
 
 export function registerNotificacion(app, getController) {
+  const controller = getController(NotificacionController);
   /**
    * @swagger
    * /notificaciones/{usuarioId}:
@@ -40,8 +41,8 @@ export function registerNotificacion(app, getController) {
    *                     type: string
    *                     format: date-time
    */
-  app.get("/notificaciones/:usuarioId", (req, res) => {
-    getController(NotificacionController).findAll(req, res);
+  app.get("/usuarios/:idUsuario/notificaciones", (req, res, next) => {
+    controller.obtenerNotificacionesUsuario(req, res, next);
   });
 
   /**
@@ -64,7 +65,7 @@ export function registerNotificacion(app, getController) {
    *       404:
    *         description: Notificación no encontrada
    */
-  app.patch("/notificaciones/:notificacionId/leida", (req, res) =>
-    getController(NotificacionController).marcarComoLeida(req, res)
-  );
+  app.patch("/notificaciones/:idNotificacion/leida", (req, res, next) => {
+    controller.marcarComoLeida(req, res, next);
+  });
 }

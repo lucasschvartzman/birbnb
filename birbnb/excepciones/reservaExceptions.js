@@ -1,20 +1,12 @@
-export class ReservaException extends Error {
-  constructor(message, statusCode) {
-    super(message);
-    this.statusCode = statusCode;
-    this.status = `${statusCode}`.startsWith('4') ? 'fail' : 'error';
-    this.esOperacional = true;
-    Error.captureStackTrace(this, this.constructor);
-  }
-}
+import { AppException } from "./appExceptions.js";
 
-export class DatosReservaInvalidosException extends ReservaException {
+export class DatosReservaInvalidosException extends AppException {
   constructor(message) {
     super(message,400);
   }
 }
 
-export class ReservaNoExisteException extends ReservaException {
+export class ReservaNoExisteException extends AppException {
   constructor(idReserva) {
     super(`La reserva con id ${idReserva} no existe`, 404);
   }

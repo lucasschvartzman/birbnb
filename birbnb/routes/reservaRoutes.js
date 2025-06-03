@@ -200,7 +200,7 @@ export function registerReserva(app, getController) {
    *         $ref: '#/components/responses/InternalServerError'
    */
   app.post("/reservas", (req, res, next) => {
-    getController(ReservaController).crearReserva(req, res, next);
+    controller.crearReserva(req, res, next);
   });
 
   /**
@@ -250,7 +250,7 @@ export function registerReserva(app, getController) {
    *         $ref: '#/components/responses/InternalServerError'
    */
   app.patch("/reservas/:id/cancelar", (req, res, next) => {
-    getController(ReservaController).cancelarReserva(req, res, next);
+    controller.cancelarReserva(req, res, next);
   });
 
   /**
@@ -336,7 +336,7 @@ export function registerReserva(app, getController) {
    *         $ref: '#/components/responses/InternalServerError'
    */
   app.put("/reservas/:id", (req, res, next) => {
-    getController(ReservaController).modificarReserva(req, res, next);
+    controller.modificarReserva(req, res, next);
   });
 
   /**
@@ -445,6 +445,6 @@ export function registerReserva(app, getController) {
    *         $ref: '#/components/responses/InternalServerError'
    */
   app.get("/usuarios/:idUsuario/reservas", (req, res, next) => {
-    return getController(ReservaController).obtenerHistorialUsuario(req, res, next);
+    return controller.obtenerHistorialUsuario(req, res, next);
   });
 }

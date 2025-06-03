@@ -1,32 +1,46 @@
+const toDto = (notificacion) => {
+    return {
+        mensaje: notificacion.mensaje,
+        usuario: notificacion.usuario._id,
+        fechaAlta: notificacion.fechaAlta,
+        leida: notificacion.leida,
+        fechaLeida: notificacion.fechaLeida
+    }
+}
+
 export class NotificacionController {
   constructor(notificacionService) {
     this.notificacionService = notificacionService;
   }
 
-  async findAll(req, res) {
-    try {
-      const filters = {};
-      if (req.params.usuarioId) {
-        filters.idUsuario = req.params.usuarioId;
+  #armarFiltrosBusqueda(req) {
+      const filtros = {};
+      if (req.params.idUsuario) {
+          filtros.idUsuario = req.params.idUsuario;
       }
       if (req.query.leida !== undefined) {
-        filters.leida = req.query.leida;
+          filtros.leida = req.query.leida;
       }
-      const notificaciones = await this.notificacionService.findAll(filters);
-      res.json(notificaciones);
+      return filtros;
+  }
+
+  async obtenerNotificacionesUsuario(req, res, next) {
+    try {
+      const filtros = this.#armarFiltrosBusqueda(req);
+      const notificacionesUsuario = await this.notificacionService.obtenerNotificacionesUsuario(filtros);
+      res.json(notificacionesUsuario.map(toDto));
     } catch (error) {
+        next(error);
     }
   }
 
-  async marcarComoLeida(req, res) {
-
-    const notificacionActualizada = await this.notificacionService.marcarComoLeida(req.params.notificacionId);
-
-    if (!notificacionActualizada) {
-      throw new Error(`Notificación con id ${notificacionId} no encontrada`);
-    }
-
-    res.json(notificacionActualizada);
+  async marcarComoLeida(req, res, next) {
+      try {
+          const notificacionActualizada = await this.notificacionService.marcarComoLeida(req.params.idNotificacion);
+          res.json(toDto(notificacionActualizada));
+      } catch (error) {
+          next(error);
+      }
   }
 
 }

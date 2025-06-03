@@ -1,4 +1,4 @@
-class Notificacion {
+export class Notificacion {
 
   constructor(usuario, mensaje, fechaAlta, leida, fechaLeida) {
     this.mensaje = mensaje;
@@ -17,5 +17,3 @@ class Notificacion {
     return this.leida;
   }
 }
-
-export { Notificacion };
