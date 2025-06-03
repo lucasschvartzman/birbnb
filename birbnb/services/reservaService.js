@@ -7,10 +7,12 @@ import { NotificacionFactory } from "../models/factories/NotificacionFactory.js"
 import { UsuarioModel } from "../models/schemas/usuarioSchema.js";
 
 export class ReservaService {
-  constructor(reservaRepository, alojamientoRepository, notificacionRepository) {
+  constructor(reservaRepository, alojamientoRepository, notificacionRepository, notificacionFactory, usuarioModel) {
     this.reservaRepository = reservaRepository;
     this.alojamientoRepository = alojamientoRepository;
     this.notificacionRepository = notificacionRepository;
+    this.notificacionFactory = notificacionFactory;
+    this.usuarioModel = usuarioModel;
   }
 
   async crearReserva(reserva) {
@@ -82,8 +84,8 @@ export class ReservaService {
   }
 
   async #generarNotificacionCreacion(reserva, alojamiento) {
-    const huespedReservador = await UsuarioModel.findById(reserva.huespedReservador);
-    const notificacionCreacion = NotificacionFactory.crearNotificacionReservaCreada({
+    const huespedReservador = await this.usuarioModel.findById(reserva.huespedReservador);
+    const notificacionCreacion = this.notificacionFactory.crearNotificacionReservaCreada({
       huesped: huespedReservador.nombre,
       alojamiento: alojamiento.nombre,
       fechaInicio: reserva.rangoFechas.fechaInicio,
@@ -94,9 +96,9 @@ export class ReservaService {
   }
 
   async #generarNotificacionCancelacion(reserva, motivo) {
-    const huespedReservador = await UsuarioModel.findById(reserva.huespedReservador);
+    const huespedReservador = await this.usuarioModel.findById(reserva.huespedReservador);
     const alojamiento = await this.alojamientoRepository.findById(reserva.alojamiento);
-    const notificacionCancelacion = NotificacionFactory.crearNotificacionReservaCancelada({
+    const notificacionCancelacion = this.notificacionFactory.crearNotificacionReservaCancelada({
       huesped: huespedReservador.nombre,
       alojamiento: alojamiento.nombre,
       fechaInicio: reserva.fechaInicio,
