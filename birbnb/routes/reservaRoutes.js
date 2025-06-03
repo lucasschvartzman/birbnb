@@ -210,7 +210,6 @@ export function registerReserva(app, getController) {
    *     summary: Cancelar una reserva existente
    *     description: |
    *       Cancela una reserva específica. Solo se pueden cancelar reservas en estado PENDIENTE o CONFIRMADA.
-   *       El motivo de cancelación es opcional pero recomendado para auditoría.
    *     tags:
    *       - Reservas
    *     parameters:
@@ -222,9 +221,9 @@ export function registerReserva(app, getController) {
    *           pattern: '^[0-9a-fA-F]{24}$'
    *         description: ID único de la reserva (formato ObjectId de MongoDB)
    *         example: "64f1a2b3c4d5e6f7g8h9i0j3"
-   *       - in: query
+   *       - in: body
    *         name: motivo
-   *         required: false
+   *         required: true
    *         schema:
    *           type: string
    *           maxLength: 500
