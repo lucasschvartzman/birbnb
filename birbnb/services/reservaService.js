@@ -1,7 +1,7 @@
 import {
   DatosReservaInvalidosException,
   ReservaNoExisteException
-} from "../excepciones/reservaExceptions.js";
+} from "../exceptions/reservaExceptions.js";
 import { EstadoReserva } from "../models/entities/EstadoReserva.js";
 import { NotificacionFactory } from "../models/factories/NotificacionFactory.js";
 import { UsuarioModel } from "../models/schemas/usuarioSchema.js";

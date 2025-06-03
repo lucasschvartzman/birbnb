@@ -3,7 +3,7 @@ import { ReservaService } from "../birbnb/services/reservaService.js";
 import {
   ReservaInvalida,
   ReservaNoExiste,
-} from "../birbnb/excepciones/reservaExceptions.js";
+} from "../birbnb/exceptions/reservaExceptions.js";
 import { EstadoReserva } from "../birbnb/models/entities/EstadoReserva.js";
 
 describe("ReservaService - integración con alojamiento y reservas", () => {

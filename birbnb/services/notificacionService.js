@@ -1,4 +1,4 @@
-import {NotificacionNoExisteException} from "../excepciones/notificacionExceptions.js";
+import {NotificacionNoExisteException} from "../exceptions/notificacionExceptions.js";
 
 export class NotificacionService {
   constructor(notificacionRepository) {

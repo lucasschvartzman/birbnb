@@ -84,7 +84,7 @@ export function registerReserva(app, getController) {
    *           $ref: '#/components/schemas/RangoFechas'
    *         estado:
    *           type: string
-   *           enum: [PENDIENTE, CONFIRMADA, INICIADA, FINALIZADA, CANCELADA]
+   *           enum: [PENDIENTE, CONFIRMADA, CANCELADA]
    *           description: Estado actual de la reserva
    *           example: "CONFIRMADA"
    *         precioPorNoche:
@@ -303,16 +303,6 @@ export function registerReserva(app, getController) {
    *                 description: Nuevo precio por noche
    *                 example: 175.00
    *           examples:
-   *             cambiar_fechas:
-   *               summary: Cambiar solo las fechas
-   *               value:
-   *                 rangoFechas:
-   *                   fechaInicio: "2024-12-26"
-   *                   fechaFin: "2024-12-31"
-   *             cambiar_huespedes:
-   *               summary: Cambiar cantidad de huéspedes
-   *               value:
-   *                 cantidadHuespedes: 4
    *             modificacion_completa:
    *               summary: Modificación completa
    *               value:
@@ -346,7 +336,7 @@ export function registerReserva(app, getController) {
    *     summary: Obtener historial de reservas de un usuario
    *     description: |
    *       Recupera todas las reservas realizadas por un usuario específico, ordenadas por fecha de creación descendente.
-   *       Incluye reservas en todos los estados (PENDIENTE, CONFIRMADA, INICIADA, FINALIZADA, CANCELADA).
+   *       Incluye reservas en todos los estados (PENDIENTE, CONFIRMADA, CANCELADA).
    *     tags:
    *       - Reservas
    *       - Usuarios
@@ -364,28 +354,9 @@ export function registerReserva(app, getController) {
    *         required: false
    *         schema:
    *           type: string
-   *           enum: [PENDIENTE, CONFIRMADA, INICIADA, FINALIZADA, CANCELADA]
+   *           enum: [PENDIENTE, CONFIRMADA, CANCELADA]
    *         description: Filtrar reservas por estado específico
    *         example: "CONFIRMADA"
-   *       - in: query
-   *         name: limit
-   *         required: false
-   *         schema:
-   *           type: integer
-   *           minimum: 1
-   *           maximum: 100
-   *           default: 20
-   *         description: Número máximo de reservas a retornar
-   *         example: 10
-   *       - in: query
-   *         name: offset
-   *         required: false
-   *         schema:
-   *           type: integer
-   *           minimum: 0
-   *           default: 0
-   *         description: Número de reservas a omitir (para paginación)
-   *         example: 0
    *     responses:
    *       200:
    *         description: Lista de reservas del usuario obtenida exitosamente
