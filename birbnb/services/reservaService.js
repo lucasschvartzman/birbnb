@@ -1,12 +1,9 @@
-import {
-  DatosReservaInvalidosException,
-  ReservaNoExisteException
-} from "../exceptions/reservaExceptions.js";
+import { DatosReservaInvalidosException, ReservaNoExisteException } from "../exceptions/reservaExceptions.js";
 import { EstadoReserva } from "../models/entities/EstadoReserva.js";
-import { NotificacionFactory } from "../models/factories/NotificacionFactory.js";
-import { UsuarioModel } from "../models/schemas/usuarioSchema.js";
+import { UsuarioNoExisteException } from "../exceptions/usuarioExceptions.js";
 
 export class ReservaService {
+
   constructor(reservaRepository, alojamientoRepository, notificacionRepository, notificacionFactory, usuarioModel) {
     this.reservaRepository = reservaRepository;
     this.alojamientoRepository = alojamientoRepository;
@@ -45,6 +42,7 @@ export class ReservaService {
   }
 
   async obtenerHistorialPorUsuario(idUsuario) {
+    await this.#validarExistenciaUsuario(idUsuario);
     return this.reservaRepository.findAll({ idUsuario });
   }
 
@@ -68,6 +66,13 @@ export class ReservaService {
     }
     if (reserva.estaIniciada()) {
       throw new DatosReservaInvalidosException(`La reserva ya está iniciada.`);
+    }
+  }
+
+  async #validarExistenciaUsuario(idUsuario) {
+    const usuarioExiste = await this.usuarioModel.exists({_id: idUsuario});
+    if (!usuarioExiste) {
+      throw new UsuarioNoExisteException(idUsuario);
     }
   }
 

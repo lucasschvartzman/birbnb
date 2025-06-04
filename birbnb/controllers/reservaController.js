@@ -15,6 +15,7 @@ const fromDto = (body) => {
 
 const toDto = (reserva) => {
   return {
+    id : reserva._id,
     fechaAlta: reserva.fechaAlta,
     huespedReservadorId: reserva.huespedReservador._id,
     cantidadHuespedes: reserva.cantidadHuespedes,

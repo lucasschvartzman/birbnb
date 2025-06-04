@@ -1,10 +1,12 @@
 import { beforeEach, describe, expect, test, jest } from '@jest/globals';
 import { NotificacionService } from '../birbnb/services/notificacionService.js';
 import { NotificacionNoExisteException } from '../birbnb/exceptions/notificacionExceptions.js';
+import {UsuarioNoExisteException} from "../birbnb/exceptions/usuarioExceptions.js";
 
 describe('NotificacionService', () => {
   let servicio;
   let repositorioMock;
+  let usuarioModelMock;
 
   const notificacionesEjemplo = [
     { id: '1', mensaje: 'Nueva reserva recibida', leida: false, fechaCreacion: new Date('2024-01-01') },
@@ -20,17 +22,23 @@ describe('NotificacionService', () => {
       save: jest.fn(),
       findAll: jest.fn()
     };
-    servicio = new NotificacionService(repositorioMock);
+    usuarioModelMock = {
+      exists: jest.fn()
+    };
+    servicio = new NotificacionService(repositorioMock, usuarioModelMock);
   });
 
   describe('obtenerNotificacionesUsuario', () => {
     describe('cuando se filtra por estado de lectura', () => {
       test('debe retornar solo notificaciones leídas cuando el filtro leida es true', async () => {
+        const idUsuario = 'usuario123';
         const notificacionesLeidasEsperadas = notificacionesEjemplo.filter(n => n.leida);
+        usuarioModelMock.exists.mockResolvedValue(true);
         repositorioMock.findAll.mockResolvedValue(notificacionesLeidasEsperadas);
 
-        const resultado = await servicio.obtenerNotificacionesUsuario({ leida: true });
+        const resultado = await servicio.obtenerNotificacionesUsuario(idUsuario,{ leida: true });
 
+        expect(usuarioModelMock.exists).toHaveBeenCalledWith({_id: idUsuario});
         expect(resultado).toEqual(notificacionesLeidasEsperadas);
         expect(resultado).toHaveLength(2);
         expect(repositorioMock.findAll).toHaveBeenCalledWith({ leida: true });
@@ -38,11 +46,14 @@ describe('NotificacionService', () => {
       });
 
       test('debe retornar solo notificaciones no leídas cuando el filtro leida es false', async () => {
+        const idUsuario = 'usuario123';
         const notificacionesNoLeidasEsperadas = notificacionesEjemplo.filter(n => !n.leida);
+        usuarioModelMock.exists.mockResolvedValue(true);
         repositorioMock.findAll.mockResolvedValue(notificacionesNoLeidasEsperadas);
 
-        const resultado = await servicio.obtenerNotificacionesUsuario({ leida: false });
+        const resultado = await servicio.obtenerNotificacionesUsuario(idUsuario,{ leida: false });
 
+        expect(usuarioModelMock.exists).toHaveBeenCalledWith({_id: idUsuario});
         expect(resultado).toEqual(notificacionesNoLeidasEsperadas);
         expect(resultado).toHaveLength(3);
         expect(repositorioMock.findAll).toHaveBeenCalledWith({ leida: false });
@@ -52,29 +63,38 @@ describe('NotificacionService', () => {
 
     describe('cuando no se aplican filtros', () => {
       test('debe retornar todas las notificaciones cuando se proporciona objeto de filtro vacío', async () => {
+        const idUsuario = 'usuario123';
+        usuarioModelMock.exists.mockResolvedValue(true);
         repositorioMock.findAll.mockResolvedValue(notificacionesEjemplo);
 
-        const resultado = await servicio.obtenerNotificacionesUsuario({});
+        const resultado = await servicio.obtenerNotificacionesUsuario(idUsuario,{});
 
+        expect(usuarioModelMock.exists).toHaveBeenCalledWith({_id: idUsuario});
         expect(resultado).toEqual(notificacionesEjemplo);
         expect(resultado).toHaveLength(5);
         expect(repositorioMock.findAll).toHaveBeenCalledWith({});
       });
 
       test('debe retornar todas las notificaciones cuando se proporciona filtro null', async () => {
+        const idUsuario = 'usuario123';
+        usuarioModelMock.exists.mockResolvedValue(true);
         repositorioMock.findAll.mockResolvedValue(notificacionesEjemplo);
 
-        const resultado = await servicio.obtenerNotificacionesUsuario(null);
+        const resultado = await servicio.obtenerNotificacionesUsuario(idUsuario, null);
 
+        expect(usuarioModelMock.exists).toHaveBeenCalledWith({_id: idUsuario});
         expect(resultado).toEqual(notificacionesEjemplo);
         expect(repositorioMock.findAll).toHaveBeenCalledWith(null);
       });
 
       test('debe retornar todas las notificaciones cuando se proporciona filtro undefined', async () => {
+        const idUsuario = 'usuario123';
+        usuarioModelMock.exists.mockResolvedValue(true);
         repositorioMock.findAll.mockResolvedValue(notificacionesEjemplo);
 
-        const resultado = await servicio.obtenerNotificacionesUsuario(undefined);
+        const resultado = await servicio.obtenerNotificacionesUsuario(idUsuario, undefined);
 
+        expect(usuarioModelMock.exists).toHaveBeenCalledWith({_id: idUsuario});
         expect(resultado).toEqual(notificacionesEjemplo);
         expect(repositorioMock.findAll).toHaveBeenCalledWith(undefined);
       });
@@ -82,34 +102,72 @@ describe('NotificacionService', () => {
 
     describe('cuando se manejan casos extremos', () => {
       test('debe retornar arreglo vacío cuando no existen notificaciones', async () => {
+        const idUsuario = 'usuario123';
+        usuarioModelMock.exists.mockResolvedValue(true);
         repositorioMock.findAll.mockResolvedValue([]);
 
-        const resultado = await servicio.obtenerNotificacionesUsuario({ leida: true });
+        const resultado = await servicio.obtenerNotificacionesUsuario(idUsuario, { leida: true });
 
+        expect(usuarioModelMock.exists).toHaveBeenCalledWith({_id: idUsuario});
         expect(resultado).toEqual([]);
         expect(resultado).toHaveLength(0);
         expect(repositorioMock.findAll).toHaveBeenCalledWith({ leida: true });
       });
 
       test('debe manejar objetos de filtro complejos con múltiples propiedades', async () => {
+        const idUsuario = 'usuario123';
         const filtroComplejo = { leida: true, tipo: 'reserva', fechaDesde: '2024-01-01' };
         const notificacionesFiltradas = [notificacionesEjemplo[1]];
+        usuarioModelMock.exists.mockResolvedValue(true);
         repositorioMock.findAll.mockResolvedValue(notificacionesFiltradas);
 
-        const resultado = await servicio.obtenerNotificacionesUsuario(filtroComplejo);
+        const resultado = await servicio.obtenerNotificacionesUsuario(idUsuario, filtroComplejo);
 
+        expect(usuarioModelMock.exists).toHaveBeenCalledWith({_id: idUsuario});
         expect(resultado).toEqual(notificacionesFiltradas);
         expect(repositorioMock.findAll).toHaveBeenCalledWith(filtroComplejo);
       });
 
       test('debe propagar errores del repositorio', async () => {
+        const idUsuario = 'usuario123';
         const errorRepositorio = new Error('Error de conexión a base de datos');
+
+        usuarioModelMock.exists.mockResolvedValue(true);
         repositorioMock.findAll.mockRejectedValue(errorRepositorio);
 
-        await expect(servicio.obtenerNotificacionesUsuario({}))
+        await expect(servicio.obtenerNotificacionesUsuario(idUsuario, {}))
             .rejects
             .toThrow('Error de conexión a base de datos');
       });
+    });
+  });
+
+  describe('cuando el usuario no existe', () => {
+    test('debe lanzar UsuarioNoExisteException cuando el usuario no existe', async () => {
+      const idUsuarioInexistente = 'usuario999';
+
+      usuarioModelMock.exists.mockResolvedValue(false);
+
+      await expect(servicio.obtenerNotificacionesUsuario(idUsuarioInexistente, {}))
+          .rejects
+          .toThrow(UsuarioNoExisteException);
+
+      expect(usuarioModelMock.exists).toHaveBeenCalledWith({_id: idUsuarioInexistente});
+      expect(repositorioMock.findAll).not.toHaveBeenCalled();
+    });
+
+    test('debe propagar errores del usuarioModel', async () => {
+      const idUsuario = 'usuario123';
+      const errorUsuarioModel = new Error('Error en validación de usuario');
+
+      usuarioModelMock.exists.mockRejectedValue(errorUsuarioModel);
+
+      await expect(servicio.obtenerNotificacionesUsuario(idUsuario, {}))
+          .rejects
+          .toThrow('Error en validación de usuario');
+
+      expect(usuarioModelMock.exists).toHaveBeenCalledWith({_id: idUsuario});
+      expect(repositorioMock.findAll).not.toHaveBeenCalled();
     });
   });
 
@@ -203,7 +261,7 @@ describe('NotificacionService', () => {
           leida: true,
           estaLeida: jest.fn(() => {
             const estadoActual = estaLeida;
-            estaLeida = false; // Simular cambio de estado
+            estaLeida = false;
             return estadoActual;
           }),
           marcarComoLeida: jest.fn(function() {

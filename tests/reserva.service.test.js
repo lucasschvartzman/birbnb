@@ -5,6 +5,7 @@ import {
   ReservaNoExisteException,
 } from "../birbnb/exceptions/reservaExceptions.js";
 import { EstadoReserva } from "../birbnb/models/entities/EstadoReserva.js";
+import {UsuarioNoExisteException} from "../birbnb/exceptions/usuarioExceptions.js";
 
 describe("ReservaService", () => {
   let service;
@@ -133,6 +134,7 @@ describe("ReservaService", () => {
 
     usuarioModelMock = {
       findById: jest.fn(),
+      exists: jest.fn()
     };
 
     jest.clearAllMocks();
@@ -376,10 +378,12 @@ describe("ReservaService", () => {
           { id: "reserva-3", huespedReservador: idUsuario },
         ];
 
+        usuarioModelMock.exists.mockResolvedValue(true);
         reservaRepositoryMock.findAll.mockResolvedValue(historialEsperado);
 
         const resultado = await service.obtenerHistorialPorUsuario(idUsuario);
 
+        expect(usuarioModelMock.exists).toHaveBeenCalledWith({_id: idUsuario});
         expect(reservaRepositoryMock.findAll).toHaveBeenCalledWith({ idUsuario });
         expect(reservaRepositoryMock.findAll).toHaveBeenCalledTimes(1);
         expect(resultado).toEqual(historialEsperado);
@@ -387,24 +391,41 @@ describe("ReservaService", () => {
       });
 
       test("debe retornar array vacío cuando el usuario no tiene reservas", async () => {
+        usuarioModelMock.exists.mockResolvedValue(true);
         reservaRepositoryMock.findAll.mockResolvedValue([]);
 
         const resultado = await service.obtenerHistorialPorUsuario(idUsuario);
 
+        expect(usuarioModelMock.exists).toHaveBeenCalledWith({_id: idUsuario});
         expect(resultado).toEqual([]);
         expect(resultado).toHaveLength(0);
       });
     });
 
     describe("cuando se proporciona un ID de usuario inválido", () => {
-      test("debe manejar correctamente usuarios inexistentes", async () => {
+      test("debe lanzar UsuarioNoExisteException cuando el usuario no existe", async () => {
         const idUsuarioInexistente = "usuario-inexistente";
-        reservaRepositoryMock.findAll.mockResolvedValue([]);
 
-        const resultado = await service.obtenerHistorialPorUsuario(idUsuarioInexistente);
+        usuarioModelMock.exists.mockResolvedValue(false);
 
-        expect(reservaRepositoryMock.findAll).toHaveBeenCalledWith({ idUsuario: idUsuarioInexistente });
-        expect(resultado).toEqual([]);
+        await expect(service.obtenerHistorialPorUsuario(idUsuarioInexistente))
+            .rejects
+            .toThrow(UsuarioNoExisteException);
+
+        expect(usuarioModelMock.exists).toHaveBeenCalledWith({_id: idUsuarioInexistente});
+        expect(reservaRepositoryMock.findAll).not.toHaveBeenCalled();
+      });
+      test("debe propagar errores del usuarioModel", async () => {
+        const errorUsuarioModel = new Error('Error en validación de usuario');
+
+        usuarioModelMock.exists.mockRejectedValue(errorUsuarioModel);
+
+        await expect(service.obtenerHistorialPorUsuario(idUsuario))
+            .rejects
+            .toThrow('Error en validación de usuario');
+
+        expect(usuarioModelMock.exists).toHaveBeenCalledWith({_id: idUsuario});
+        expect(reservaRepositoryMock.findAll).not.toHaveBeenCalled();
       });
     });
   });

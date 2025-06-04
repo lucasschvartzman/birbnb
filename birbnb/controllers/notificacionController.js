@@ -1,5 +1,6 @@
 const toDto = (notificacion) => {
     return {
+        id: notificacion._id,
         mensaje: notificacion.mensaje,
         usuario: notificacion.usuario._id,
         fechaAlta: notificacion.fechaAlta,
@@ -27,7 +28,7 @@ export class NotificacionController {
   async obtenerNotificacionesUsuario(req, res, next) {
     try {
       const filtros = this.#armarFiltrosBusqueda(req);
-      const notificacionesUsuario = await this.notificacionService.obtenerNotificacionesUsuario(filtros);
+      const notificacionesUsuario = await this.notificacionService.obtenerNotificacionesUsuario(req.params.idUsuario,filtros);
       res.json(notificacionesUsuario.map(toDto));
     } catch (error) {
         next(error);
