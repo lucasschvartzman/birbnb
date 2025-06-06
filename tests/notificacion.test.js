@@ -1,12 +1,13 @@
 import { beforeEach, describe, expect, test, jest } from '@jest/globals';
 import { NotificacionService } from '../birbnb/services/notificacionService.js';
 import { NotificacionNoExisteException } from '../birbnb/exceptions/notificacionExceptions.js';
-import {UsuarioNoExisteException} from "../birbnb/exceptions/usuarioExceptions.js";
+import { UsuarioNoExisteException } from "../birbnb/exceptions/usuarioExceptions.js";
 
 describe('NotificacionService', () => {
   let servicio;
   let repositorioMock;
-  let usuarioModelMock;
+  let usuarioServiceMock;
+  let alojamientoRepositoryMock;
 
   const notificacionesEjemplo = [
     { id: '1', mensaje: 'Nueva reserva recibida', leida: false, fechaCreacion: new Date('2024-01-01') },
@@ -22,10 +23,14 @@ describe('NotificacionService', () => {
       save: jest.fn(),
       findAll: jest.fn()
     };
-    usuarioModelMock = {
-      exists: jest.fn()
+    usuarioServiceMock = {
+      validarExistenciaUsuario: jest.fn(),
+      obtenerUsuarioPorId: jest.fn()
     };
-    servicio = new NotificacionService(repositorioMock, usuarioModelMock);
+    alojamientoRepositoryMock = {
+      findById: jest.fn()
+    };
+    servicio = new NotificacionService(repositorioMock, alojamientoRepositoryMock, usuarioServiceMock);
   });
 
   describe('obtenerNotificacionesUsuario', () => {
@@ -33,12 +38,12 @@ describe('NotificacionService', () => {
       test('debe retornar solo notificaciones leídas cuando el filtro leida es true', async () => {
         const idUsuario = 'usuario123';
         const notificacionesLeidasEsperadas = notificacionesEjemplo.filter(n => n.leida);
-        usuarioModelMock.exists.mockResolvedValue(true);
+        usuarioServiceMock.validarExistenciaUsuario.mockResolvedValue(true);
         repositorioMock.findAll.mockResolvedValue(notificacionesLeidasEsperadas);
 
-        const resultado = await servicio.obtenerNotificacionesUsuario(idUsuario,{ leida: true });
+        const resultado = await servicio.obtenerNotificacionesUsuario(idUsuario, { leida: true });
 
-        expect(usuarioModelMock.exists).toHaveBeenCalledWith({_id: idUsuario});
+        expect(usuarioServiceMock.validarExistenciaUsuario).toHaveBeenCalledWith(idUsuario);
         expect(resultado).toEqual(notificacionesLeidasEsperadas);
         expect(resultado).toHaveLength(2);
         expect(repositorioMock.findAll).toHaveBeenCalledWith({ leida: true });
@@ -48,12 +53,12 @@ describe('NotificacionService', () => {
       test('debe retornar solo notificaciones no leídas cuando el filtro leida es false', async () => {
         const idUsuario = 'usuario123';
         const notificacionesNoLeidasEsperadas = notificacionesEjemplo.filter(n => !n.leida);
-        usuarioModelMock.exists.mockResolvedValue(true);
+        usuarioServiceMock.validarExistenciaUsuario.mockResolvedValue(true);
         repositorioMock.findAll.mockResolvedValue(notificacionesNoLeidasEsperadas);
 
-        const resultado = await servicio.obtenerNotificacionesUsuario(idUsuario,{ leida: false });
+        const resultado = await servicio.obtenerNotificacionesUsuario(idUsuario, { leida: false });
 
-        expect(usuarioModelMock.exists).toHaveBeenCalledWith({_id: idUsuario});
+        expect(usuarioServiceMock.validarExistenciaUsuario).toHaveBeenCalledWith(idUsuario);
         expect(resultado).toEqual(notificacionesNoLeidasEsperadas);
         expect(resultado).toHaveLength(3);
         expect(repositorioMock.findAll).toHaveBeenCalledWith({ leida: false });
@@ -64,12 +69,12 @@ describe('NotificacionService', () => {
     describe('cuando no se aplican filtros', () => {
       test('debe retornar todas las notificaciones cuando se proporciona objeto de filtro vacío', async () => {
         const idUsuario = 'usuario123';
-        usuarioModelMock.exists.mockResolvedValue(true);
+        usuarioServiceMock.validarExistenciaUsuario.mockResolvedValue(true);
         repositorioMock.findAll.mockResolvedValue(notificacionesEjemplo);
 
-        const resultado = await servicio.obtenerNotificacionesUsuario(idUsuario,{});
+        const resultado = await servicio.obtenerNotificacionesUsuario(idUsuario, {});
 
-        expect(usuarioModelMock.exists).toHaveBeenCalledWith({_id: idUsuario});
+        expect(usuarioServiceMock.validarExistenciaUsuario).toHaveBeenCalledWith(idUsuario);
         expect(resultado).toEqual(notificacionesEjemplo);
         expect(resultado).toHaveLength(5);
         expect(repositorioMock.findAll).toHaveBeenCalledWith({});
@@ -77,24 +82,24 @@ describe('NotificacionService', () => {
 
       test('debe retornar todas las notificaciones cuando se proporciona filtro null', async () => {
         const idUsuario = 'usuario123';
-        usuarioModelMock.exists.mockResolvedValue(true);
+        usuarioServiceMock.validarExistenciaUsuario.mockResolvedValue(true);
         repositorioMock.findAll.mockResolvedValue(notificacionesEjemplo);
 
         const resultado = await servicio.obtenerNotificacionesUsuario(idUsuario, null);
 
-        expect(usuarioModelMock.exists).toHaveBeenCalledWith({_id: idUsuario});
+        expect(usuarioServiceMock.validarExistenciaUsuario).toHaveBeenCalledWith(idUsuario);
         expect(resultado).toEqual(notificacionesEjemplo);
         expect(repositorioMock.findAll).toHaveBeenCalledWith(null);
       });
 
       test('debe retornar todas las notificaciones cuando se proporciona filtro undefined', async () => {
         const idUsuario = 'usuario123';
-        usuarioModelMock.exists.mockResolvedValue(true);
+        usuarioServiceMock.validarExistenciaUsuario.mockResolvedValue(true);
         repositorioMock.findAll.mockResolvedValue(notificacionesEjemplo);
 
         const resultado = await servicio.obtenerNotificacionesUsuario(idUsuario, undefined);
 
-        expect(usuarioModelMock.exists).toHaveBeenCalledWith({_id: idUsuario});
+        expect(usuarioServiceMock.validarExistenciaUsuario).toHaveBeenCalledWith(idUsuario);
         expect(resultado).toEqual(notificacionesEjemplo);
         expect(repositorioMock.findAll).toHaveBeenCalledWith(undefined);
       });
@@ -103,12 +108,12 @@ describe('NotificacionService', () => {
     describe('cuando se manejan casos extremos', () => {
       test('debe retornar arreglo vacío cuando no existen notificaciones', async () => {
         const idUsuario = 'usuario123';
-        usuarioModelMock.exists.mockResolvedValue(true);
+        usuarioServiceMock.validarExistenciaUsuario.mockResolvedValue(true);
         repositorioMock.findAll.mockResolvedValue([]);
 
         const resultado = await servicio.obtenerNotificacionesUsuario(idUsuario, { leida: true });
 
-        expect(usuarioModelMock.exists).toHaveBeenCalledWith({_id: idUsuario});
+        expect(usuarioServiceMock.validarExistenciaUsuario).toHaveBeenCalledWith(idUsuario);
         expect(resultado).toEqual([]);
         expect(resultado).toHaveLength(0);
         expect(repositorioMock.findAll).toHaveBeenCalledWith({ leida: true });
@@ -118,12 +123,12 @@ describe('NotificacionService', () => {
         const idUsuario = 'usuario123';
         const filtroComplejo = { leida: true, tipo: 'reserva', fechaDesde: '2024-01-01' };
         const notificacionesFiltradas = [notificacionesEjemplo[1]];
-        usuarioModelMock.exists.mockResolvedValue(true);
+        usuarioServiceMock.validarExistenciaUsuario.mockResolvedValue(true);
         repositorioMock.findAll.mockResolvedValue(notificacionesFiltradas);
 
         const resultado = await servicio.obtenerNotificacionesUsuario(idUsuario, filtroComplejo);
 
-        expect(usuarioModelMock.exists).toHaveBeenCalledWith({_id: idUsuario});
+        expect(usuarioServiceMock.validarExistenciaUsuario).toHaveBeenCalledWith(idUsuario);
         expect(resultado).toEqual(notificacionesFiltradas);
         expect(repositorioMock.findAll).toHaveBeenCalledWith(filtroComplejo);
       });
@@ -132,12 +137,12 @@ describe('NotificacionService', () => {
         const idUsuario = 'usuario123';
         const errorRepositorio = new Error('Error de conexión a base de datos');
 
-        usuarioModelMock.exists.mockResolvedValue(true);
+        usuarioServiceMock.validarExistenciaUsuario.mockResolvedValue(true);
         repositorioMock.findAll.mockRejectedValue(errorRepositorio);
 
         await expect(servicio.obtenerNotificacionesUsuario(idUsuario, {}))
-            .rejects
-            .toThrow('Error de conexión a base de datos');
+          .rejects
+          .toThrow('Error de conexión a base de datos');
       });
     });
   });
@@ -146,27 +151,27 @@ describe('NotificacionService', () => {
     test('debe lanzar UsuarioNoExisteException cuando el usuario no existe', async () => {
       const idUsuarioInexistente = 'usuario999';
 
-      usuarioModelMock.exists.mockResolvedValue(false);
+      usuarioServiceMock.validarExistenciaUsuario.mockRejectedValue(new UsuarioNoExisteException(idUsuarioInexistente));
 
       await expect(servicio.obtenerNotificacionesUsuario(idUsuarioInexistente, {}))
-          .rejects
-          .toThrow(UsuarioNoExisteException);
+        .rejects
+        .toThrow(UsuarioNoExisteException);
 
-      expect(usuarioModelMock.exists).toHaveBeenCalledWith({_id: idUsuarioInexistente});
+      expect(usuarioServiceMock.validarExistenciaUsuario).toHaveBeenCalledWith(idUsuarioInexistente);
       expect(repositorioMock.findAll).not.toHaveBeenCalled();
     });
 
-    test('debe propagar errores del usuarioModel', async () => {
+    test('debe propagar errores del usuarioService', async () => {
       const idUsuario = 'usuario123';
-      const errorUsuarioModel = new Error('Error en validación de usuario');
+      const errorUsuarioService = new Error('Error en validación de usuario');
 
-      usuarioModelMock.exists.mockRejectedValue(errorUsuarioModel);
+      usuarioServiceMock.validarExistenciaUsuario.mockRejectedValue(errorUsuarioService);
 
       await expect(servicio.obtenerNotificacionesUsuario(idUsuario, {}))
-          .rejects
-          .toThrow('Error en validación de usuario');
+        .rejects
+        .toThrow('Error en validación de usuario');
 
-      expect(usuarioModelMock.exists).toHaveBeenCalledWith({_id: idUsuario});
+      expect(usuarioServiceMock.validarExistenciaUsuario).toHaveBeenCalledWith(idUsuario);
       expect(repositorioMock.findAll).not.toHaveBeenCalled();
     });
   });
@@ -286,8 +291,8 @@ describe('NotificacionService', () => {
         repositorioMock.findById.mockResolvedValue(null);
 
         await expect(servicio.marcarComoLeida(idInexistente))
-            .rejects
-            .toThrow(NotificacionNoExisteException);
+          .rejects
+          .toThrow(NotificacionNoExisteException);
 
         expect(repositorioMock.findById).toHaveBeenCalledWith(idInexistente);
         expect(repositorioMock.save).not.toHaveBeenCalled();
@@ -298,8 +303,8 @@ describe('NotificacionService', () => {
         repositorioMock.findById.mockResolvedValue(undefined);
 
         await expect(servicio.marcarComoLeida(idInexistente))
-            .rejects
-            .toThrow(NotificacionNoExisteException);
+          .rejects
+          .toThrow(NotificacionNoExisteException);
 
         expect(repositorioMock.findById).toHaveBeenCalledWith(idInexistente);
         expect(repositorioMock.save).not.toHaveBeenCalled();
@@ -312,8 +317,8 @@ describe('NotificacionService', () => {
         repositorioMock.findById.mockResolvedValue(null);
 
         await expect(servicio.marcarComoLeida(idVacio))
-            .rejects
-            .toThrow(NotificacionNoExisteException);
+          .rejects
+          .toThrow(NotificacionNoExisteException);
 
         expect(repositorioMock.findById).toHaveBeenCalledWith(idVacio);
       });
@@ -323,8 +328,8 @@ describe('NotificacionService', () => {
         repositorioMock.findById.mockResolvedValue(null);
 
         await expect(servicio.marcarComoLeida(idNulo))
-            .rejects
-            .toThrow(NotificacionNoExisteException);
+          .rejects
+          .toThrow(NotificacionNoExisteException);
 
         expect(repositorioMock.findById).toHaveBeenCalledWith(idNulo);
       });
@@ -334,8 +339,8 @@ describe('NotificacionService', () => {
         repositorioMock.findById.mockResolvedValue(null);
 
         await expect(servicio.marcarComoLeida(idIndefinido))
-            .rejects
-            .toThrow(NotificacionNoExisteException);
+          .rejects
+          .toThrow(NotificacionNoExisteException);
 
         expect(repositorioMock.findById).toHaveBeenCalledWith(idIndefinido);
       });
@@ -345,8 +350,8 @@ describe('NotificacionService', () => {
         repositorioMock.findById.mockResolvedValue(null);
 
         await expect(servicio.marcarComoLeida(idLargo))
-            .rejects
-            .toThrow(NotificacionNoExisteException);
+          .rejects
+          .toThrow(NotificacionNoExisteException);
 
         expect(repositorioMock.findById).toHaveBeenCalledWith(idLargo);
       });
@@ -356,8 +361,8 @@ describe('NotificacionService', () => {
         repositorioMock.findById.mockResolvedValue(null);
 
         await expect(servicio.marcarComoLeida(idEspecial))
-            .rejects
-            .toThrow(NotificacionNoExisteException);
+          .rejects
+          .toThrow(NotificacionNoExisteException);
 
         expect(repositorioMock.findById).toHaveBeenCalledWith(idEspecial);
       });
@@ -370,8 +375,8 @@ describe('NotificacionService', () => {
         repositorioMock.findById.mockRejectedValue(errorRepositorio);
 
         await expect(servicio.marcarComoLeida(idNotificacion))
-            .rejects
-            .toThrow('Fallo en consulta a base de datos');
+          .rejects
+          .toThrow('Fallo en consulta a base de datos');
 
         expect(repositorioMock.findById).toHaveBeenCalledWith(idNotificacion);
         expect(repositorioMock.save).not.toHaveBeenCalled();
@@ -394,8 +399,8 @@ describe('NotificacionService', () => {
         repositorioMock.save.mockRejectedValue(errorGuardado);
 
         await expect(servicio.marcarComoLeida(idNotificacion))
-            .rejects
-            .toThrow('Error al guardar notificacion');
+          .rejects
+          .toThrow('Error al guardar notificacion');
 
         expect(repositorioMock.findById).toHaveBeenCalledWith(idNotificacion);
         expect(notificacion.estaLeida).toHaveBeenCalled();
@@ -420,8 +425,8 @@ describe('NotificacionService', () => {
         repositorioMock.findById.mockResolvedValue(notificacionDefectuosa);
 
         await expect(servicio.marcarComoLeida(idNotificacion))
-            .rejects
-            .toThrow('Método estaLeida falló');
+          .rejects
+          .toThrow('Método estaLeida falló');
 
         expect(repositorioMock.findById).toHaveBeenCalledWith(idNotificacion);
         expect(notificacionDefectuosa.estaLeida).toHaveBeenCalled();
@@ -444,15 +449,14 @@ describe('NotificacionService', () => {
         repositorioMock.findById.mockResolvedValue(notificacionDefectuosa);
 
         await expect(servicio.marcarComoLeida(idNotificacion))
-            .rejects
-            .toThrow('Falló el método marcarComoLeida');
+          .rejects
+          .toThrow('Falló el método marcarComoLeida');
 
         expect(repositorioMock.findById).toHaveBeenCalledWith(idNotificacion);
         expect(notificacionDefectuosa.estaLeida).toHaveBeenCalled();
         expect(notificacionDefectuosa.marcarComoLeida).toHaveBeenCalled();
         expect(repositorioMock.save).not.toHaveBeenCalled();
       });
-
     });
   });
 });

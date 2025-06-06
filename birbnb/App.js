@@ -19,6 +19,8 @@ import { AlojamientoController } from "./controllers/alojamientoController.js";
 import { ReservaController } from "./controllers/reservaController.js";
 import { NotificacionFactory } from "./models/factories/NotificacionFactory.js";
 import { UsuarioModel } from "./models/schemas/usuarioSchema.js";
+import {UsuarioRepository} from "./models/repositories/usuarioRepository.js";
+import {UsuarioService} from "./services/usuarioService.js";
 
 const DEFAULT_PORT = 3000;
 
@@ -51,12 +53,12 @@ export class App {
         const alojamientoRepository = new AlojamientoRepository();
         const notificacionRepository = new NotificacionRepository();
         const reservaRepository = new ReservaRepository();
-        const notificacionFactory = NotificacionFactory;
-        const usuarioModel = UsuarioModel;
+        const usuarioRepository = new UsuarioRepository();
 
-        const notificacionService = new NotificacionService(notificacionRepository, usuarioModel);
+        const usuarioService = new UsuarioService(usuarioRepository);
+        const notificacionService = new NotificacionService(notificacionRepository, usuarioService);
         const reservaService = new ReservaService(reservaRepository, alojamientoRepository,
-            notificacionRepository, notificacionFactory, usuarioModel);
+            notificacionRepository, usuarioRepository);
         // const alojamientoService = new AlojamientoService(alojamientoRepository);
 
         const alojamientoController = new AlojamientoController(alojamientoRepository);

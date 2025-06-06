@@ -26,7 +26,7 @@ export class Reserva {
     return this.rangoFechas.seSuperponeCon(rangoDeFechas);
   }
 
-  estaIniciada() {
-    return this.rangoFechas.incluye(new Date());
+  estaIniciada(fecha) {
+    return this.rangoFechas.incluye(fecha);
   }
 }

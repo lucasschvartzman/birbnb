@@ -1,21 +1,20 @@
 import { DatosReservaInvalidosException, ReservaNoExisteException } from "../exceptions/reservaExceptions.js";
 import { EstadoReserva } from "../models/entities/EstadoReserva.js";
-import { UsuarioNoExisteException } from "../exceptions/usuarioExceptions.js";
+import { AlojamientoNoExisteException } from "../exceptions/alojamientoExceptions.js";
 
 export class ReservaService {
 
-  constructor(reservaRepository, alojamientoRepository, notificacionRepository, notificacionFactory, usuarioModel) {
+  constructor(reservaRepository, alojamientoRepository, notificacionService, usuarioService) {
     this.reservaRepository = reservaRepository;
     this.alojamientoRepository = alojamientoRepository;
-    this.notificacionRepository = notificacionRepository;
-    this.notificacionFactory = notificacionFactory;
-    this.usuarioModel = usuarioModel;
+    this.notificacionService = notificacionService;
+    this.usuarioService = usuarioService;
   }
 
   async crearReserva(reserva) {
     const alojamiento = await this.alojamientoRepository.findById(reserva.alojamiento);
     this.#validarDatosAlojamientoReserva(reserva, alojamiento);
-    await this.#generarNotificacionCreacion(reserva, alojamiento);
+    await this.notificacionService.generarNotificacionCreacion(reserva, alojamiento);
     return this.reservaRepository.save({
       ...reserva,
       fechaAlta: new Date(),
@@ -26,9 +25,12 @@ export class ReservaService {
   async cancelarReserva(id, motivo) {
     const reserva = await this.reservaRepository.findById(id);
     this.#validarDatosReserva(reserva,id);
-    await this.#generarNotificacionCancelacion(reserva,motivo);
-    reserva.actualizarEstado(EstadoReserva.CANCELADA.nombre);
-    return this.reservaRepository.save(reserva);
+    await this.notificacionService.generarNotificacionCancelacion(reserva,motivo);
+    reserva.actualizarEstado(EstadoReserva.CANCELADA);
+    return this.reservaRepository.save({
+      estado: reserva.estado.nombre,
+      ...reserva
+    });
   }
 
   async modificarReserva(id, reservaModificada) {
@@ -42,15 +44,13 @@ export class ReservaService {
   }
 
   async obtenerHistorialPorUsuario(idUsuario) {
-    await this.#validarExistenciaUsuario(idUsuario);
+    await this.usuarioService.validarExistenciaUsuario(idUsuario);
     return this.reservaRepository.findAll({ idUsuario });
   }
 
-  // VALIDACIONES
-
   #validarDatosAlojamientoReserva(reserva, alojamiento) {
     if (alojamiento == null) {
-      throw new DatosReservaInvalidosException(`El alojamiento que se quiere reservar no existe.`);
+      throw new AlojamientoNoExisteException(reserva.alojamiento.id);
     }
     if (!alojamiento.estaDisponibleEn(reserva.rangoFechas)) {
       throw new DatosReservaInvalidosException(`El alojamiento no está disponible en ese rango de fechas.`);
@@ -64,52 +64,8 @@ export class ReservaService {
     if (reserva == null) {
       throw new ReservaNoExisteException(id);
     }
-    if (reserva.estaIniciada()) {
+    if (reserva.estaIniciada(new Date())) {
       throw new DatosReservaInvalidosException(`La reserva ya está iniciada.`);
     }
-  }
-
-  async #validarExistenciaUsuario(idUsuario) {
-    const usuarioExiste = await this.usuarioModel.exists({_id: idUsuario});
-    if (!usuarioExiste) {
-      throw new UsuarioNoExisteException(idUsuario);
-    }
-  }
-
-  // MÉTODOS AUXILIARES
-
-  #toNotificacionSchema(notificacion) {
-    return {
-      mensaje: notificacion.mensaje,
-      usuario: notificacion.usuario._id,
-      fechaAlta: notificacion.fechaAlta,
-      leida: notificacion.leida,
-      fechaLeida: notificacion.fechaLeida
-    }
-  }
-
-  async #generarNotificacionCreacion(reserva, alojamiento) {
-    const huespedReservador = await this.usuarioModel.findById(reserva.huespedReservador);
-    const notificacionCreacion = this.notificacionFactory.crearNotificacionReservaCreada({
-      huesped: huespedReservador.nombre,
-      alojamiento: alojamiento.nombre,
-      fechaInicio: reserva.rangoFechas.fechaInicio,
-      cantidadDias: reserva.rangoFechas.cantidadDias(),
-      anfitrion: alojamiento.anfitrion
-    });
-    this.notificacionRepository.save(this.#toNotificacionSchema(notificacionCreacion));
-  }
-
-  async #generarNotificacionCancelacion(reserva, motivo) {
-    const huespedReservador = await this.usuarioModel.findById(reserva.huespedReservador);
-    const alojamiento = await this.alojamientoRepository.findById(reserva.alojamiento);
-    const notificacionCancelacion = this.notificacionFactory.crearNotificacionReservaCancelada({
-      huesped: huespedReservador.nombre,
-      alojamiento: alojamiento.nombre,
-      fechaInicio: reserva.fechaInicio,
-      motivo: motivo,
-      anfitrion: alojamiento.anfitrion
-    });
-    return this.notificacionRepository.save(this.#toNotificacionSchema(notificacionCancelacion))
   }
 }

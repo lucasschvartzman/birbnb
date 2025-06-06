@@ -14,7 +14,6 @@ export class NotificacionFactory {
         return new Notificacion(datos.anfitrion, mensaje, new Date(),false,null);
     }
 
-    // TODO: Esto seria necesario usarlo. No vi exactamente donde :s
     static crearNotificacionReservaAceptada(datos) {
       const mensaje = `Tu reserva para el alojamiento "${datos.alojamiento}" fue aceptada.`;
       return new Notificacion(datos.huesped, mensaje);

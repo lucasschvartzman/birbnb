@@ -15,8 +15,9 @@ export class RangoFechas {
     return fecha >= this.fechaInicio && fecha <= this.fechaFin;
   }
 
-  cantidadDias() {
-    const milisegundosPorDia = 1000 * 60 * 60 * 24;
-    return Math.ceil((this.fechaInicio - this.fechaFin) / milisegundosPorDia);
+  calcularCantidadDias() {
+    const milisegundosPorDia = 24 * 60 * 60 * 1000;
+    const diferenciaMilisegundosEntreFechas = this.fechaFin.getTime() - this.fechaFin.getTime();
+    return Math.ceil(diferenciaMilisegundosEntreFechas / milisegundosPorDia);
   }
 }
