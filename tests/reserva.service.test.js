@@ -145,7 +145,7 @@ describe("ReservaService", () => {
         expect(reservaRepositoryMock.save).toHaveBeenCalledWith({
           ...datosReservaEjemplo.valida,
           fechaAlta: expect.any(Date),
-          estado: EstadoReserva.PENDIENTE.nombre,
+          estado: EstadoReserva.PENDIENTE,
         });
         expect(reservaRepositoryMock.save).toHaveBeenCalledTimes(1);
       });
@@ -285,7 +285,7 @@ describe("ReservaService", () => {
       test("debe modificar la reserva exitosamente", async () => {
         const reservaModificada = {
           id: idReserva,
-          estado: EstadoReserva.PENDIENTE.nombre,
+          estado: EstadoReserva.PENDIENTE,
           ...datosReservaEjemplo.modificacion,
         };
 
