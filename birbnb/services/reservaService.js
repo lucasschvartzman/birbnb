@@ -18,7 +18,7 @@ export class ReservaService {
     return this.reservaRepository.save({
       ...reserva,
       fechaAlta: new Date(),
-      estado: EstadoReserva.PENDIENTE.nombre
+      estado: EstadoReserva.PENDIENTE
     });
   }
 
@@ -27,10 +27,7 @@ export class ReservaService {
     this.#validarDatosReserva(reserva,id);
     await this.notificacionService.generarNotificacionCancelacion(reserva,motivo);
     reserva.actualizarEstado(EstadoReserva.CANCELADA);
-    return this.reservaRepository.save({
-      estado: reserva.estado.nombre,
-      ...reserva
-    });
+    return this.reservaRepository.save(reserva)
   }
 
   async modificarReserva(id, reservaModificada) {
@@ -38,7 +35,7 @@ export class ReservaService {
     this.#validarDatosAlojamientoReserva(reservaModificada, alojamiento);
     return this.reservaRepository.save({
       id: id,
-      estado: EstadoReserva.PENDIENTE.nombre,
+      estado: EstadoReserva.PENDIENTE,
       ...reservaModificada
     })
   }

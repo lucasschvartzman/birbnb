@@ -56,9 +56,9 @@ export class App {
         const usuarioRepository = new UsuarioRepository();
 
         const usuarioService = new UsuarioService(usuarioRepository);
-        const notificacionService = new NotificacionService(notificacionRepository, usuarioService);
+        const notificacionService = new NotificacionService(notificacionRepository, alojamientoRepository, usuarioService);
         const reservaService = new ReservaService(reservaRepository, alojamientoRepository,
-            notificacionRepository, usuarioRepository);
+          notificacionService, usuarioService);
         // const alojamientoService = new AlojamientoService(alojamientoRepository);
 
         const alojamientoController = new AlojamientoController(alojamientoRepository);
