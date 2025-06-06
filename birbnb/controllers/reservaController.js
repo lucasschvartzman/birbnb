@@ -66,7 +66,7 @@ export class ReservaController {
 
   async obtenerHistorialUsuario(req, res, next) {
     try {
-      const historialReservas = await this.reservaService.obtenerHistorialPorUsuario(req.params.idUsuario);
+      const historialReservas = await this.reservaService.obtenerHistorialPorUsuario(req.params.id);
       res.json(historialReservas.map(toDto));
     } catch (error) {
       next(error);

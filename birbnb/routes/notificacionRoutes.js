@@ -139,7 +139,7 @@ export function registerNotificacion(app, getController) {
    *       500:
    *         $ref: '#/components/responses/InternalServerError'
    */
-  app.get("/usuarios/:idUsuario/notificaciones", (req, res, next) => {
+  app.get("/usuarios/:id/notificaciones", (req, res, next) => {
     controller.obtenerNotificacionesUsuario(req, res, next);
   });
 
@@ -182,7 +182,7 @@ export function registerNotificacion(app, getController) {
    *       500:
    *         $ref: '#/components/responses/InternalServerError'
    */
-  app.patch("/notificaciones/:idNotificacion/leida", (req, res, next) => {
+  app.patch("/notificaciones/:id/leida", (req, res, next) => {
     controller.marcarComoLeida(req, res, next);
   });
 }

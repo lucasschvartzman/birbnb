@@ -414,7 +414,7 @@ export function registerReserva(app, getController) {
    *       500:
    *         $ref: '#/components/responses/InternalServerError'
    */
-  app.get("/usuarios/:idUsuario/reservas", (req, res, next) => {
+  app.get("/usuarios/:id/reservas", (req, res, next) => {
     return controller.obtenerHistorialUsuario(req, res, next);
   });
 }

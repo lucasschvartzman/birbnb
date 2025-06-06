@@ -16,8 +16,8 @@ export class NotificacionController {
 
   #armarFiltrosBusqueda(req) {
       const filtros = {};
-      if (req.params.idUsuario) {
-          filtros.idUsuario = req.params.idUsuario;
+      if (req.params.id) {
+          filtros.idUsuario = req.params.id;
       }
       if (req.query.leida !== undefined) {
           filtros.leida = req.query.leida;
@@ -28,7 +28,7 @@ export class NotificacionController {
   async obtenerNotificacionesUsuario(req, res, next) {
     try {
       const filtros = this.#armarFiltrosBusqueda(req);
-      const notificacionesUsuario = await this.notificacionService.obtenerNotificacionesUsuario(req.params.idUsuario,filtros);
+      const notificacionesUsuario = await this.notificacionService.obtenerNotificacionesUsuario(req.params.id,filtros);
       res.json(notificacionesUsuario.map(toDto));
     } catch (error) {
         next(error);
@@ -37,7 +37,7 @@ export class NotificacionController {
 
   async marcarComoLeida(req, res, next) {
       try {
-          const notificacionActualizada = await this.notificacionService.marcarComoLeida(req.params.idNotificacion);
+          const notificacionActualizada = await this.notificacionService.marcarComoLeida(req.params.id);
           res.json(toDto(notificacionActualizada));
       } catch (error) {
           next(error);
