@@ -1,6 +1,8 @@
 import { AlojamientoController } from "../controllers/alojamientoController.js";
 
 export function registerAlojamiento(app, getController) {
+  const controller = getController(AlojamientoController);
+
   /**
    * @swagger
    * /alojamientos:
@@ -59,7 +61,7 @@ export function registerAlojamiento(app, getController) {
    *       schema:
    *         type: string
    *         description: las características deseadas del alojamiento, separadas por comas
-   *     description: 
+   *     description:
    *     responses:
    *       500:
    *         description: Error interno del servicio.
@@ -71,7 +73,7 @@ export function registerAlojamiento(app, getController) {
    *               type: array
    *               items:
    *                 type: object
-   *                 properties: 
+   *                 properties:
    *                   nombre:
    *                     type: string
    *                   descripcion:
@@ -84,7 +86,7 @@ export function registerAlojamiento(app, getController) {
    *                     type: number
    *                   coordenadas:
    *                     type: object
-   *                     properties: 
+   *                     properties:
    *                       latitud:
    *                         type: number
    *                       longitud:
@@ -105,10 +107,6 @@ export function registerAlojamiento(app, getController) {
    *                       type: string
    */
   app.get("/alojamientos", async (req, res, next) => {
-    try {
-      getController(AlojamientoController).buscarAlojamientosConFiltros(req, res);
-    } catch (error) {
-      next(error);
-    }
+    return controller.buscarAlojamientosConFiltros(req, res, next);
   });
 }

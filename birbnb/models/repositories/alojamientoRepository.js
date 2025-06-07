@@ -8,37 +8,30 @@ export class AlojamientoRepository {
 
   findById(id) {
     return this.model
-        .findById(id)
-        .populate({
-          path: "direccion.ciudad",
-          populate: {
-            path: "pais",
-          },
-        })
-        .populate("anfitrion")
-        .populate("reservas");
+      .findById(id)
+      .populate({
+        path: "direccion.ciudad",
+        populate: {
+          path: "pais",
+        },
+      })
+      .populate("anfitrion")
+      .populate("reservas");
   }
 
-  findAll(filters = {}, paginado = {}) {
+  findAllWithFilters = async (criterio, { pagina = 1, tamanioPagina = 10 }) => {
     const pipeline = [];
 
-    this.addLocationLookups(pipeline);
-
-    this.addLocationFilters(pipeline, filters);
-
-    this.generarQuery(pipeline, filters);
-
-    const skip = ((paginado.pagina || 1) - 1) * (paginado.tamanioPagina || 10);
-    const limit = paginado.tamanioPagina || 10;
-    pipeline.push({ $skip: skip }, { $limit: limit });
-
-    this.addRelationshipLookups(pipeline);
-
-    return this.model.aggregate(pipeline);
-  }
-
-  addLocationLookups(pipeline) {
     pipeline.push(
+      {
+        $lookup: {
+          from: "usuarios",
+          localField: "anfitrion",
+          foreignField: "_id",
+          as: "anfitrion",
+        },
+      },
+      { $unwind: "$anfitrion" },
       {
         $lookup: {
           from: "ciudades",
@@ -53,88 +46,57 @@ export class AlojamientoRepository {
           from: "paises",
           localField: "ciudad.pais",
           foreignField: "_id",
-          as: "ciudad.pais",
+          as: "pais",
         },
       },
-      { $unwind: "$ciudad.pais" }
+      { $unwind: "$pais" }
     );
-  }
 
-  addLocationFilters(pipeline, filters) {
-    const locationMatch = {};
+    const match = {};
 
-    if (filters.idCiudad) {
-      locationMatch["direccion.ciudad"] = new mongoose.Types.ObjectId(
-        filters.idCiudad
-      );
+    if (criterio.idCiudad) {
+      match["ciudad._id"] = new mongoose.Types.ObjectId(criterio.idCiudad);
     }
 
-    if (filters.idPais) {
-      locationMatch["ciudad.pais._id"] = new mongoose.Types.ObjectId(
-        filters.idPais
-      );
-    }
-
-    if (Object.keys(locationMatch).length > 0) {
-      pipeline.push({ $match: locationMatch });
-    }
-  }
-
-  generarQuery(pipeline, filters) {
-    const matchStage = {};
-
-    if (filters.latitud !== undefined) {
-      matchStage["direccion.latitud"] = filters.latitud;
-    }
-    if (filters.longitud !== undefined) {
-      matchStage["direccion.longitud"] = filters.longitud;
+    if (criterio.idPais) {
+      match["pais._id"] = new mongoose.Types.ObjectId(criterio.idPais);
     }
 
     if (
-      filters.precioMinimo !== undefined ||
-      filters.precioMaximo !== undefined
+      criterio.precioMinimo !== undefined ||
+      criterio.precioMaximo !== undefined
     ) {
-      matchStage.precioPorNoche = {};
-      if (filters.precioMinimo !== undefined) {
-        matchStage.precioPorNoche.$gte = Number(filters.precioMinimo);
+      match.precioPorNoche = {};
+      if (criterio.precioMinimo !== undefined) {
+        match.precioPorNoche.$gte = criterio.precioMinimo;
       }
-      if (filters.precioMaximo !== undefined) {
-        matchStage.precioPorNoche.$lte = Number(filters.precioMaximo);
+      if (criterio.precioMaximo !== undefined) {
+        match.precioPorNoche.$lte = criterio.precioMaximo;
       }
     }
 
-    if (filters.huespedes !== undefined) {
-      matchStage.cantHuespedesMax = { $gte: Number(filters.huespedes) };
+    if (criterio.huespedes !== undefined) {
+      match.cantHuespedesMax = { $gte: criterio.huespedes };
     }
 
-    if (filters.caracteristicas && Array.isArray(filters.caracteristicas)) {
-      matchStage.caracteristicas = { $in: filters.caracteristicas };
+    if (criterio.caracteristicas && criterio.caracteristicas.length > 0) {
+      match.caracteristicas = { $all: criterio.caracteristicas };
     }
 
-    if (Object.keys(matchStage).length > 0) {
-      pipeline.push({ $match: matchStage });
+    if (criterio.latitud !== undefined && criterio.longitud !== undefined) {
+      match["direccion.latitud"] = criterio.latitud;
+      match["direccion.longitud"] = criterio.longitud;
     }
-  }
 
-  addRelationshipLookups(pipeline) {
+    if (Object.keys(match).length > 0) {
+      pipeline.push({ $match: match });
+    }
+
     pipeline.push(
-      {
-        $lookup: {
-          from: "usuarios",
-          localField: "anfitrion",
-          foreignField: "_id",
-          as: "anfitrion",
-        },
-      },
-      { $unwind: "$anfitrion" },
-      {
-        $lookup: {
-          from: "reservas",
-          localField: "reservas",
-          foreignField: "_id",
-          as: "reservas",
-        },
-      }
+      { $skip: (pagina - 1) * tamanioPagina },
+      { $limit: tamanioPagina }
     );
-  }
+
+    return await this.model.aggregate(pipeline);
+  };
 }
