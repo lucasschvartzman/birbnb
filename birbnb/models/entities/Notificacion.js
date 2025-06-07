@@ -1,4 +1,4 @@
-class Notificacion {
+export class Notificacion {
 
   constructor(usuario, mensaje, fechaAlta, leida, fechaLeida) {
     this.mensaje = mensaje;
@@ -12,6 +12,8 @@ class Notificacion {
     this.leida = true;
     this.fechaLeida = new Date();
   }
-}
 
-export { Notificacion };
+  estaLeida() {
+    return this.leida;
+  }
+}

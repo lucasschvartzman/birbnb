@@ -1,36 +1,67 @@
+import {NotificacionNoExisteException} from "../exceptions/notificacionExceptions.js";
+import {NotificacionFactory} from "../models/factories/NotificacionFactory.js";
+
 export class NotificacionService {
-  constructor(notificacionRepository) {
+
+  constructor(notificacionRepository, alojamientoRepository, usuarioService) {
     this.notificacionRepository = notificacionRepository;
+    this.usuarioService = usuarioService;
+    this.alojamientoRepository = alojamientoRepository;
   }
 
-  async findAll(filters) {
-    try {
-      return await this.notificacionRepository.findAll(filters);
-    } catch (error) {
-      throw new Error('Error al obtener notificaciones: ' + error.message);
+  async obtenerNotificacionesUsuario(idUsuario, filtros) {
+    await this.usuarioService.validarExistenciaUsuario(idUsuario);
+    return await this.notificacionRepository.findAll(filtros);
+  }
+
+  async marcarComoLeida(idNotificacion) {
+    const notificacion = await this.notificacionRepository.findById(idNotificacion);
+    this.#validarDatosNotificacion(idNotificacion,notificacion);
+    if (notificacion.estaLeida()) {
+      return notificacion;
+    }
+    notificacion.marcarComoLeida();
+    return await this.notificacionRepository.save(notificacion);
+  }
+
+  #validarDatosNotificacion(idNotificacion, notificacion) {
+    if (notificacion == null) {
+      throw new NotificacionNoExisteException(idNotificacion);
     }
   }
 
-  async marcarComoLeida(notificacionId) {
-    try {
+  async generarNotificacionCreacion(reserva, alojamiento) {
+    const huespedReservador = await this.usuarioService.obtenerUsuarioPorId(reserva.huespedReservador);
+    const notificacionCreacion = NotificacionFactory.crearNotificacionReservaCreada({
+      huesped: huespedReservador.nombre,
+      alojamiento: alojamiento.nombre,
+      fechaInicio: reserva.rangoFechas.fechaInicio,
+      cantidadDias: reserva.rangoFechas.calcularCantidadDias(),
+      anfitrion: alojamiento.anfitrion
+    });
+    this.notificacionRepository.save(this.#toNotificacionSchema(notificacionCreacion));
+  }
 
-      const notificacion = await this.notificacionRepository.findById(notificacionId);
+  async generarNotificacionCancelacion(reserva, motivo) {
+    const huespedReservador = await this.usuarioService.obtenerUsuarioPorId(reserva.huespedReservador);
+    const alojamiento = await this.alojamientoRepository.findById(reserva.alojamiento);
+    const notificacionCancelacion = NotificacionFactory.crearNotificacionReservaCancelada({
+      huesped: huespedReservador.nombre,
+      alojamiento: alojamiento.nombre,
+      fechaInicio: reserva.fechaInicio,
+      motivo: motivo,
+      anfitrion: alojamiento.anfitrion
+    });
+    return this.notificacionRepository.save(this.#toNotificacionSchema(notificacionCancelacion))
+  }
 
-      if (notificacion.leida) {
-        return notificacion;
-      } else {
-        notificacion.marcarComoLeida();
-
-        const notificacionActualizada = await this.notificacionRepository.save(notificacion);
-
-        if (!notificacionActualizada) {
-          throw new Error(`Notificación con id ${notificacionId} no encontrada`);
-        }
-
-        return notificacionActualizada;
-      }
-    } catch (error) {
-      throw new Error('Error al marcar como leída: ' + error.message);
+  #toNotificacionSchema(notificacion) {
+    return {
+      mensaje: notificacion.mensaje,
+      usuario: notificacion.usuario._id,
+      fechaAlta: notificacion.fechaAlta,
+      leida: notificacion.leida,
+      fechaLeida: notificacion.fechaLeida
     }
   }
 }

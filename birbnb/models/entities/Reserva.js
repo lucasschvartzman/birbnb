@@ -1,13 +1,4 @@
-import { EstadoReserva } from "./EstadoReserva.js";
-
-class Reserva {
-  fechaAlta;
-  huespedReservador;
-  cantidadHuespedes;
-  alojamiento;
-  rangoFechas;
-  estado;
-  precioPorNoche;
+export class Reserva {
 
   constructor(
     fechaAlta,
@@ -39,5 +30,3 @@ class Reserva {
     return this.rangoFechas.incluye(fecha);
   }
 }
-
-export { Reserva };

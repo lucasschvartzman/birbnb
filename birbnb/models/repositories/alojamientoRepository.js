@@ -6,20 +6,20 @@ export class AlojamientoRepository {
     this.model = AlojamientoModel;
   }
 
-  async findById(id) {
-    return await this.model
-      .findById(id)
-      .populate({
-        path: "direccion.ciudad",
-        populate: {
-          path: "pais",
-        },
-      })
-      .populate("anfitrion")
-      .populate("reservas");
+  findById(id) {
+    return this.model
+        .findById(id)
+        .populate({
+          path: "direccion.ciudad",
+          populate: {
+            path: "pais",
+          },
+        })
+        .populate("anfitrion")
+        .populate("reservas");
   }
 
-  async findAll(filters = {}, paginado = {}) {
+  findAll(filters = {}, paginado = {}) {
     const pipeline = [];
 
     this.addLocationLookups(pipeline);
@@ -34,7 +34,7 @@ export class AlojamientoRepository {
 
     this.addRelationshipLookups(pipeline);
 
-    return await this.model.aggregate(pipeline);
+    return this.model.aggregate(pipeline);
   }
 
   addLocationLookups(pipeline) {

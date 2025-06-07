@@ -44,6 +44,8 @@ const reservaSchema = new mongoose.Schema(
       type: String,
       enum: EstadoReserva.getAllAsString(),
       required: true,
+      set: (value) => (value?.nombre) || value,
+      get: (value) => (typeof value === "string") ? EstadoReserva.getByNombre(value) : value
     },
     precioPorNoche: {
       type: Number,
