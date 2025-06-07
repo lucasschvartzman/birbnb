@@ -1,5 +1,6 @@
 import {NotificacionNoExisteException} from "../exceptions/notificacionExceptions.js";
 import {NotificacionFactory} from "../models/factories/NotificacionFactory.js";
+import { AlojamientoNoExisteException } from "../exceptions/alojamientoExceptions.js";
 
 export class NotificacionService {
 
@@ -29,6 +30,12 @@ export class NotificacionService {
       throw new NotificacionNoExisteException(idNotificacion);
     }
   }
+  #validarExistenciaAlojamiento(idAlojamiento, alojamiento) {
+    if (!alojamiento) {
+      throw new AlojamientoNoExisteException(idAlojamiento);
+    }
+    return alojamiento;
+  }
 
   async generarNotificacionCreacion(reserva, alojamiento) {
     const huespedReservador = await this.usuarioService.obtenerUsuarioPorId(reserva.huespedReservador);
@@ -39,12 +46,14 @@ export class NotificacionService {
       cantidadDias: reserva.rangoFechas.calcularCantidadDias(),
       anfitrion: alojamiento.anfitrion
     });
-    this.notificacionRepository.save(this.#toNotificacionSchema(notificacionCreacion));
+    await this.notificacionRepository.save(this.#toNotificacionSchema(notificacionCreacion));
   }
 
   async generarNotificacionCancelacion(reserva, motivo) {
     const huespedReservador = await this.usuarioService.obtenerUsuarioPorId(reserva.huespedReservador);
     const alojamiento = await this.alojamientoRepository.findById(reserva.alojamiento);
+    this.#validarExistenciaAlojamiento(reserva.alojamiento, alojamiento);
+
     const notificacionCancelacion = NotificacionFactory.crearNotificacionReservaCancelada({
       huesped: huespedReservador.nombre,
       alojamiento: alojamiento.nombre,
@@ -52,7 +61,7 @@ export class NotificacionService {
       motivo: motivo,
       anfitrion: alojamiento.anfitrion
     });
-    return this.notificacionRepository.save(this.#toNotificacionSchema(notificacionCancelacion))
+    return await this.notificacionRepository.save(this.#toNotificacionSchema(notificacionCancelacion))
   }
 
   #toNotificacionSchema(notificacion) {
