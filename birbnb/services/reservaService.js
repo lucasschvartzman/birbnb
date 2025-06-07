@@ -15,7 +15,7 @@ export class ReservaService {
     const alojamiento = await this.alojamientoRepository.findById(reserva.alojamiento);
     this.#validarDatosAlojamientoReserva(reserva, alojamiento);
     await this.notificacionService.generarNotificacionCreacion(reserva, alojamiento);
-    return this.reservaRepository.save({
+    return await this.reservaRepository.save({
       ...reserva,
       fechaAlta: new Date(),
       estado: EstadoReserva.PENDIENTE
@@ -25,9 +25,12 @@ export class ReservaService {
   async cancelarReserva(id, motivo) {
     const reserva = await this.reservaRepository.findById(id);
     this.#validarDatosReserva(reserva,id);
+    if (reserva.estado === EstadoReserva.CANCELADA) {
+      throw new DatosReservaInvalidosException("La reserva ya está cancelada.");
+    }
     await this.notificacionService.generarNotificacionCancelacion(reserva,motivo);
     reserva.actualizarEstado(EstadoReserva.CANCELADA);
-    return this.reservaRepository.save(reserva)
+    return await this.reservaRepository.save(reserva)
   }
 
   async modificarReserva(id, reservaModificada) {
@@ -42,7 +45,7 @@ export class ReservaService {
 
   async obtenerHistorialPorUsuario(idUsuario) {
     await this.usuarioService.validarExistenciaUsuario(idUsuario);
-    return this.reservaRepository.findAll({ idUsuario });
+    return await this.reservaRepository.findAll({ idUsuario });
   }
 
   #validarDatosAlojamientoReserva(reserva, alojamiento) {
