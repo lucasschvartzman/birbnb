@@ -10,6 +10,12 @@ export class NotificacionRepository {
     return this.model.findById(notificacionId).populate("usuario");
   }
 
+  // En este save están acopladas las ideas de crear una notificacion
+  // y modificarla (marcarla como leida por ej), lo cual ocasiona que
+  // tengan que hacer esa creación de id a manopla y además genera un
+  // bug: si te llega la instrucción de marcar como leída una notificación
+  // que no existe, en vez de tirar error te la va a crear!
+  // Debería haber dos methods diferentes, uno solo para crear, y uno solo para editar
   async save(notificacion) {
     const query = notificacion.id
       ? { _id: notificacion.id }
