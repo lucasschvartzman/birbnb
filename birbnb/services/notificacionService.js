@@ -1,5 +1,6 @@
 import {NotificacionNoExisteException} from "../exceptions/notificacionExceptions.js";
 import {NotificacionFactory} from "../models/factories/NotificacionFactory.js";
+import {AlojamientoNoExisteException} from "../exceptions/alojamientoExceptions.js";
 
 export class NotificacionService {
 
@@ -51,6 +52,9 @@ export class NotificacionService {
   async #obtenerDatosNotificacionCancelacion(reserva, motivo) {
     const huespedReservador = await this.usuarioService.obtenerUsuarioPorId(reserva.huespedReservador);
     const alojamiento = await this.alojamientoRepository.findById(reserva.alojamiento);
+    if (alojamiento == null) {
+      throw new AlojamientoNoExisteException(reserva.alojamiento);
+    }
     return {
       huesped: huespedReservador.nombre,
       alojamiento: alojamiento.nombre,
