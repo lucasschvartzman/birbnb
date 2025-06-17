@@ -1,6 +1,8 @@
-import { DatosReservaInvalidosException, ReservaNoExisteException } from "../exceptions/reservaExceptions.js";
-import { EstadoReserva } from "../models/entities/EstadoReserva.js";
-import { AlojamientoNoExisteException } from "../exceptions/alojamientoExceptions.js";
+import {DatosReservaInvalidosException, ReservaNoExisteException} from "../exceptions/reservaExceptions.js";
+import {EstadoReserva} from "../models/entities/EstadoReserva.js";
+import {AlojamientoNoExisteException} from "../exceptions/alojamientoExceptions.js";
+import {ReservaValidator} from "../validators/ReservaValidator.js";
+import {AlojamientoValidator} from "../validators/AlojamientoValidator.js";
 
 export class ReservaService {
 
@@ -12,57 +14,66 @@ export class ReservaService {
   }
 
   async crearReserva(reserva) {
-    const alojamiento = await this.alojamientoRepository.findById(reserva.alojamiento);
-    this.#validarDatosAlojamientoReserva(reserva, alojamiento);
-    await this.notificacionService.generarNotificacionCreacion(reserva, alojamiento);
-    return this.reservaRepository.save({
+    ReservaValidator.validarValoresCampos(reserva);
+    const idAlojamiento = reserva.alojamiento;
+    const alojamiento = await this.#obtenerAlojamiento(idAlojamiento);
+    this.#validarAlojamiento(alojamiento, reserva);
+    const nuevaReserva = {
       ...reserva,
       fechaAlta: new Date(),
       estado: EstadoReserva.PENDIENTE
-    });
+    }
+    const reservaCreada = await this.reservaRepository.create(nuevaReserva);
+    await this.notificacionService.generarNotificacionCreacion(nuevaReserva, alojamiento);
+    return reservaCreada;
   }
 
   async cancelarReserva(id, motivo) {
-    const reserva = await this.reservaRepository.findById(id);
-    this.#validarDatosReserva(reserva,id);
-    await this.notificacionService.generarNotificacionCancelacion(reserva,motivo);
+    const reserva = await this.#obtenerReserva(id);
+    if (reserva.estaIniciada(new Date())) {
+      throw new DatosReservaInvalidosException(`La reserva ya está iniciada.`);
+    }
     reserva.actualizarEstado(EstadoReserva.CANCELADA);
-    return this.reservaRepository.save(reserva)
+    const reservaActualizada = await this.reservaRepository.update(id, reserva);
+    await this.notificacionService.generarNotificacionCancelacion(reservaActualizada, motivo);
+    return reservaActualizada;
   }
 
   async modificarReserva(id, reservaModificada) {
-    const alojamiento = await this.alojamientoRepository.findById(reservaModificada.alojamiento);
-    this.#validarDatosAlojamientoReserva(reservaModificada, alojamiento);
-    return this.reservaRepository.save({
-      id: id,
-      estado: EstadoReserva.PENDIENTE,
-      ...reservaModificada
-    })
+    ReservaValidator.validarValoresCampos(reservaModificada);
+    const idAlojamiento = reservaModificada.alojamiento;
+    const alojamiento = await this.#obtenerAlojamiento(idAlojamiento);
+    this.#validarAlojamiento(alojamiento, reservaModificada);
+    const reservaActualizada = {
+      ...reservaModificada,
+      estado: EstadoReserva.PENDIENTE
+    }
+    return this.reservaRepository.update(id, reservaActualizada);
   }
 
   async obtenerHistorialPorUsuario(idUsuario) {
     await this.usuarioService.validarExistenciaUsuario(idUsuario);
-    return this.reservaRepository.findAll({ idUsuario });
+    return this.reservaRepository.findAll({idUsuario});
   }
 
-  #validarDatosAlojamientoReserva(reserva, alojamiento) {
-    if (alojamiento == null) {
-      throw new AlojamientoNoExisteException(reserva.alojamiento.id);
-    }
-    if (!alojamiento.estaDisponibleEn(reserva.rangoFechas)) {
-      throw new DatosReservaInvalidosException(`El alojamiento no está disponible en ese rango de fechas.`);
-    }
-    if (!alojamiento.tieneCapacidadPara(reserva.cantidadHuespedes)) {
-      throw new DatosReservaInvalidosException(`El alojamiento no tiene capacidad para la cantidad de huespedes solicitada.`);
-    }
-  }
-
-  #validarDatosReserva(reserva,id) {
+  async #obtenerReserva(idReserva) {
+    const reserva = await this.reservaRepository.findById(idReserva);
     if (reserva == null) {
-      throw new ReservaNoExisteException(id);
+      throw new ReservaNoExisteException(idReserva);
     }
-    if (reserva.estaIniciada(new Date())) {
-      throw new DatosReservaInvalidosException(`La reserva ya está iniciada.`);
+    return reserva;
+  }
+
+  async #obtenerAlojamiento(idAlojamiento) {
+    const alojamiento = await this.alojamientoRepository.findById(idAlojamiento);
+    if (alojamiento == null) {
+      throw new AlojamientoNoExisteException(idAlojamiento);
     }
+    return alojamiento;
+  }
+
+  #validarAlojamiento(alojamiento, reserva) {
+    AlojamientoValidator.validarDisponibilidad(alojamiento, reserva.rangoFechas);
+    AlojamientoValidator.validarCapacidad(alojamiento, reserva.cantidadHuespedes);
   }
 }

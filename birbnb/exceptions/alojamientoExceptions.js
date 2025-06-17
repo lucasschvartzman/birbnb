@@ -5,3 +5,9 @@ export class AlojamientoNoExisteException extends AppException {
     super(`El alojamiento con id ${idAlojamiento} no existe`, 404);
   }
 }
+
+export class DatosAlojamientoInvalidosException extends AppException {
+  constructor(message) {
+    super(message,400);
+  }
+}
