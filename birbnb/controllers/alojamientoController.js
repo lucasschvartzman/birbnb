@@ -50,26 +50,21 @@ export class AlojamientoController {
       !this.#esNumeroPositivo(queryParameters.precioMaximo)
     )
       errores.push(this.#obtenerMensajeNumeroNoEnteroPositivo("precioMaximo"));
-    if (
-      !isNaN(queryParameters.precioMinimo) &&
-      !isNaN(queryParameters.precioMaximo) &&
-      queryParameters.precioMinimo > queryParameters.precioMaximo
-    )
-      errores.push(
-        'El "precioMinimo" no puede ser mayor que el "precioMaximo"'
-      );
+    const precioMinimo = queryParameters.precioMinimo ? parseFloat(queryParameters.precioMinimo) : null;
+    const precioMaximo = queryParameters.precioMaximo ? parseFloat(queryParameters.precioMaximo) : null;
+    if (precioMinimo !== null && precioMaximo !== null && precioMinimo > queryParameters) {
+      errores.push('El "precioMinimo" no puede ser mayor que el "precioMaximo"');
+    }
     if (queryParameters.latitud && isNaN(queryParameters.latitud))
       errores.push(this.#obtenerMensajeStringInvalido("coordLatitud"));
-    if (queryParameters.longitud && isNaN(queryParameters.latitud))
+    if (queryParameters.longitud && isNaN(queryParameters.longitud))
       errores.push(this.#obtenerMensajeStringInvalido("coordLongitud"));
-    if (
-      queryParameters.huespedes &&
-      !this.#esNumeroPositivo(
-        queryParameters.huespedes ||
-          !Number.isInteger(queryParameters.huespedes)
-      )
-    )
-      errores.push(this.#obtenerMensajeNumeroNoEnteroPositivo("huespedes"));
+    if (queryParameters.huespedes) {
+      const huespedesNum = parseInt(queryParameters.huespedes);
+      if (!this.#esNumeroPositivo(queryParameters.huespedes) || !Number.isInteger(huespedesNum)) {
+        errores.push(this.#obtenerMensajeNumeroNoEnteroPositivo("huespedes"));
+      }
+    }
     if (
       queryParameters.caracteristicas &&
       !this.#esStringValido(queryParameters.caracteristicas)
@@ -85,11 +80,11 @@ export class AlojamientoController {
     return {
       idCiudad: queryParameters.idCiudad,
       idPais: queryParameters.idPais,
-      latitud: queryParameters.latitud,
-      longitud: queryParameters.longitud,
-      precioMinimo: queryParameters.precioMinimo,
-      precioMaximo: queryParameters.precioMaximo,
-      huespedes: queryParameters.huespedes,
+      latitud: queryParameters.latitud ? parseFloat(queryParameters.latitud) : undefined,
+      longitud: queryParameters.longitud ? parseFloat(queryParameters.longitud) : undefined,
+      precioMinimo: queryParameters.precioMinimo ? parseFloat(queryParameters.precioMinimo) : undefined,
+      precioMaximo: queryParameters.precioMinimo ? parseFloat(queryParameters.precioMaximo) : undefined,
+      huespedes: queryParameters.huespedes ? parseInt(queryParameters.huespedes) : undefined,
       caracteristicas: this.#mapearCaracteristicas(
         queryParameters.caracteristicas
       ),
