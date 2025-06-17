@@ -33,6 +33,9 @@ export class ReservaService {
     if (reserva.estaIniciada(new Date())) {
       throw new DatosReservaInvalidosException(`La reserva ya está iniciada.`);
     }
+    if (reserva.estaCancelada()) {
+      return reserva;
+    }
     reserva.actualizarEstado(EstadoReserva.CANCELADA);
     const reservaActualizada = await this.reservaRepository.update(id, reserva);
     await this.notificacionService.generarNotificacionCancelacion(reservaActualizada, motivo);

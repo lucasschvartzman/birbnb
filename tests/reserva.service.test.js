@@ -68,8 +68,17 @@ describe("ReservaService", () => {
     },
   };
 
+  function crearReservaMock(datos = {}) {
+    return {
+      estaIniciada: jest.fn().mockReturnValue(false),
+      estaCancelada: jest.fn().mockReturnValue(false),
+      actualizarEstado: jest.fn(),
+      ...datos
+    };
+  }
+
   const reservasEjemplo = {
-    pendiente: {
+    pendiente: crearReservaMock({
       id: "reserva-1",
       estado: EstadoReserva.PENDIENTE,
       huespedReservador: "usuario-456",
@@ -78,15 +87,19 @@ describe("ReservaService", () => {
         ...datosReservaEjemplo.valida.rangoFechas,
         fechaFin: new Date("2025-07-03"),
       },
-      estaIniciada: jest.fn().mockReturnValue(false),
-      actualizarEstado: jest.fn(),
-    },
-    iniciada: {
+    }),
+    iniciada: crearReservaMock({
       id: "reserva-2",
       estado: EstadoReserva.PENDIENTE,
       estaIniciada: jest.fn().mockReturnValue(true),
-      actualizarEstado: jest.fn(),
-    },
+    }),
+    cancelada: crearReservaMock({
+      id: "reserva-3",
+      estado: EstadoReserva.CANCELADA,
+      huespedReservador: "usuario-456",
+      alojamiento: "alojamiento-123",
+      estaCancelada: jest.fn().mockReturnValue(true),
+    }),
   };
 
   const usuariosEjemplo = {
@@ -144,17 +157,17 @@ describe("ReservaService", () => {
         };
 
         alojamientoRepositoryMock.findById.mockResolvedValue(alojamientosEjemplo.disponible);
-        reservaRepositoryMock.create.mockResolvedValue(reservaGuardada); 
+        reservaRepositoryMock.create.mockResolvedValue(reservaGuardada);
 
         const resultado = await service.crearReserva(datosReservaEjemplo.valida);
 
         expect(resultado).toEqual(reservaGuardada);
-        expect(reservaRepositoryMock.create).toHaveBeenCalledWith({ 
+        expect(reservaRepositoryMock.create).toHaveBeenCalledWith({
           ...datosReservaEjemplo.valida,
           fechaAlta: expect.any(Date),
           estado: EstadoReserva.PENDIENTE,
         });
-        expect(reservaRepositoryMock.create).toHaveBeenCalledTimes(1); 
+        expect(reservaRepositoryMock.create).toHaveBeenCalledTimes(1);
       });
 
       test("debe generar notificación de creación", async () => {
@@ -166,7 +179,7 @@ describe("ReservaService", () => {
         };
 
         alojamientoRepositoryMock.findById.mockResolvedValue(alojamientosEjemplo.disponible);
-        reservaRepositoryMock.create.mockResolvedValue(reservaGuardada); 
+        reservaRepositoryMock.create.mockResolvedValue(reservaGuardada);
 
         await service.crearReserva(datosReservaEjemplo.valida);
 
@@ -188,7 +201,7 @@ describe("ReservaService", () => {
           .rejects.toThrow(AlojamientoNoExisteException);
 
         expect(alojamientoRepositoryMock.findById).toHaveBeenCalledWith(datosReservaEjemplo.valida.alojamiento);
-        expect(reservaRepositoryMock.create).not.toHaveBeenCalled(); 
+        expect(reservaRepositoryMock.create).not.toHaveBeenCalled();
         expect(notificacionServiceMock.generarNotificacionCreacion).not.toHaveBeenCalled();
       });
     });
@@ -202,7 +215,7 @@ describe("ReservaService", () => {
 
         expect(alojamientosEjemplo.noDisponible.estaDisponibleEn)
           .toHaveBeenCalledWith(datosReservaEjemplo.valida.rangoFechas);
-        expect(reservaRepositoryMock.create).not.toHaveBeenCalled(); 
+        expect(reservaRepositoryMock.create).not.toHaveBeenCalled();
         expect(notificacionServiceMock.generarNotificacionCreacion).not.toHaveBeenCalled();
       });
     });
@@ -216,7 +229,7 @@ describe("ReservaService", () => {
 
         expect(alojamientosEjemplo.sinCapacidad.tieneCapacidadPara)
           .toHaveBeenCalledWith(datosReservaEjemplo.valida.cantidadHuespedes);
-        expect(reservaRepositoryMock.create).not.toHaveBeenCalled(); 
+        expect(reservaRepositoryMock.create).not.toHaveBeenCalled();
         expect(notificacionServiceMock.generarNotificacionCreacion).not.toHaveBeenCalled();
       });
     });
@@ -228,15 +241,16 @@ describe("ReservaService", () => {
     describe("cuando la reserva puede ser cancelada", () => {
       test("debe cancelar la reserva exitosamente", async () => {
         const reservaActualizada = {
-          estado: EstadoReserva.CANCELADA.nombre,
+          estado: EstadoReserva.CANCELADA,
           ...reservasEjemplo.pendiente
         };
 
         reservaRepositoryMock.findById.mockResolvedValue(reservasEjemplo.pendiente);
-        reservaRepositoryMock.update.mockResolvedValue(reservaActualizada); 
+        reservaRepositoryMock.update.mockResolvedValue(reservaActualizada);
 
         const resultado = await service.cancelarReserva("reserva-1", motivoCancelacion);
 
+        expect(reservasEjemplo.pendiente.estaCancelada).toHaveBeenCalledTimes(1);
         expect(reservasEjemplo.pendiente.actualizarEstado)
           .toHaveBeenCalledWith(EstadoReserva.CANCELADA);
         expect(reservaRepositoryMock.update).toHaveBeenCalledWith("reserva-1", reservasEjemplo.pendiente);
@@ -245,18 +259,30 @@ describe("ReservaService", () => {
 
       test("debe generar notificación de cancelación", async () => {
         const reservaActualizada = {
-          estado: EstadoReserva.CANCELADA.nombre,
+          estado: EstadoReserva.CANCELADA,
           ...reservasEjemplo.pendiente
         };
 
         reservaRepositoryMock.findById.mockResolvedValue(reservasEjemplo.pendiente);
-        reservaRepositoryMock.update.mockResolvedValue(reservaActualizada); 
+        reservaRepositoryMock.update.mockResolvedValue(reservaActualizada);
 
         await service.cancelarReserva("reserva-1", motivoCancelacion);
 
         expect(notificacionServiceMock.generarNotificacionCancelacion)
           .toHaveBeenCalledWith(reservaActualizada, motivoCancelacion);
         expect(notificacionServiceMock.generarNotificacionCancelacion).toHaveBeenCalledTimes(1);
+      });
+
+      test("debe retornar la reserva sin modificar cuando ya está cancelada", async () => {
+        reservaRepositoryMock.findById.mockResolvedValue(reservasEjemplo.cancelada);
+
+        const resultado = await service.cancelarReserva("reserva-3", motivoCancelacion);
+
+        expect(reservasEjemplo.cancelada.estaCancelada).toHaveBeenCalledTimes(1);
+        expect(reservasEjemplo.cancelada.actualizarEstado).not.toHaveBeenCalled();
+        expect(reservaRepositoryMock.update).not.toHaveBeenCalled();
+        expect(notificacionServiceMock.generarNotificacionCancelacion).not.toHaveBeenCalled();
+        expect(resultado).toEqual(reservasEjemplo.cancelada);
       });
     });
 
@@ -267,7 +293,7 @@ describe("ReservaService", () => {
         await expect(service.cancelarReserva("reserva-inexistente", motivoCancelacion))
           .rejects.toThrow(ReservaNoExisteException);
 
-        expect(reservaRepositoryMock.update).not.toHaveBeenCalled(); 
+        expect(reservaRepositoryMock.update).not.toHaveBeenCalled();
         expect(notificacionServiceMock.generarNotificacionCancelacion).not.toHaveBeenCalled();
       });
     });
@@ -280,7 +306,7 @@ describe("ReservaService", () => {
           .rejects.toThrow(DatosReservaInvalidosException);
 
         expect(reservasEjemplo.iniciada.estaIniciada).toHaveBeenCalledWith(expect.any(Date));
-        expect(reservaRepositoryMock.update).not.toHaveBeenCalled(); 
+        expect(reservaRepositoryMock.update).not.toHaveBeenCalled();
         expect(notificacionServiceMock.generarNotificacionCancelacion).not.toHaveBeenCalled();
       });
     });
@@ -298,11 +324,11 @@ describe("ReservaService", () => {
         };
 
         alojamientoRepositoryMock.findById.mockResolvedValue(alojamientosEjemplo.disponible);
-        reservaRepositoryMock.update.mockResolvedValue(reservaModificada); 
+        reservaRepositoryMock.update.mockResolvedValue(reservaModificada);
 
         const resultado = await service.modificarReserva(idReserva, datosReservaEjemplo.modificacion);
 
-        expect(reservaRepositoryMock.update).toHaveBeenCalledWith(idReserva, { 
+        expect(reservaRepositoryMock.update).toHaveBeenCalledWith(idReserva, {
           ...datosReservaEjemplo.modificacion,
           estado: EstadoReserva.PENDIENTE
         });
@@ -311,7 +337,7 @@ describe("ReservaService", () => {
 
       test("debe validar disponibilidad y capacidad del nuevo alojamiento", async () => {
         alojamientoRepositoryMock.findById.mockResolvedValue(alojamientosEjemplo.disponible);
-        reservaRepositoryMock.update.mockResolvedValue({}); 
+        reservaRepositoryMock.update.mockResolvedValue({});
 
         await service.modificarReserva(idReserva, datosReservaEjemplo.modificacion);
 
@@ -329,7 +355,7 @@ describe("ReservaService", () => {
         await expect(service.modificarReserva(idReserva, datosReservaEjemplo.modificacion))
           .rejects.toThrow(AlojamientoNoExisteException);
 
-        expect(reservaRepositoryMock.update).not.toHaveBeenCalled(); 
+        expect(reservaRepositoryMock.update).not.toHaveBeenCalled();
       });
     });
 
@@ -340,7 +366,7 @@ describe("ReservaService", () => {
         await expect(service.modificarReserva(idReserva, datosReservaEjemplo.modificacion))
           .rejects.toThrow(DatosAlojamientoInvalidosException);
 
-        expect(reservaRepositoryMock.update).not.toHaveBeenCalled(); 
+        expect(reservaRepositoryMock.update).not.toHaveBeenCalled();
       });
     });
 
@@ -351,7 +377,7 @@ describe("ReservaService", () => {
         await expect(service.modificarReserva(idReserva, datosReservaEjemplo.modificacion))
           .rejects.toThrow(DatosAlojamientoInvalidosException);
 
-        expect(reservaRepositoryMock.update).not.toHaveBeenCalled(); 
+        expect(reservaRepositoryMock.update).not.toHaveBeenCalled();
       });
     });
   });

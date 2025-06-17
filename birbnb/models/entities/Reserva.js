@@ -1,3 +1,5 @@
+import {EstadoReserva} from "./EstadoReserva.js";
+
 export class Reserva {
 
   constructor(
@@ -28,5 +30,9 @@ export class Reserva {
 
   estaIniciada(fecha) {
     return this.rangoFechas.incluye(fecha);
+  }
+
+  estaCancelada() {
+    return this.estado === EstadoReserva.CANCELADA;
   }
 }
