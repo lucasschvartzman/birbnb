@@ -37,10 +37,6 @@ export function registerNotificacion(app, getController) {
    *     ErrorResponse:
    *       type: object
    *       properties:
-   *         status:
-   *           type: string
-   *           enum: [error, fail]
-   *           description: Tipo de respuesta de error
    *         message:
    *           type: string
    *           description: Mensaje descriptivo del error
@@ -56,7 +52,6 @@ export function registerNotificacion(app, getController) {
    *           schema:
    *             $ref: '#/components/schemas/ErrorResponse'
    *           example:
-   *             status: "fail"
    *             message: "Notificación no encontrada"
    *
    *     InternalServerError:
@@ -66,7 +61,6 @@ export function registerNotificacion(app, getController) {
    *           schema:
    *             $ref: '#/components/schemas/ErrorResponse'
    *           example:
-   *             status: "error"
    *             message: "Error interno del servidor"
    */
 
@@ -134,7 +128,6 @@ export function registerNotificacion(app, getController) {
    *             schema:
    *               $ref: '#/components/schemas/ErrorResponse'
    *             example:
-   *               status: "fail"
    *               message: "Usuario no encontrado"
    *       500:
    *         $ref: '#/components/responses/InternalServerError'
