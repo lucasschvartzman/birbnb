@@ -37,19 +37,19 @@ export class AlojamientoRepository {
           from: "ciudades",
           localField: "direccion.ciudad",
           foreignField: "_id",
-          as: "ciudad",
+          as: "direccion.ciudad",
         },
       },
-      { $unwind: "$ciudad" },
+      { $unwind: "$direccion.ciudad" },
       {
         $lookup: {
           from: "paises",
-          localField: "ciudad.pais",
+          localField: "direccion.ciudad.pais",
           foreignField: "_id",
-          as: "pais",
+          as: "direccion.ciudad.pais",
         },
       },
-      { $unwind: "$pais" }
+      { $unwind: "$direccion.ciudad.pais" }
     );
 
     const match = {};

@@ -50,10 +50,20 @@ export class AlojamientoController {
       !this.#esNumeroPositivo(queryParameters.precioMaximo)
     )
       errores.push(this.#obtenerMensajeNumeroNoEnteroPositivo("precioMaximo"));
-    const precioMinimo = queryParameters.precioMinimo ? parseFloat(queryParameters.precioMinimo) : null;
-    const precioMaximo = queryParameters.precioMaximo ? parseFloat(queryParameters.precioMaximo) : null;
-    if (precioMinimo !== null && precioMaximo !== null && precioMinimo > queryParameters) {
-      errores.push('El "precioMinimo" no puede ser mayor que el "precioMaximo"');
+    const precioMinimo = queryParameters.precioMinimo
+      ? parseFloat(queryParameters.precioMinimo)
+      : null;
+    const precioMaximo = queryParameters.precioMaximo
+      ? parseFloat(queryParameters.precioMaximo)
+      : null;
+    if (
+      precioMinimo !== null &&
+      precioMaximo !== null &&
+      precioMinimo > queryParameters
+    ) {
+      errores.push(
+        'El "precioMinimo" no puede ser mayor que el "precioMaximo"'
+      );
     }
     if (queryParameters.latitud && isNaN(queryParameters.latitud))
       errores.push(this.#obtenerMensajeStringInvalido("coordLatitud"));
@@ -61,7 +71,10 @@ export class AlojamientoController {
       errores.push(this.#obtenerMensajeStringInvalido("coordLongitud"));
     if (queryParameters.huespedes) {
       const huespedesNum = parseInt(queryParameters.huespedes);
-      if (!this.#esNumeroPositivo(queryParameters.huespedes) || !Number.isInteger(huespedesNum)) {
+      if (
+        !this.#esNumeroPositivo(queryParameters.huespedes) ||
+        !Number.isInteger(huespedesNum)
+      ) {
         errores.push(this.#obtenerMensajeNumeroNoEnteroPositivo("huespedes"));
       }
     }
@@ -80,11 +93,21 @@ export class AlojamientoController {
     return {
       idCiudad: queryParameters.idCiudad,
       idPais: queryParameters.idPais,
-      latitud: queryParameters.latitud ? parseFloat(queryParameters.latitud) : undefined,
-      longitud: queryParameters.longitud ? parseFloat(queryParameters.longitud) : undefined,
-      precioMinimo: queryParameters.precioMinimo ? parseFloat(queryParameters.precioMinimo) : undefined,
-      precioMaximo: queryParameters.precioMinimo ? parseFloat(queryParameters.precioMaximo) : undefined,
-      huespedes: queryParameters.huespedes ? parseInt(queryParameters.huespedes) : undefined,
+      latitud: queryParameters.latitud
+        ? parseFloat(queryParameters.latitud)
+        : undefined,
+      longitud: queryParameters.longitud
+        ? parseFloat(queryParameters.longitud)
+        : undefined,
+      precioMinimo: queryParameters.precioMinimo
+        ? parseFloat(queryParameters.precioMinimo)
+        : undefined,
+      precioMaximo: queryParameters.precioMinimo
+        ? parseFloat(queryParameters.precioMaximo)
+        : undefined,
+      huespedes: queryParameters.huespedes
+        ? parseInt(queryParameters.huespedes)
+        : undefined,
       caracteristicas: this.#mapearCaracteristicas(
         queryParameters.caracteristicas
       ),
@@ -110,7 +133,9 @@ export class AlojamientoController {
     return {
       nombre: alojamiento.nombre,
       descripcion: alojamiento.descripcion,
-      direccion: this.#toDireccionDto(alojamiento.direccion),
+      direccion: alojamiento.direccion
+        ? this.#toDireccionDto(alojamiento.direccion)
+        : undefined,
       precioPorNoche: alojamiento.precioPorNoche,
       cantHuespedesMax: alojamiento.cantHuespedesMax,
       moneda: alojamiento.moneda.nombre,
@@ -126,10 +151,13 @@ export class AlojamientoController {
       const criterios = this.#obtenerCriterioParseado(req.query);
       const pagina = req.query.pagina || 1;
       const tamanioPagina = req.query.tamanioPagina || 25;
-      const alojamientos = await this.alojamientoRepository.findAll(criterios, {
-        pagina,
-        tamanioPagina,
-      });
+      const alojamientos = await this.alojamientoRepository.findAllWithFilters(
+        criterios,
+        {
+          pagina,
+          tamanioPagina,
+        }
+      );
       const jsonRespuesta = alojamientos.map(this.#toDto);
       res.json(jsonRespuesta);
     } catch (error) {
