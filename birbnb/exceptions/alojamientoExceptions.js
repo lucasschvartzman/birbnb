@@ -8,6 +8,6 @@ export class AlojamientoNoExisteException extends AppException {
 
 export class FiltrosAlojamientoInvalidosException extends AppException {
   constructor(errores) {
-    super(`Errores de validación en los parámetros: ${JSON.stringify(errores)}`, 400);
+    super(`Errores de validación en los parámetros: ${errores}`, 400);
   }
 }
