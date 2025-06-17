@@ -53,7 +53,7 @@ export class AlojamientoController {
     if (
       !isNaN(queryParameters.precioMinimo) &&
       !isNaN(queryParameters.precioMaximo) &&
-      precioMinimo > precioMaximo
+      queryParameters.precioMinimo > queryParameters.precioMaximo
     )
       errores.push(
         'El "precioMinimo" no puede ser mayor que el "precioMaximo"'
