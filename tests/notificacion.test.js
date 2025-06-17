@@ -20,7 +20,8 @@ describe('NotificacionService', () => {
   beforeEach(() => {
     repositorioMock = {
       findById: jest.fn(),
-      save: jest.fn(),
+      create: jest.fn(),
+      update: jest.fn(),
       findAll: jest.fn()
     };
     usuarioServiceMock = {
@@ -198,14 +199,14 @@ describe('NotificacionService', () => {
         };
 
         repositorioMock.findById.mockResolvedValue(notificacionOriginal);
-        repositorioMock.save.mockResolvedValue(notificacionGuardada);
+        repositorioMock.update.mockResolvedValue(notificacionGuardada);
 
         const resultado = await servicio.marcarComoLeida(idNotificacion);
 
         expect(repositorioMock.findById).toHaveBeenCalledWith(idNotificacion);
         expect(notificacionOriginal.estaLeida).toHaveBeenCalledTimes(1);
         expect(notificacionOriginal.marcarComoLeida).toHaveBeenCalledTimes(1);
-        expect(repositorioMock.save).toHaveBeenCalledWith(notificacionOriginal);
+        expect(repositorioMock.update).toHaveBeenCalledWith(idNotificacion,notificacionOriginal);
         expect(resultado).toEqual(notificacionGuardada);
       });
 
@@ -225,12 +226,12 @@ describe('NotificacionService', () => {
         };
 
         repositorioMock.findById.mockResolvedValue(notificacionOriginal);
-        repositorioMock.save.mockResolvedValue(notificacionOriginal);
+        repositorioMock.update.mockResolvedValue(notificacionOriginal);
 
         await servicio.marcarComoLeida(idNotificacion);
 
         expect(notificacionOriginal.marcarComoLeida).toHaveBeenCalled();
-        expect(repositorioMock.save).toHaveBeenCalledWith(notificacionOriginal);
+        expect(repositorioMock.update).toHaveBeenCalledWith(idNotificacion,notificacionOriginal);
       });
     });
 
@@ -253,7 +254,7 @@ describe('NotificacionService', () => {
         expect(repositorioMock.findById).toHaveBeenCalledWith(idNotificacion);
         expect(notificacionYaLeida.estaLeida).toHaveBeenCalledTimes(1);
         expect(notificacionYaLeida.marcarComoLeida).not.toHaveBeenCalled();
-        expect(repositorioMock.save).not.toHaveBeenCalled();
+        expect(repositorioMock.update).not.toHaveBeenCalled();
         expect(resultado).toBe(notificacionYaLeida);
       });
 
@@ -295,7 +296,7 @@ describe('NotificacionService', () => {
           .toThrow(NotificacionNoExisteException);
 
         expect(repositorioMock.findById).toHaveBeenCalledWith(idInexistente);
-        expect(repositorioMock.save).not.toHaveBeenCalled();
+        expect(repositorioMock.update).not.toHaveBeenCalled();
       });
 
       test('debe lanzar NotificacionNoExisteException cuando la notificacion es undefined', async () => {
@@ -307,7 +308,7 @@ describe('NotificacionService', () => {
           .toThrow(NotificacionNoExisteException);
 
         expect(repositorioMock.findById).toHaveBeenCalledWith(idInexistente);
-        expect(repositorioMock.save).not.toHaveBeenCalled();
+        expect(repositorioMock.update).not.toHaveBeenCalled();
       });
     });
 
@@ -379,10 +380,10 @@ describe('NotificacionService', () => {
           .toThrow('Fallo en consulta a base de datos');
 
         expect(repositorioMock.findById).toHaveBeenCalledWith(idNotificacion);
-        expect(repositorioMock.save).not.toHaveBeenCalled();
+        expect(repositorioMock.update).not.toHaveBeenCalled();
       });
 
-      test('debe propagar errores del repositorio en save', async () => {
+      test('debe propagar errores del repositorio en update', async () => {
         const idNotificacion = '1';
         const notificacion = {
           id: idNotificacion,
@@ -396,7 +397,7 @@ describe('NotificacionService', () => {
         const errorGuardado = new Error('Error al guardar notificacion');
 
         repositorioMock.findById.mockResolvedValue(notificacion);
-        repositorioMock.save.mockRejectedValue(errorGuardado);
+        repositorioMock.update.mockRejectedValue(errorGuardado);
 
         await expect(servicio.marcarComoLeida(idNotificacion))
           .rejects
@@ -405,7 +406,7 @@ describe('NotificacionService', () => {
         expect(repositorioMock.findById).toHaveBeenCalledWith(idNotificacion);
         expect(notificacion.estaLeida).toHaveBeenCalled();
         expect(notificacion.marcarComoLeida).toHaveBeenCalled();
-        expect(repositorioMock.save).toHaveBeenCalledWith(notificacion);
+        expect(repositorioMock.update).toHaveBeenCalledWith(idNotificacion,notificacion);
       });
     });
 
@@ -431,7 +432,7 @@ describe('NotificacionService', () => {
         expect(repositorioMock.findById).toHaveBeenCalledWith(idNotificacion);
         expect(notificacionDefectuosa.estaLeida).toHaveBeenCalled();
         expect(notificacionDefectuosa.marcarComoLeida).not.toHaveBeenCalled();
-        expect(repositorioMock.save).not.toHaveBeenCalled();
+        expect(repositorioMock.update).not.toHaveBeenCalled();
       });
 
       test('debe manejar notificacion con método marcarComoLeida que lanza error', async () => {
@@ -455,7 +456,7 @@ describe('NotificacionService', () => {
         expect(repositorioMock.findById).toHaveBeenCalledWith(idNotificacion);
         expect(notificacionDefectuosa.estaLeida).toHaveBeenCalled();
         expect(notificacionDefectuosa.marcarComoLeida).toHaveBeenCalled();
-        expect(repositorioMock.save).not.toHaveBeenCalled();
+        expect(repositorioMock.update).not.toHaveBeenCalled();
       });
     });
   });

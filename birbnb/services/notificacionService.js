@@ -23,21 +23,21 @@ export class NotificacionService {
       return notificacion;
     }
     notificacion.marcarComoLeida();
-    return await this.notificacionRepository.update(idNotificacion, this.#toNotificacionSchema(notificacion));
+    return await this.notificacionRepository.update(idNotificacion, notificacion);
   }
-  
+
   // Métodos para generar notificaciones:
 
   async generarNotificacionCreacion(reserva, alojamiento) {
     const datosNotificacionCreacion = await this.#obtenerDatosNotificacionCreacion(reserva, alojamiento);
     const notificacionCreacion = NotificacionFactory.crearNotificacionReservaCreada(datosNotificacionCreacion);
-    return this.notificacionRepository.create(this.#toNotificacionSchema(notificacionCreacion));
+    return this.notificacionRepository.create(notificacionCreacion);
   }
 
   async generarNotificacionCancelacion(reserva, motivo) {
     const datosNotificacionCancelacion = await this.#obtenerDatosNotificacionCancelacion(reserva, motivo);
     const notificacionCancelacion = NotificacionFactory.crearNotificacionReservaCancelada(datosNotificacionCancelacion);
-    return this.notificacionRepository.create(this.#toNotificacionSchema(notificacionCancelacion))
+    return this.notificacionRepository.create(notificacionCancelacion)
   }
 
   // Métodos auxiliares
@@ -74,15 +74,5 @@ export class NotificacionService {
       throw new NotificacionNoExisteException(idNotificacion);
     }
     return notificacion;
-  }
-
-  #toNotificacionSchema(notificacion) {
-    return {
-      mensaje: notificacion.mensaje,
-      usuario: notificacion.usuario._id,
-      fechaAlta: notificacion.fechaAlta,
-      leida: notificacion.leida,
-      fechaLeida: notificacion.fechaLeida
-    }
   }
 }
