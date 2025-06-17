@@ -106,7 +106,7 @@ export function registerAlojamiento(app, getController) {
    *                     items:
    *                       type: string
    */
-  app.get("/alojamientos", async (req, res, next) => {
-    return controller.buscarAlojamientosConFiltros(req, res, next);
+  app.get("/alojamientos", (req, res, next) => {
+    controller.buscarAlojamientosConFiltros(req, res, next);
   });
 }

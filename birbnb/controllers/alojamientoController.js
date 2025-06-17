@@ -1,5 +1,6 @@
 import { Caracteristica } from "../models/entities/Caracteristica.js";
 import { FiltrosAlojamientoInvalidosException } from "../exceptions/alojamientoExceptions.js";
+import mongoose from "mongoose";
 
 export class AlojamientoController {
   constructor(alojamientoRepository) {
@@ -24,22 +25,29 @@ export class AlojamientoController {
   };
 
   #obtenerMensajeStringInvalido = (parametro) => {
-    return `El parámetro "${parametro}" debe ser un string válido`;
+    return `El parámetro '${parametro}' debe ser un string válido.`;
+  };
+
+  #obtenerMensajeIdInvalido = (parametro) => {
+    return `El parámetro '${parametro}' debe ser un ObjectId válido.`;
   };
 
   #obtenerMensajeNumeroNoEnteroPositivo = (parametro) => {
-    return `El parámetro "${parametro}" debe ser un string válido`;
+    return `El parámetro '${parametro}' debe ser un string válido.`;
   };
 
   #validarParametros = (queryParameters) => {
     const errores = [];
     if (
       queryParameters.idCiudad &&
-      !this.#esStringValido(queryParameters.idCiudad)
+      !mongoose.Types.ObjectId.isValid(queryParameters.idCiudad)
     )
-      errores.push(this.#obtenerMensajeStringInvalido("ciudad"));
-    if (queryParameters.idPais && !this.#esStringValido(queryParameters.idPais))
-      errores.push(this.#obtenerMensajeStringInvalido("pais"));
+      errores.push(this.#obtenerMensajeIdInvalido("ciudad"));
+    if (
+      queryParameters.idPais &&
+      !mongoose.Types.ObjectId.isValid(queryParameters.idCiudad)
+    )
+      errores.push(this.#obtenerMensajeIdInvalido("pais"));
     if (
       queryParameters.precioMinimo &&
       !this.#esNumeroPositivo(queryParameters.precioMinimo)
@@ -62,7 +70,7 @@ export class AlojamientoController {
       precioMinimo > queryParameters
     ) {
       errores.push(
-        'El "precioMinimo" no puede ser mayor que el "precioMaximo"'
+        'El \'precioMinimo\' no puede ser mayor que el \'precioMaximo\'.'
       );
     }
     if (queryParameters.latitud && isNaN(queryParameters.latitud))
@@ -84,7 +92,7 @@ export class AlojamientoController {
     )
       errores.push(this.#obtenerMensajeStringInvalido("caracteristicas"));
     if (errores.length > 0) {
-      throw new FiltrosAlojamientoInvalidosException(JSON.stringify(errores));
+      throw new FiltrosAlojamientoInvalidosException(errores.join(" "));
     }
     return true;
   };
@@ -161,7 +169,7 @@ export class AlojamientoController {
       const jsonRespuesta = alojamientos.map(this.#toDto);
       res.json(jsonRespuesta);
     } catch (error) {
-      next();
+      next(error);
     }
   }
 }

@@ -55,11 +55,11 @@ export class AlojamientoRepository {
     const match = {};
 
     if (criterio.idCiudad) {
-      match["ciudad._id"] = new mongoose.Types.ObjectId(criterio.idCiudad);
+      match["direccion.ciudad._id"] = new mongoose.Types.ObjectId(criterio.idCiudad);
     }
 
     if (criterio.idPais) {
-      match["pais._id"] = new mongoose.Types.ObjectId(criterio.idPais);
+      match["direccion.ciudad.pais._id"] = new mongoose.Types.ObjectId(criterio.idPais);
     }
 
     if (
