@@ -62,7 +62,7 @@ export class NotificacionService {
     return {
       huesped: huespedReservador.nombre,
       alojamiento: alojamiento.nombre,
-      fechaInicio: reserva.fechaInicio,
+      fechaInicio: reserva.rangoFechas.fechaInicio,
       motivo: motivo,
       anfitrion: alojamiento.anfitrion
     }
