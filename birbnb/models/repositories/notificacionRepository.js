@@ -1,4 +1,4 @@
-import { NotificacionModel } from "../schemas/notificacionSchema.js";
+import {NotificacionModel} from "../schemas/notificacionSchema.js";
 
 export class NotificacionRepository {
 
@@ -10,13 +10,20 @@ export class NotificacionRepository {
     return this.model.findById(notificacionId).populate("usuario");
   }
 
-  async save(notificacion) {
-    const query = notificacion.id
-      ? { _id: notificacion.id }
-      : { _id: new this.model()._id };
+  async create(notificacion) {
+    const nuevaNotificacion = new this.model(notificacion);
+    return nuevaNotificacion
+      .save()
+      .then(doc => doc.populate("usuario"));
+  }
 
+  async update(id, datosActualizacion) {
     return this.model
-      .findOneAndUpdate(query, notificacion, { new: true, upsert: true })
+      .findOneAndUpdate(
+        {_id: id},
+        {$set: datosActualizacion},
+        {new: true}
+      )
       .populate("usuario");
   }
 

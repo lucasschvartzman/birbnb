@@ -2,4 +2,7 @@ import { App } from "./birbnb/App.js"
 
 const birbnb = new App();
 
-birbnb.iniciar().then(r => {});
+birbnb.iniciar().catch(error => {
+    console.error(`Error inicializando la aplicación`, error);
+    process.exit(1);
+});

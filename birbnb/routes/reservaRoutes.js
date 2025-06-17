@@ -96,10 +96,6 @@ export function registerReserva(app, getController) {
    *     ErrorResponse:
    *       type: object
    *       properties:
-   *         status:
-   *           type: string
-   *           enum: [error, fail]
-   *           description: Tipo de respuesta de error
    *         message:
    *           type: string
    *           description: Mensaje descriptivo del error
@@ -115,7 +111,6 @@ export function registerReserva(app, getController) {
    *           schema:
    *             $ref: '#/components/schemas/ErrorResponse'
    *           example:
-   *             status: "fail"
    *             message: "La fecha de inicio debe ser anterior a la fecha de fin"
    *
    *     NotFound:
@@ -125,7 +120,6 @@ export function registerReserva(app, getController) {
    *           schema:
    *             $ref: '#/components/schemas/ErrorResponse'
    *           example:
-   *             status: "fail"
    *             message: "Reserva no encontrada"
    *
    *     InternalServerError:
@@ -135,7 +129,6 @@ export function registerReserva(app, getController) {
    *           schema:
    *             $ref: '#/components/schemas/ErrorResponse'
    *           example:
-   *             status: "error"
    *             message: "Error interno del servidor"
    */
 
@@ -409,7 +402,6 @@ export function registerReserva(app, getController) {
    *             schema:
    *               $ref: '#/components/schemas/ErrorResponse'
    *             example:
-   *               status: "fail"
    *               message: "Usuario no encontrado"
    *       500:
    *         $ref: '#/components/responses/InternalServerError'

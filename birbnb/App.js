@@ -34,15 +34,10 @@ export class App {
     }
 
     async iniciar() {
-        try {
-            await this.conectarAMongo();
-            this.cargarContexto();
-            this.configurarServidor();
-            await this.lanzar();
-        } catch (error) {
-            console.error('Error durante la inicialización:', error);
-            process.exit(1);
-        }
+        await this.conectarAMongo();
+        this.cargarContexto();
+        this.configurarServidor();
+        await this.lanzar();
     }
 
     async conectarAMongo() {

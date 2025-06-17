@@ -1,5 +1,6 @@
 import {NotificacionNoExisteException} from "../exceptions/notificacionExceptions.js";
 import {NotificacionFactory} from "../models/factories/NotificacionFactory.js";
+import {AlojamientoNoExisteException} from "../exceptions/alojamientoExceptions.js";
 
 export class NotificacionService {
 
@@ -9,59 +10,69 @@ export class NotificacionService {
     this.alojamientoRepository = alojamientoRepository;
   }
 
+  // Métodos utilizados por el controller
+
   async obtenerNotificacionesUsuario(idUsuario, filtros) {
     await this.usuarioService.validarExistenciaUsuario(idUsuario);
     return await this.notificacionRepository.findAll(filtros);
   }
 
   async marcarComoLeida(idNotificacion) {
-    const notificacion = await this.notificacionRepository.findById(idNotificacion);
-    this.#validarDatosNotificacion(idNotificacion,notificacion);
+    const notificacion = await this.#obtenerNotificacion(idNotificacion);
     if (notificacion.estaLeida()) {
       return notificacion;
     }
     notificacion.marcarComoLeida();
-    return await this.notificacionRepository.save(notificacion);
+    return await this.notificacionRepository.update(idNotificacion, notificacion);
   }
 
-  #validarDatosNotificacion(idNotificacion, notificacion) {
-    if (notificacion == null) {
-      throw new NotificacionNoExisteException(idNotificacion);
-    }
-  }
+  // Métodos para generar notificaciones:
 
   async generarNotificacionCreacion(reserva, alojamiento) {
+    const datosNotificacionCreacion = await this.#obtenerDatosNotificacionCreacion(reserva, alojamiento);
+    const notificacionCreacion = NotificacionFactory.crearNotificacionReservaCreada(datosNotificacionCreacion);
+    return this.notificacionRepository.create(notificacionCreacion);
+  }
+
+  async generarNotificacionCancelacion(reserva, motivo) {
+    const datosNotificacionCancelacion = await this.#obtenerDatosNotificacionCancelacion(reserva, motivo);
+    const notificacionCancelacion = NotificacionFactory.crearNotificacionReservaCancelada(datosNotificacionCancelacion);
+    return this.notificacionRepository.create(notificacionCancelacion)
+  }
+
+  // Métodos auxiliares
+
+  async #obtenerDatosNotificacionCreacion(reserva, alojamiento) {
     const huespedReservador = await this.usuarioService.obtenerUsuarioPorId(reserva.huespedReservador);
-    const notificacionCreacion = NotificacionFactory.crearNotificacionReservaCreada({
+    return {
       huesped: huespedReservador.nombre,
       alojamiento: alojamiento.nombre,
       fechaInicio: reserva.rangoFechas.fechaInicio,
       cantidadDias: reserva.rangoFechas.calcularCantidadDias(),
       anfitrion: alojamiento.anfitrion
-    });
-    this.notificacionRepository.save(this.#toNotificacionSchema(notificacionCreacion));
+    }
   }
 
-  async generarNotificacionCancelacion(reserva, motivo) {
+  async #obtenerDatosNotificacionCancelacion(reserva, motivo) {
     const huespedReservador = await this.usuarioService.obtenerUsuarioPorId(reserva.huespedReservador);
     const alojamiento = await this.alojamientoRepository.findById(reserva.alojamiento);
-    const notificacionCancelacion = NotificacionFactory.crearNotificacionReservaCancelada({
+    if (alojamiento == null) {
+      throw new AlojamientoNoExisteException(reserva.alojamiento);
+    }
+    return {
       huesped: huespedReservador.nombre,
       alojamiento: alojamiento.nombre,
       fechaInicio: reserva.fechaInicio,
       motivo: motivo,
       anfitrion: alojamiento.anfitrion
-    });
-    return this.notificacionRepository.save(this.#toNotificacionSchema(notificacionCancelacion))
+    }
   }
 
-  #toNotificacionSchema(notificacion) {
-    return {
-      mensaje: notificacion.mensaje,
-      usuario: notificacion.usuario._id,
-      fechaAlta: notificacion.fechaAlta,
-      leida: notificacion.leida,
-      fechaLeida: notificacion.fechaLeida
+  async #obtenerNotificacion(idNotificacion) {
+    const notificacion = await this.notificacionRepository.findById(idNotificacion);
+    if (notificacion == null) {
+      throw new NotificacionNoExisteException(idNotificacion);
     }
+    return notificacion;
   }
 }
