@@ -10,6 +10,8 @@ export class NotificacionService {
     this.alojamientoRepository = alojamientoRepository;
   }
 
+  // Métodos utilizados por el controller
+
   async obtenerNotificacionesUsuario(idUsuario, filtros) {
     await this.usuarioService.validarExistenciaUsuario(idUsuario);
     return await this.notificacionRepository.findAll(filtros);
@@ -23,6 +25,8 @@ export class NotificacionService {
     notificacion.marcarComoLeida();
     return await this.notificacionRepository.update(idNotificacion, this.#toNotificacionSchema(notificacion));
   }
+  
+  // Métodos para generar notificaciones:
 
   async generarNotificacionCreacion(reserva, alojamiento) {
     const datosNotificacionCreacion = await this.#obtenerDatosNotificacionCreacion(reserva, alojamiento);
