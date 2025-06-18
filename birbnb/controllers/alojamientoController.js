@@ -45,7 +45,7 @@ export class AlojamientoController {
       errores.push(this.#obtenerMensajeIdInvalido("ciudad"));
     if (
       queryParameters.idPais &&
-      !mongoose.Types.ObjectId.isValid(queryParameters.idCiudad)
+      !mongoose.Types.ObjectId.isValid(queryParameters.idPais)
     )
       errores.push(this.#obtenerMensajeIdInvalido("pais"));
     if (
@@ -67,7 +67,7 @@ export class AlojamientoController {
     if (
       precioMinimo !== null &&
       precioMaximo !== null &&
-      precioMinimo > queryParameters
+      precioMinimo > precioMaximo
     ) {
       errores.push(
         'El \'precioMinimo\' no puede ser mayor que el \'precioMaximo\'.'
@@ -110,7 +110,7 @@ export class AlojamientoController {
       precioMinimo: queryParameters.precioMinimo
         ? parseFloat(queryParameters.precioMinimo)
         : undefined,
-      precioMaximo: queryParameters.precioMinimo
+      precioMaximo: queryParameters.precioMaximo
         ? parseFloat(queryParameters.precioMaximo)
         : undefined,
       huespedes: queryParameters.huespedes
