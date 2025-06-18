@@ -5,3 +5,9 @@ export class AlojamientoNoExisteException extends AppException {
     super(`El alojamiento con id ${idAlojamiento} no existe`, 404);
   }
 }
+
+export class FiltrosAlojamientoInvalidosException extends AppException {
+  constructor(errores) {
+    super(`Errores de validación en los parámetros: ${errores}`, 400);
+  }
+}

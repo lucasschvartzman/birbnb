@@ -8,115 +8,20 @@ export class AlojamientoRepository {
 
   findById(id) {
     return this.model
-        .findById(id)
-        .populate({
-          path: "direccion.ciudad",
-          populate: {
-            path: "pais",
-          },
-        })
-        .populate("anfitrion")
-        .populate("reservas");
+      .findById(id)
+      .populate({
+        path: "direccion.ciudad",
+        populate: {
+          path: "pais",
+        },
+      })
+      .populate("anfitrion")
+      .populate("reservas");
   }
 
-  findAll(filters = {}, paginado = {}) {
+  findAllWithFilters = async (criterio, { pagina = 1, tamanioPagina = 10 }) => {
     const pipeline = [];
 
-    this.addLocationLookups(pipeline);
-
-    this.addLocationFilters(pipeline, filters);
-
-    this.generarQuery(pipeline, filters);
-
-    const skip = ((paginado.pagina || 1) - 1) * (paginado.tamanioPagina || 10);
-    const limit = paginado.tamanioPagina || 10;
-    pipeline.push({ $skip: skip }, { $limit: limit });
-
-    this.addRelationshipLookups(pipeline);
-
-    return this.model.aggregate(pipeline);
-  }
-
-  addLocationLookups(pipeline) {
-    pipeline.push(
-      {
-        $lookup: {
-          from: "ciudades",
-          localField: "direccion.ciudad",
-          foreignField: "_id",
-          as: "ciudad",
-        },
-      },
-      { $unwind: "$ciudad" },
-      {
-        $lookup: {
-          from: "paises",
-          localField: "ciudad.pais",
-          foreignField: "_id",
-          as: "ciudad.pais",
-        },
-      },
-      { $unwind: "$ciudad.pais" }
-    );
-  }
-
-  addLocationFilters(pipeline, filters) {
-    const locationMatch = {};
-
-    if (filters.idCiudad) {
-      locationMatch["direccion.ciudad"] = new mongoose.Types.ObjectId(
-        filters.idCiudad
-      );
-    }
-
-    if (filters.idPais) {
-      locationMatch["ciudad.pais._id"] = new mongoose.Types.ObjectId(
-        filters.idPais
-      );
-    }
-
-    if (Object.keys(locationMatch).length > 0) {
-      pipeline.push({ $match: locationMatch });
-    }
-  }
-
-  generarQuery(pipeline, filters) {
-    const matchStage = {};
-
-    if (filters.latitud !== undefined) {
-      matchStage["direccion.latitud"] = filters.latitud;
-    }
-    if (filters.longitud !== undefined) {
-      matchStage["direccion.longitud"] = filters.longitud;
-    }
-
-    if (
-      filters.precioMinimo !== undefined ||
-      filters.precioMaximo !== undefined
-    ) {
-      matchStage.precioPorNoche = {};
-      if (filters.precioMinimo !== undefined) {
-        matchStage.precioPorNoche.$gte = Number(filters.precioMinimo);
-      }
-      if (filters.precioMaximo !== undefined) {
-        matchStage.precioPorNoche.$lte = Number(filters.precioMaximo);
-      }
-    }
-
-    if (filters.huespedes !== undefined) {
-      matchStage.cantHuespedesMax = { $gte: Number(filters.huespedes) };
-    }
-
-    if (filters.caracteristicas && Array.isArray(filters.caracteristicas)) {
-      matchStage.caracteristicas = { $in: filters.caracteristicas };
-    }
-
-    if (Object.keys(matchStage).length > 0) {
-      pipeline.push({ $match: matchStage });
-    }
-  }
-
-  addRelationshipLookups(pipeline) {
     pipeline.push(
       {
         $lookup: {
@@ -129,12 +34,69 @@ export class AlojamientoRepository {
       { $unwind: "$anfitrion" },
       {
         $lookup: {
-          from: "reservas",
-          localField: "reservas",
+          from: "ciudades",
+          localField: "direccion.ciudad",
           foreignField: "_id",
-          as: "reservas",
+          as: "direccion.ciudad",
         },
-      }
+      },
+      { $unwind: "$direccion.ciudad" },
+      {
+        $lookup: {
+          from: "paises",
+          localField: "direccion.ciudad.pais",
+          foreignField: "_id",
+          as: "direccion.ciudad.pais",
+        },
+      },
+      { $unwind: "$direccion.ciudad.pais" }
     );
-  }
+
+    const match = {};
+
+    if (criterio.idCiudad) {
+      match["direccion.ciudad._id"] = new mongoose.Types.ObjectId(criterio.idCiudad);
+    }
+
+    if (criterio.idPais) {
+      match["direccion.ciudad.pais._id"] = new mongoose.Types.ObjectId(criterio.idPais);
+    }
+
+    if (
+      criterio.precioMinimo !== undefined ||
+      criterio.precioMaximo !== undefined
+    ) {
+      match.precioPorNoche = {};
+      if (criterio.precioMinimo !== undefined) {
+        match.precioPorNoche.$gte = criterio.precioMinimo;
+      }
+      if (criterio.precioMaximo !== undefined) {
+        match.precioPorNoche.$lte = criterio.precioMaximo;
+      }
+    }
+
+    if (criterio.huespedes !== undefined) {
+      match.cantHuespedesMax = { $gte: criterio.huespedes };
+    }
+
+    if (criterio.caracteristicas && criterio.caracteristicas.length > 0) {
+      match.caracteristicas = { $all: criterio.caracteristicas };
+    }
+
+    if (criterio.latitud !== undefined && criterio.longitud !== undefined) {
+      match["direccion.latitud"] = criterio.latitud;
+      match["direccion.longitud"] = criterio.longitud;
+    }
+
+    if (Object.keys(match).length > 0) {
+      pipeline.push({ $match: match });
+    }
+
+    pipeline.push(
+      { $skip: (pagina - 1) * tamanioPagina },
+      { $limit: tamanioPagina }
+    );
+
+    return await this.model.aggregate(pipeline);
+  };
 }
