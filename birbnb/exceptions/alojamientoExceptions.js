@@ -7,8 +7,8 @@ export class AlojamientoNoExisteException extends AppException {
 }
 
 export class DatosAlojamientoInvalidosException extends AppException {
-  constructor(idAlojamiento) {
-    super(400,idAlojamiento);
+  constructor(mensaje) {
+    super(mensaje,400);
   }
 }
 
