@@ -1,13 +1,14 @@
-import { RangoFechas } from "../models/entities/RangoFechas.js";
+import {RangoFechas} from "../models/entities/RangoFechas.js";
+import {ReservaValidator} from "../validators/ReservaValidator.js";
 
 const fromDto = (body) => {
   return {
     huespedReservador: body.huespedReservador,
     cantidadHuespedes: body.cantidadHuespedes,
     alojamiento: body.alojamiento,
-    rangoFechas:  new RangoFechas(
-        body.rangoFechas.fechaInicio,
-        body.rangoFechas.fechaFin
+    rangoFechas: new RangoFechas(
+      body.rangoFechas.fechaInicio,
+      body.rangoFechas.fechaFin
     ),
     precioPorNoche: body.precioPorNoche
   }
@@ -15,7 +16,7 @@ const fromDto = (body) => {
 
 const toDto = (reserva) => {
   return {
-    id : reserva._id,
+    id: reserva._id,
     fechaAlta: reserva.fechaAlta,
     huespedReservadorId: reserva.huespedReservador._id,
     cantidadHuespedes: reserva.cantidadHuespedes,
@@ -37,6 +38,7 @@ export class ReservaController {
 
   async crearReserva(req, res, next) {
     try {
+      ReservaValidator.validarCamposRequeridos(req.body);
       const reservaDto = fromDto(req.body);
       const nuevaReserva = await this.reservaService.crearReserva(reservaDto);
       res.status(201).json(toDto(nuevaReserva));
@@ -56,6 +58,7 @@ export class ReservaController {
 
   async modificarReserva(req, res, next) {
     try {
+      ReservaValidator.validarCamposRequeridos(req.body);
       const reservaDto = fromDto(req.body);
       const reservaActualizada = await this.reservaService.modificarReserva(req.params.id, reservaDto);
       res.json(toDto(reservaActualizada));

@@ -1,5 +1,5 @@
-import { AlojamientoModel } from "../schemas/alojamientoSchema.js";
-import mongoose from "mongoose";
+import {AlojamientoModel} from "../schemas/alojamientoSchema.js";
+import {AlojamientoPipelineBuilder} from "../builders/AlojamientoPipelineBuilder.js";
 
 export class AlojamientoRepository {
   constructor() {
@@ -19,84 +19,43 @@ export class AlojamientoRepository {
       .populate("reservas");
   }
 
-  findAllWithFilters = async (criterio, { pagina = 1, tamanioPagina = 10 }) => {
-    const pipeline = [];
+  async findAllWithFilters(filtros = {}, pagina, tamanioPagina) {
+    const pipeline = AlojamientoPipelineBuilder
+      .create()
+      .agregarJoins()
+      .agregarFiltros(filtros)
+      .agregarPaginacion(pagina, tamanioPagina)
+      .build();
 
-    pipeline.push(
-      {
-        $lookup: {
-          from: "usuarios",
-          localField: "anfitrion",
-          foreignField: "_id",
-          as: "anfitrion",
-        },
-      },
-      { $unwind: "$anfitrion" },
-      {
-        $lookup: {
-          from: "ciudades",
-          localField: "direccion.ciudad",
-          foreignField: "_id",
-          as: "direccion.ciudad",
-        },
-      },
-      { $unwind: "$direccion.ciudad" },
-      {
-        $lookup: {
-          from: "paises",
-          localField: "direccion.ciudad.pais",
-          foreignField: "_id",
-          as: "direccion.ciudad.pais",
-        },
-      },
-      { $unwind: "$direccion.ciudad.pais" }
-    );
+    const resultadoAgregacion = await this.#realizarAgregacion(pipeline);
 
-    const match = {};
+    const alojamientos = resultadoAgregacion.datos;
+    const resultadoPaginacion = this.#obtenerResultadoPaginacion(resultadoAgregacion, pagina, tamanioPagina);
 
-    if (criterio.idCiudad) {
-      match["direccion.ciudad._id"] = new mongoose.Types.ObjectId(criterio.idCiudad);
+    return {
+      alojamientos,
+      resultadoPaginacion
     }
+  }
 
-    if (criterio.idPais) {
-      match["direccion.ciudad.pais._id"] = new mongoose.Types.ObjectId(criterio.idPais);
-    }
+  async #realizarAgregacion(pipeline) {
+    const resultadoAgregacion = await this.model.aggregate(pipeline);
+    return resultadoAgregacion[0] || { datos: [], totalCount: [] };
+  }
 
-    if (
-      criterio.precioMinimo !== undefined ||
-      criterio.precioMaximo !== undefined
-    ) {
-      match.precioPorNoche = {};
-      if (criterio.precioMinimo !== undefined) {
-        match.precioPorNoche.$gte = criterio.precioMinimo;
-      }
-      if (criterio.precioMaximo !== undefined) {
-        match.precioPorNoche.$lte = criterio.precioMaximo;
+  #obtenerResultadoPaginacion(resultadoBusqueda, pagina, tamanioPagina) {
+    const totalElementos = resultadoBusqueda?.totalCount?.[0]?.count || 0;
+    const totalPaginas = Math.ceil(totalElementos / tamanioPagina);
+    return {
+      paginacion: {
+        paginaActual: pagina,
+        tamanioPagina: tamanioPagina,
+        totalElementos,
+        totalPaginas,
+        hayPaginaAnterior: pagina > 1,
+        hayPaginaSiguiente: pagina < totalPaginas
       }
     }
+  }
 
-    if (criterio.huespedes !== undefined) {
-      match.cantHuespedesMax = { $gte: criterio.huespedes };
-    }
-
-    if (criterio.caracteristicas && criterio.caracteristicas.length > 0) {
-      match.caracteristicas = { $all: criterio.caracteristicas };
-    }
-
-    if (criterio.latitud !== undefined && criterio.longitud !== undefined) {
-      match["direccion.latitud"] = criterio.latitud;
-      match["direccion.longitud"] = criterio.longitud;
-    }
-
-    if (Object.keys(match).length > 0) {
-      pipeline.push({ $match: match });
-    }
-
-    pipeline.push(
-      { $skip: (pagina - 1) * tamanioPagina },
-      { $limit: tamanioPagina }
-    );
-
-    return await this.model.aggregate(pipeline);
-  };
 }

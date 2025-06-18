@@ -1,6 +1,7 @@
 import {NotificacionNoExisteException} from "../exceptions/notificacionExceptions.js";
 import {NotificacionFactory} from "../models/factories/NotificacionFactory.js";
 import {AlojamientoNoExisteException} from "../exceptions/alojamientoExceptions.js";
+import {UsuarioNoExisteException} from "../exceptions/usuarioExceptions.js";
 
 export class NotificacionService {
 
@@ -43,7 +44,11 @@ export class NotificacionService {
   // Métodos auxiliares
 
   async #obtenerDatosNotificacionCreacion(reserva, alojamiento) {
-    const huespedReservador = await this.usuarioService.obtenerUsuarioPorId(reserva.huespedReservador);
+    const idHuespedReservador = reserva.huespedReservador;
+    const huespedReservador = await this.usuarioService.obtenerUsuarioPorId(idHuespedReservador);
+    if (!huespedReservador) {
+      throw new UsuarioNoExisteException(idHuespedReservador)
+    }
     return {
       huesped: huespedReservador.nombre,
       alojamiento: alojamiento.nombre,
@@ -54,7 +59,11 @@ export class NotificacionService {
   }
 
   async #obtenerDatosNotificacionCancelacion(reserva, motivo) {
-    const huespedReservador = await this.usuarioService.obtenerUsuarioPorId(reserva.huespedReservador);
+    const idHuespedReservador = reserva.huespedReservador;
+    const huespedReservador = await this.usuarioService.obtenerUsuarioPorId(idHuespedReservador);
+    if (!huespedReservador) {
+      throw new UsuarioNoExisteException(idHuespedReservador)
+    }
     const alojamiento = await this.alojamientoRepository.findById(reserva.alojamiento);
     if (alojamiento == null) {
       throw new AlojamientoNoExisteException(reserva.alojamiento);

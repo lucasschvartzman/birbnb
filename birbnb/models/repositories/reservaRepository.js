@@ -12,16 +12,21 @@ export class ReservaRepository {
       .populate("alojamiento");
   }
 
-  async save(reserva) {
-    const query = reserva.id
-      ? { _id: reserva.id }
-      : { _id: new this.model()._id };
+  async create(reserva) {
+    const nuevaReserva = new this.model(reserva);
+    return nuevaReserva
+      .save()
+      .then(doc => doc.populate("huespedReservador"))
+      .then(doc => doc.populate("alojamiento"));
+  }
 
+  async update(id, reserva) {
     return this.model
-      .findOneAndUpdate(query, reserva, {
-        new: true,
-        upsert: true
-      })
+      .findOneAndUpdate(
+        { _id: id },
+        { $set: reserva },
+        { new: true }
+      )
       .populate("huespedReservador")
       .populate("alojamiento");
   }

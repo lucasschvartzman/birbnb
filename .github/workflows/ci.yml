@@ -6,7 +6,7 @@ on:
     branches:
       - main
       - ENTREGA_2
-      - refactor-reservas-notificaciones
+      - validators
 
 jobs:
   test:
