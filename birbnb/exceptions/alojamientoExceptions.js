@@ -14,6 +14,7 @@ export class DatosAlojamientoInvalidosException extends AppException {
 
 export class FiltrosAlojamientoInvalidosException extends AppException {
   constructor(errores) {
-    super(`Errores de validación en los parámetros: ${errores}`, 400);
+    super("Errores de validación en los parámetros", 400);
+    this.errors = errores;
   }
 }

@@ -1,5 +1,5 @@
-import { AlojamientoModel } from "../schemas/alojamientoSchema.js";
-import mongoose from "mongoose";
+import {AlojamientoModel} from "../schemas/alojamientoSchema.js";
+import {AlojamientoPipelineBuilder} from "../builders/AlojamientoPipelineBuilder.js";
 
 export class AlojamientoRepository {
   constructor() {
@@ -19,98 +19,35 @@ export class AlojamientoRepository {
       .populate("reservas");
   }
 
-  findAllWithFilters = async (criterio, { pagina = 1, tamanioPagina = 10 }) => {
-    const pipeline = [];
+  async findAllWithFilters(filtros = {}, pagina, tamanioPagina) {
+    const pipeline = AlojamientoPipelineBuilder
+      .create()
+      .agregarJoins()
+      .agregarFiltros(filtros)
+      .agregarPaginacion(pagina, tamanioPagina)
+      .build();
 
-    pipeline.push(
-      {
-        $lookup: {
-          from: "usuarios",
-          localField: "anfitrion",
-          foreignField: "_id",
-          as: "anfitrion",
-        },
-      },
-      { $unwind: "$anfitrion" },
-      {
-        $lookup: {
-          from: "ciudades",
-          localField: "direccion.ciudad",
-          foreignField: "_id",
-          as: "direccion.ciudad",
-        },
-      },
-      { $unwind: "$direccion.ciudad" },
-      {
-        $lookup: {
-          from: "paises",
-          localField: "direccion.ciudad.pais",
-          foreignField: "_id",
-          as: "direccion.ciudad.pais",
-        },
-      },
-      { $unwind: "$direccion.ciudad.pais" }
-    );
+    const resultadoAgregacion = await this.#realizarAgregacion(pipeline);
 
-    const match = {};
-
-    if (criterio.idCiudad) {
-      match["direccion.ciudad._id"] = new mongoose.Types.ObjectId(criterio.idCiudad);
-    }
-
-    if (criterio.idPais) {
-      match["direccion.ciudad.pais._id"] = new mongoose.Types.ObjectId(criterio.idPais);
-    }
-
-    if (
-      criterio.precioMinimo !== undefined ||
-      criterio.precioMaximo !== undefined
-    ) {
-      match.precioPorNoche = {};
-      if (criterio.precioMinimo !== undefined) {
-        match.precioPorNoche.$gte = criterio.precioMinimo;
-      }
-      if (criterio.precioMaximo !== undefined) {
-        match.precioPorNoche.$lte = criterio.precioMaximo;
-      }
-    }
-
-    if (criterio.huespedes !== undefined) {
-      match.cantHuespedesMax = { $gte: criterio.huespedes };
-    }
-
-    if (criterio.caracteristicas && criterio.caracteristicas.length > 0) {
-      match.caracteristicas = { $all: criterio.caracteristicas };
-    }
-
-    if (criterio.latitud !== undefined && criterio.longitud !== undefined) {
-      match["direccion.latitud"] = criterio.latitud;
-      match["direccion.longitud"] = criterio.longitud;
-    }
-
-    if (Object.keys(match).length > 0) {
-      pipeline.push({ $match: match });
-    }
-
-    pipeline.push({
-      $facet: {
-        datos: [
-          { $skip: (pagina - 1) * tamanioPagina },
-          { $limit: tamanioPagina }
-        ],
-        totalCount: [
-          { $count: "count" }
-        ]
-      }
-    });
-
-    const resultado = await this.model.aggregate(pipeline);
-    const datos = resultado[0].datos;
-    const totalElementos = resultado[0].totalCount[0]?.count || 0;
-    const totalPaginas = Math.ceil(totalElementos / tamanioPagina);
+    const alojamientos = resultadoAgregacion.datos;
+    const resultadoPaginacion = this.#obtenerResultadoPaginacion(resultadoAgregacion, pagina, tamanioPagina);
 
     return {
-      datos,
+      alojamientos,
+      resultadoPaginacion
+    }
+  }
+
+  async #realizarAgregacion(pipeline) {
+    const resultadoAgregacion = await this.model.aggregate(pipeline);
+     // Sé que es feo, pero aggregate siempre devuelve un array por el $facet :s
+    return resultadoAgregacion[0] || { datos: [], totalCount: [] };
+  }
+
+  #obtenerResultadoPaginacion(resultadoBusqueda, pagina, tamanioPagina) {
+    const totalElementos = resultadoBusqueda?.totalCount?.[0]?.count || 0;
+    const totalPaginas = Math.ceil(totalElementos / tamanioPagina);
+    return {
       paginacion: {
         paginaActual: pagina,
         tamanioPagina: tamanioPagina,
@@ -119,6 +56,7 @@ export class AlojamientoRepository {
         hayPaginaAnterior: pagina > 1,
         hayPaginaSiguiente: pagina < totalPaginas
       }
-    };
-  };
+    }
+  }
+
 }
