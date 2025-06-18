@@ -1,96 +1,175 @@
 import { Caracteristica } from "../models/entities/Caracteristica.js";
+import { FiltrosAlojamientoInvalidosException } from "../exceptions/alojamientoExceptions.js";
+import mongoose from "mongoose";
 
-const mapearCaracteristicas = (caracteristicas) => {
-    if (!caracteristicas) 
-        return caracteristicas
+export class AlojamientoController {
+  constructor(alojamientoRepository) {
+    this.alojamientoRepository = alojamientoRepository;
+  }
+
+  #mapearCaracteristicas = (caracteristicas) => {
+    if (!caracteristicas) return caracteristicas;
     const caracteristicasValidas = Caracteristica.getAllAsString();
     const arrayDeCaracteristicas = caracteristicas.trim().split(",");
-    return arrayDeCaracteristicas.filter((c) => caracteristicasValidas.includes(c.trim()))
-}
+    return arrayDeCaracteristicas.filter((c) =>
+      caracteristicasValidas.includes(c.trim())
+    );
+  };
 
-const esStringValido = (valor) => {
-    return typeof valor === 'string' && valor.trim().length !== 0
-} 
+  #esStringValido = (valor) => {
+    return typeof valor === "string" && valor.trim().length !== 0;
+  };
 
-const esNumeroPositivo = (valor) => {
-    return !isNaN(valor) && valor > 0
-}
+  #esNumeroPositivo = (valor) => {
+    return !isNaN(valor) && valor > 0;
+  };
 
-const validarParametros = (queryParameters) => {
-    const errores = []
-    if (queryParameters.idCiudad && !esStringValido(queryParameters.idCiudad))
-        errores.push('El parámetro "ciudad" debe ser un string válido')
-    if (queryParameters.idPais && !esStringValido(queryParameters.idPais))
-        errores.push('El parámetro "pais" debe ser un string válido')
-    if (queryParameters.precioMinimo && !esNumeroPositivo(queryParameters.precioMinimo))
-        errores.push('El parámetro "precioMinimo" debe ser un número positivo');
-    if (queryParameters.precioMaximo && !esNumeroPositivo(queryParameters.precioMaximo))
-        errores.push('El parámetro "precioMaximo" debe ser un número positivo'); 
-    if (queryParameters.latitud && isNaN(queryParameters.latitud) )
-        errores.push(mensajeErrorStringInvalido("coordLatitud"))  
-    if (queryParameters.longitud && isNaN(queryParameters.latitud))
-        errores.push(mensajeErrorStringInvalido("coordLongitud"))
-    if (queryParameters.huespedes && (!esNumeroPositivo(queryParameters.huespedes||!Number.isInteger(queryParameters.huespedes))))
-        errores.push('El parámetro "huespedes" debe ser un número entero positivo');
-    if (queryParameters.caracteristicas && !esStringValido(queryParameters.caracteristicas)) 
-        errores.push('El parámetro "caracteristicas" debe ser un string válido')
+  #obtenerMensajeStringInvalido = (parametro) => {
+    return `El parámetro '${parametro}' debe ser un string válido.`;
+  };
+
+  #obtenerMensajeIdInvalido = (parametro) => {
+    return `El parámetro '${parametro}' debe ser un ObjectId válido.`;
+  };
+
+  #obtenerMensajeNumeroNoEnteroPositivo = (parametro) => {
+    return `El parámetro '${parametro}' debe ser un string válido.`;
+  };
+
+  #validarParametros = (queryParameters) => {
+    const errores = [];
+    if (
+      queryParameters.idCiudad &&
+      !mongoose.Types.ObjectId.isValid(queryParameters.idCiudad)
+    )
+      errores.push(this.#obtenerMensajeIdInvalido("ciudad"));
+    if (
+      queryParameters.idPais &&
+      !mongoose.Types.ObjectId.isValid(queryParameters.idPais)
+    )
+      errores.push(this.#obtenerMensajeIdInvalido("pais"));
+    if (
+      queryParameters.precioMinimo &&
+      !this.#esNumeroPositivo(queryParameters.precioMinimo)
+    )
+      errores.push(this.#obtenerMensajeNumeroNoEnteroPositivo("precioMinimo"));
+    if (
+      queryParameters.precioMaximo &&
+      !this.#esNumeroPositivo(queryParameters.precioMaximo)
+    )
+      errores.push(this.#obtenerMensajeNumeroNoEnteroPositivo("precioMaximo"));
+    const precioMinimo = queryParameters.precioMinimo
+      ? parseFloat(queryParameters.precioMinimo)
+      : null;
+    const precioMaximo = queryParameters.precioMaximo
+      ? parseFloat(queryParameters.precioMaximo)
+      : null;
+    if (
+      precioMinimo !== null &&
+      precioMaximo !== null &&
+      precioMinimo > precioMaximo
+    ) {
+      errores.push(
+        'El \'precioMinimo\' no puede ser mayor que el \'precioMaximo\'.'
+      );
+    }
+    if (queryParameters.latitud && isNaN(queryParameters.latitud))
+      errores.push(this.#obtenerMensajeStringInvalido("coordLatitud"));
+    if (queryParameters.longitud && isNaN(queryParameters.longitud))
+      errores.push(this.#obtenerMensajeStringInvalido("coordLongitud"));
+    if (queryParameters.huespedes) {
+      const huespedesNum = parseInt(queryParameters.huespedes);
+      if (
+        !this.#esNumeroPositivo(queryParameters.huespedes) ||
+        !Number.isInteger(huespedesNum)
+      ) {
+        errores.push(this.#obtenerMensajeNumeroNoEnteroPositivo("huespedes"));
+      }
+    }
+    if (
+      queryParameters.caracteristicas &&
+      !this.#esStringValido(queryParameters.caracteristicas)
+    )
+      errores.push(this.#obtenerMensajeStringInvalido("caracteristicas"));
     if (errores.length > 0) {
-        throw new Error(`Errores de validación en los parámetros: ${JSON.stringify(errores)}`);
+      throw new FiltrosAlojamientoInvalidosException(errores.join(" "));
     }
-
     return true;
-};
+  };
 
-const deRestARepo = (queryParameters) => {
+  #obtenerCriterioParseado = (queryParameters) => {
     return {
-        idCiudad: queryParameters.idCiudad, //si busco por ciudad, omitir la busqueda por pais
-        idPais: queryParameters.idPais,
-        latitud: queryParameters.latitud,
-        longitud: queryParameters.longitud,
-        precioMinimo: queryParameters.precioMinimo,
-        precioMaximo: queryParameters.precioMaximo,
-        huespedes: queryParameters.huespedes,
-        caracteristicas: mapearCaracteristicas(queryParameters.caracteristicas),
-    }
-}
-const deRepoARest = (alojamiento) => {
-    return {
-        nombre: alojamiento.nombre,
-        descripcion: alojamiento.descripcion,
-        ciudad: alojamiento.direccion?.ciudad,
-        calle: alojamiento.direccion?.calle,
-        altura: alojamiento.direccion?.altura,
-        coordenadas: {
-            latitud: alojamiento.direccion?.latitud,
-            longitud: alojamiento.direccion?.longitud},
-        precioPorNoche: alojamiento.precioPorNoche,
-        cantHuespedesMax: alojamiento.cantHuespedesMax,
-        moneda: alojamiento.moneda,
-        horarioCheckIn: alojamiento.horarioCheckIn,
-        horarioCheckOut: alojamiento.horarioCheckOut,
-        caracteristicas: alojamiento.caracteristicas,
-    }
-}
-export class AlojamientoController {
-    
-    constructor(alojamientoRepository ) {
-        this.alojamientoRepository = alojamientoRepository;
-    }
+      idCiudad: queryParameters.idCiudad,
+      idPais: queryParameters.idPais,
+      latitud: queryParameters.latitud
+        ? parseFloat(queryParameters.latitud)
+        : undefined,
+      longitud: queryParameters.longitud
+        ? parseFloat(queryParameters.longitud)
+        : undefined,
+      precioMinimo: queryParameters.precioMinimo
+        ? parseFloat(queryParameters.precioMinimo)
+        : undefined,
+      precioMaximo: queryParameters.precioMaximo
+        ? parseFloat(queryParameters.precioMaximo)
+        : undefined,
+      huespedes: queryParameters.huespedes
+        ? parseInt(queryParameters.huespedes)
+        : undefined,
+      caracteristicas: this.#mapearCaracteristicas(
+        queryParameters.caracteristicas
+      ),
+    };
+  };
 
-    async buscarAlojamientosConFiltros(req, res) {
-        try {
-            validarParametros(req.query)
-            const criterios = deRestARepo(req.query)
-            const pagina = req.query.pagina || 1
-            const tamanioPagina = req.query.tamanioPagina || 25
-            const alojamientos = await this.alojamientoRepository.findAll(criterios, {pagina, tamanioPagina})
-            const jsonRespuesta = alojamientos.map(deRepoARest)
-            res.status(200).json(jsonRespuesta)
-        } catch (error) {
-            console.error(error)
-            res.status(500).json({
-                error: error.message,
-            })
+  #toDireccionDto = (direccion) => {
+    return {
+      calle: direccion.calle,
+      altura: direccion.altura,
+      coordenadas: {
+        latitud: direccion.latitud,
+        longitud: direccion.longitud,
+      },
+      ciudad: {
+        nombre: direccion.ciudad.nombre,
+        pais: direccion.ciudad.pais.nombre,
+      },
+    };
+  };
+
+  #toDto = (alojamiento) => {
+    return {
+      nombre: alojamiento.nombre,
+      descripcion: alojamiento.descripcion,
+      direccion: alojamiento.direccion
+        ? this.#toDireccionDto(alojamiento.direccion)
+        : undefined,
+      precioPorNoche: alojamiento.precioPorNoche,
+      cantHuespedesMax: alojamiento.cantHuespedesMax,
+      moneda: alojamiento.moneda.nombre,
+      horarioCheckIn: alojamiento.horarioCheckIn,
+      horarioCheckOut: alojamiento.horarioCheckOut,
+      caracteristicas: alojamiento.caracteristicas,
+    };
+  };
+
+  async buscarAlojamientosConFiltros(req, res, next) {
+    try {
+      this.#validarParametros(req.query);
+      const criterios = this.#obtenerCriterioParseado(req.query);
+      const pagina = req.query.pagina || 1;
+      const tamanioPagina = req.query.tamanioPagina || 25;
+      const alojamientos = await this.alojamientoRepository.findAllWithFilters(
+        criterios,
+        {
+          pagina,
+          tamanioPagina,
         }
+      );
+      const jsonRespuesta = alojamientos.map(this.#toDto);
+      res.json(jsonRespuesta);
+    } catch (error) {
+      next(error);
     }
+  }
 }

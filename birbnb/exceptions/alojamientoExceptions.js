@@ -6,8 +6,8 @@ export class AlojamientoNoExisteException extends AppException {
   }
 }
 
-export class DatosAlojamientoInvalidosException extends AppException {
-  constructor(message) {
-    super(message,400);
+export class FiltrosAlojamientoInvalidosException extends AppException {
+  constructor(errores) {
+    super(`Errores de validación en los parámetros: ${errores}`, 400);
   }
 }
