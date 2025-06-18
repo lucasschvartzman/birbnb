@@ -1,0 +1,918 @@
+{
+	"info": {
+		"_postman_id": "8dc06c81-c063-431f-9916-d0f6e83af615",
+		"name": "🏠 Birbnb: Endpoints",
+		"description": "Colección de casos de prueba exhaustivos para la API de Birbnb",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "44009742",
+		"_collection_link": "https://lucasschvartzman-7867556.postman.co/workspace/Lucas-Schvartzman's-Workspace~a9c07593-f7d9-4ce5-8314-71765cb74127/collection/44009742-8dc06c81-c063-431f-9916-d0f6e83af615?action=share&source=collection_link&creator=44009742"
+	},
+	"item": [
+		{
+			"name": "Notificaciones",
+			"item": [
+				{
+					"name": "✅ Casos Exitosos",
+					"item": [
+						{
+							"name": "Notificaciones sin leer de un usuario",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/usuarios/{{idUsuarioConNotificacionesSinLeer}}/notificaciones?leida=false",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"usuarios",
+										"{{idUsuarioConNotificacionesSinLeer}}",
+										"notificaciones"
+									],
+									"query": [
+										{
+											"key": "leida",
+											"value": "false"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Notificaciones leídas de un usuario",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/usuarios/{{idUsuarioConNotificacionesLeidas}}/notificaciones?leida=true",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"usuarios",
+										"{{idUsuarioConNotificacionesLeidas}}",
+										"notificaciones"
+									],
+									"query": [
+										{
+											"key": "leida",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Todas las notificaciones (sin filtro)",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/usuarios/{{idUsuarioConNotificaciones}}/notificaciones",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"usuarios",
+										"{{idUsuarioConNotificaciones}}",
+										"notificaciones"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Marcar como leída",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/notificaciones/{{idNotificacionSinLeer}}/leida",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"notificaciones",
+										"{{idNotificacionSinLeer}}",
+										"leida"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "❌ Errores de Recursos Inexistentes",
+					"item": [
+						{
+							"name": "Usuario inexistente - 404",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/usuarios/000000000000000000000000/notificaciones",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"usuarios",
+										"000000000000000000000000",
+										"notificaciones"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Notificación inexistente al marcar como leída - 404",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/notificaciones/000000000000000000000000/leida",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"notificaciones",
+										"000000000000000000000000",
+										"leida"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "❌ Errores de Formato",
+					"item": [
+						{
+							"name": "ID usuario formato inválido - 400",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/usuarios/invalid-id/notificaciones",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"usuarios",
+										"invalid-id",
+										"notificaciones"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ID notificación formato inválido - 400",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/notificaciones/invalid-notification-id/leida",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"notificaciones",
+										"invalid-notification-id",
+										"leida"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Reservas",
+			"item": [
+				{
+					"name": "✅ Casos Exitosos",
+					"item": [
+						{
+							"name": "Crear una reserva válida",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"huespedReservador\": \"683dcc12c4f8dbbfa447b716\",\n  \"cantidadHuespedes\": 2,\n  \"alojamiento\": \"683dcb5bc4f8dbbfa447b70a\",\n  \"rangoFechas\": {\n    \"fechaInicio\": \"2025-07-10T00:00:00Z\",\n    \"fechaFin\": \"2025-07-15T00:00:00Z\"\n  },\n  \"precioPorNoche\": 100.0\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/reservas",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"reservas"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Historial de reservas de usuario (Huésped)",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/usuarios/{{idHuespedConReservas}}/reservas",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"usuarios",
+										"{{idHuespedConReservas}}",
+										"reservas"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Modificar una reserva",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"huespedReservador\": \"683dcc12c4f8dbbfa447b716\",\r\n  \"cantidadHuespedes\": 4,\r\n  \"alojamiento\": \"683dcb5bc4f8dbbfa447b70a\",\r\n  \"rangoFechas\": {\r\n    \"fechaInicio\": \"2025-07-10T00:00:00Z\",\r\n    \"fechaFin\": \"2025-07-15T00:00:00Z\"\r\n  },\r\n  \"precioPorNoche\": 100.0\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/reservas/{{idReservaPendiente}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"reservas",
+										"{{idReservaPendiente}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Cancelar una reserva con motivo",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"motivo\": \"Cambio de planes por trabajo\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/reservas/{{idReservaPendiente}}/cancelar",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"reservas",
+										"{{idReservaPendiente}}",
+										"cancelar"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "❌ Errores de Creación",
+					"item": [
+						{
+							"name": "Usuario inexistente - 404",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"huespedReservador\": \"000000000000000000000000\",\n  \"cantidadHuespedes\": 2,\n  \"alojamiento\": \"683dcb5bc4f8dbbfa447b70a\",\n  \"rangoFechas\": {\n    \"fechaInicio\": \"2025-07-10T00:00:00Z\",\n    \"fechaFin\": \"2025-07-15T00:00:00Z\"\n  },\n  \"precioPorNoche\": 100.0\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/reservas",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"reservas"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Alojamiento inexistente - 404",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"huespedReservador\": \"683dcc50c4f8dbbfa447b719\",\n  \"cantidadHuespedes\": 2,\n  \"alojamiento\": \"000000000000000000000000\",\n  \"rangoFechas\": {\n    \"fechaInicio\": \"2025-07-10T00:00:00Z\",\n    \"fechaFin\": \"2025-07-15T00:00:00Z\"\n  },\n  \"precioPorNoche\": 100.0\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/reservas",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"reservas"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Fecha inicio mayor que fecha fin - 400",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"huespedReservador\": \"6851831cd87aa73d9ccf2c3e\",\n  \"cantidadHuespedes\": 2,\n  \"alojamiento\": \"685183bfd87aa73d9ccf2c40\",\n  \"rangoFechas\": {\n    \"fechaInicio\": \"2025-07-20T00:00:00Z\",\n    \"fechaFin\": \"2025-07-15T00:00:00Z\"\n  },\n  \"precioPorNoche\": 100.0\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/reservas",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"reservas"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Fechas en el pasado - 400",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"huespedReservador\": \"6851831cd87aa73d9ccf2c3e\",\n  \"cantidadHuespedes\": 2,\n  \"alojamiento\": \"685183bfd87aa73d9ccf2c40\",\n  \"rangoFechas\": {\n    \"fechaInicio\": \"2024-01-10T00:00:00Z\",\n    \"fechaFin\": \"2024-01-15T00:00:00Z\"\n  },\n  \"precioPorNoche\": 100.0\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/reservas",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"reservas"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Cantidad de huéspedes negativa - 400",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"huespedReservador\": \"6851831cd87aa73d9ccf2c3e\",\n  \"cantidadHuespedes\": -1,\n  \"alojamiento\": \"685183bfd87aa73d9ccf2c40\",\n  \"rangoFechas\": {\n    \"fechaInicio\": \"2025-07-10T00:00:00Z\",\n    \"fechaFin\": \"2025-07-15T00:00:00Z\"\n  },\n  \"precioPorNoche\": 100.0\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/reservas",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"reservas"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Precio negativo - 400",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"huespedReservador\": \"6851831cd87aa73d9ccf2c3e\",\n  \"cantidadHuespedes\": 2,\n  \"alojamiento\": \"685183bfd87aa73d9ccf2c40\",\n  \"rangoFechas\": {\n    \"fechaInicio\": \"2025-07-10T00:00:00Z\",\n    \"fechaFin\": \"2025-07-15T00:00:00Z\"\n  },\n  \"precioPorNoche\": -50.0\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/reservas",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"reservas"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "❌ Errores de Recursos Inexistentes",
+					"item": [
+						{
+							"name": "Usuario inexistente - Historial 404",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/usuarios/000000000000000000000000/reservas",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"usuarios",
+										"000000000000000000000000",
+										"reservas"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Cancelar reserva inexistente - 404",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"motivo\": \"Test de reserva inexistente\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/reservas/000000000000000000000000/cancelar",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"reservas",
+										"000000000000000000000000",
+										"cancelar"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Modificar reserva inexistente - 404",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"huespedReservador\": \"683dcc50c4f8dbbfa447b719\",\n  \"cantidadHuespedes\": 3,\n  \"alojamiento\": \"683dcb5bc4f8dbbfa447b70a\",\n  \"rangoFechas\": {\n    \"fechaInicio\": \"2025-07-12T00:00:00Z\",\n    \"fechaFin\": \"2025-07-18T00:00:00Z\"\n  },\n  \"precioPorNoche\": 120.0\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/reservas/000000000000000000000000",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"reservas",
+										"000000000000000000000000"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "❌ Errores de Formato",
+					"item": [
+						{
+							"name": "JSON malformado - 400",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"huespedReservador\": \"683dcc50c4f8dbbfa447b719\",\n  \"cantidadHuespedes\": 2,\n  \"alojamiento\": \"683dcb5bc4f8dbbfa447b70a\",\n  \"rangoFechas\": {\n    \"fechaInicio\": \"2025-07-10T00:00:00Z\",\n    \"fechaFin\": \"2025-07-15T00:00:00Z\"\n  },\n  \"precioPorNoche\": 100.0\n  // Falta cerrar la llave."
+								},
+								"url": {
+									"raw": "{{baseUrl}}/reservas",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"reservas"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Campos faltantes - 400",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"cantidadHuespedes\": 2,\n  \"alojamiento\": \"683dcb5bc4f8dbbfa447b70a\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/reservas",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"reservas"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Utilidades",
+			"item": [
+				{
+					"name": "Health check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/health",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"health"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Documentación",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api-docs",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api-docs"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Alojamientos",
+			"item": [
+				{
+					"name": "✅ Casos Exitosos",
+					"item": [
+						{
+							"name": "Todos los alojamientos (sin filtros)",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/alojamientos",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"alojamientos"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Alojamientos con todos los filtros",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/alojamientos?idCiudad=683dcbacc4f8dbbfa447b70d&idPais=68312ec9b6250fd886ab24f8&latitud=-34.6158&longitud=-58.3734&precioMinimo=15000&precioMaximo=50000&huespedes=3&caracteristicas=WIFI,MASCOTAS_PERMITIDAS",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"alojamientos"
+									],
+									"query": [
+										{
+											"key": "idCiudad",
+											"value": "683dcbacc4f8dbbfa447b70d"
+										},
+										{
+											"key": "idPais",
+											"value": "68312ec9b6250fd886ab24f8"
+										},
+										{
+											"key": "latitud",
+											"value": "-34.6158"
+										},
+										{
+											"key": "longitud",
+											"value": "-58.3734"
+										},
+										{
+											"key": "precioMinimo",
+											"value": "15000"
+										},
+										{
+											"key": "precioMaximo",
+											"value": "50000"
+										},
+										{
+											"key": "huespedes",
+											"value": "3"
+										},
+										{
+											"key": "caracteristicas",
+											"value": "WIFI,MASCOTAS_PERMITIDAS"
+										},
+										{
+											"key": "pagina",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "tamanioPagina",
+											"value": "1",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Todos los alojamientos paginados",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/alojamientos?pagina=1&tamanioPagina=1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"alojamientos"
+									],
+									"query": [
+										{
+											"key": "pagina",
+											"value": "1"
+										},
+										{
+											"key": "tamanioPagina",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "❌ Errores de Formato",
+					"item": [
+						{
+							"name": "Identificador con formato inválido - 400",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/alojamientos?idCiudad=id-ciudad-invalido",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"alojamientos"
+									],
+									"query": [
+										{
+											"key": "idCiudad",
+											"value": "id-ciudad-invalido"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Número positivo como negativo - 400",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/alojamientos?huespedes=-1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"alojamientos"
+									],
+									"query": [
+										{
+											"key": "huespedes",
+											"value": "-1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Manejo de múltiples errores - 400",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/alojamientos?idCiudad=idCiudad-invalido&idPais=idPais-invalido&latitud=latitud-invalida&longitud=longitud-invalida&precioMinimo=-100&precioMaximo=-50&huespedes=-2&caracteristicas=",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"alojamientos"
+									],
+									"query": [
+										{
+											"key": "idCiudad",
+											"value": "idCiudad-invalido"
+										},
+										{
+											"key": "idPais",
+											"value": "idPais-invalido"
+										},
+										{
+											"key": "latitud",
+											"value": "latitud-invalida"
+										},
+										{
+											"key": "longitud",
+											"value": "longitud-invalida"
+										},
+										{
+											"key": "precioMinimo",
+											"value": "-100"
+										},
+										{
+											"key": "precioMaximo",
+											"value": "-50"
+										},
+										{
+											"key": "huespedes",
+											"value": "-2"
+										},
+										{
+											"key": "caracteristicas",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "idUsuarioConNotificacionesSinLeer",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "idUsuarioConNotificacionesLeidas",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "idUsuarioConNotificaciones",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "idNotificacionSinLeer",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "idHuespedConReservas",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "idReservaPendiente",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
