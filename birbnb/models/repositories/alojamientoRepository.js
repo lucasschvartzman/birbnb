@@ -40,7 +40,6 @@ export class AlojamientoRepository {
 
   async #realizarAgregacion(pipeline) {
     const resultadoAgregacion = await this.model.aggregate(pipeline);
-     // Sé que es feo, pero aggregate siempre devuelve un array por el $facet :s
     return resultadoAgregacion[0] || { datos: [], totalCount: [] };
   }
 
