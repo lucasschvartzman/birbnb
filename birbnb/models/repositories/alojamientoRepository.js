@@ -92,11 +92,33 @@ export class AlojamientoRepository {
       pipeline.push({ $match: match });
     }
 
-    pipeline.push(
-      { $skip: (pagina - 1) * tamanioPagina },
-      { $limit: tamanioPagina }
-    );
+    pipeline.push({
+      $facet: {
+        datos: [
+          { $skip: (pagina - 1) * tamanioPagina },
+          { $limit: tamanioPagina }
+        ],
+        totalCount: [
+          { $count: "count" }
+        ]
+      }
+    });
 
-    return await this.model.aggregate(pipeline);
+    const resultado = await this.model.aggregate(pipeline);
+    const datos = resultado[0].datos;
+    const totalElementos = resultado[0].totalCount[0]?.count || 0;
+    const totalPaginas = Math.ceil(totalElementos / tamanioPagina);
+
+    return {
+      datos,
+      paginacion: {
+        paginaActual: pagina,
+        tamanioPagina: tamanioPagina,
+        totalElementos,
+        totalPaginas,
+        hayPaginaAnterior: pagina > 1,
+        hayPaginaSiguiente: pagina < totalPaginas
+      }
+    };
   };
 }

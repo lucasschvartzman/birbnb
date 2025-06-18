@@ -157,16 +157,22 @@ export class AlojamientoController {
     try {
       this.#validarParametros(req.query);
       const criterios = this.#obtenerCriterioParseado(req.query);
-      const pagina = req.query.pagina || 1;
-      const tamanioPagina = req.query.tamanioPagina || 25;
-      const alojamientos = await this.alojamientoRepository.findAllWithFilters(
+      const pagina = parseInt(req.query.pagina) || 1;
+      const tamanioPagina = parseInt(req.query.tamanioPagina) || 25;
+
+      const resultado = await this.alojamientoRepository.findAllWithFilters(
         criterios,
         {
           pagina,
           tamanioPagina,
         }
       );
-      const jsonRespuesta = alojamientos.map(this.#toDto);
+
+      const jsonRespuesta = {
+        alojamientos: resultado.datos.map(this.#toDto),
+        paginacion: resultado.paginacion
+      };
+
       res.json(jsonRespuesta);
     } catch (error) {
       next(error);
