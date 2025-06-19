@@ -1,23 +1,23 @@
 import dotenv from "dotenv";
 import express from "express";
-import { Server } from "./src/server/server.js";
-import { MongoDBClient } from "./src/config/database.js";
+import { Server } from "./server/server.js";
+import { MongoDBClient } from "./config/database.js";
 
 // Repositories
-import { NotificacionRepository } from "./src/models/repositories/notificacionRepository.js";
-import { AlojamientoRepository } from "./src/models/repositories/alojamientoRepository.js";
-import { ReservaRepository } from "./src/models/repositories/reservaRepository.js";
+import { NotificacionRepository } from "./models/repositories/notificacionRepository.js";
+import { AlojamientoRepository } from "./models/repositories/alojamientoRepository.js";
+import { ReservaRepository } from "./models/repositories/reservaRepository.js";
 
 // Services
-import { NotificacionService } from "./src/services/notificacionService.js";
-import { ReservaService } from "./src/services/reservaService.js";
+import { NotificacionService } from "./services/notificacionService.js";
+import { ReservaService } from "./services/reservaService.js";
 
 // Controllers
-import { NotificacionController } from "./src/controllers/notificacionController.js";
-import { AlojamientoController } from "./src/controllers/alojamientoController.js";
-import { ReservaController } from "./src/controllers/reservaController.js";
-import {UsuarioRepository} from "./src/models/repositories/usuarioRepository.js";
-import {UsuarioService} from "./src/services/usuarioService.js";
+import { NotificacionController } from "./controllers/notificacionController.js";
+import { AlojamientoController } from "./controllers/alojamientoController.js";
+import { ReservaController } from "./controllers/reservaController.js";
+import {UsuarioRepository} from "./models/repositories/usuarioRepository.js";
+import {UsuarioService} from "./services/usuarioService.js";
 
 const DEFAULT_PORT = 3000;
 
