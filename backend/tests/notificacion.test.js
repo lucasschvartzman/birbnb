@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, test, jest } from '@jest/globals';
-import { NotificacionService } from '../birbnb/services/notificacionService.js';
-import { NotificacionNoExisteException } from '../birbnb/exceptions/notificacionExceptions.js';
-import { UsuarioNoExisteException } from "../birbnb/exceptions/usuarioExceptions.js";
+import { NotificacionService } from '../src/services/notificacionService.js';
+import { NotificacionNoExisteException } from '../src/exceptions/notificacionExceptions.js';
+import { UsuarioNoExisteException } from "../src/exceptions/usuarioExceptions.js";
 
 describe('NotificacionService', () => {
   let servicio;

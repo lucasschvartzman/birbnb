@@ -10,7 +10,7 @@ const swaggerOptions = {
       description: 'Documentación con Swagger',
     },
   },
-  apis: ['birbnb/routes/*.js'],
+  apis: ['backend/routes/*.js'],
 };
 
 const swaggerSpec = swaggerJSDoc(swaggerOptions);

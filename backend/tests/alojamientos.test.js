@@ -1,7 +1,7 @@
-import { Alojamiento } from "../birbnb/models/entities/Alojamiento";
-import { Caracteristica } from "../birbnb/models/entities/Caracteristica";
-import { RangoFechas } from "../birbnb/models/entities/RangoFechas";
-import { Reserva } from "../birbnb/models/entities/Reserva";
+import { Alojamiento } from "../src/models/entities/Alojamiento.js";
+import { Caracteristica } from "../src/models/entities/Caracteristica.js";
+import { RangoFechas } from "../src/models/entities/RangoFechas.js";
+import { Reserva } from "../src/models/entities/Reserva.js";
 
 const mockReserva = new Reserva(null, null, 3, null, new RangoFechas('2025-01-01', '2025-01-10'), 30);
 const mockAlojamiento = new Alojamiento(null, null, null, 30, null, null, null, null, 4, [], [])

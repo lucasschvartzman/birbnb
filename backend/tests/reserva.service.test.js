@@ -1,13 +1,13 @@
 import { beforeEach, describe, expect, test, jest, afterEach } from '@jest/globals';
-import { ReservaService } from "../birbnb/services/reservaService.js";
+import { ReservaService } from "../src/services/reservaService.js";
 import {
   DatosReservaInvalidosException,
   ReservaNoExisteException,
-} from "../birbnb/exceptions/reservaExceptions.js";
-import { EstadoReserva } from "../birbnb/models/entities/EstadoReserva.js";
-import {UsuarioNoExisteException} from "../birbnb/exceptions/usuarioExceptions.js";
-import {AlojamientoNoExisteException} from "../birbnb/exceptions/alojamientoExceptions.js";
-import {DatosAlojamientoInvalidosException} from "../birbnb/exceptions/alojamientoExceptions.js";
+} from "../src/exceptions/reservaExceptions.js";
+import { EstadoReserva } from "../src/models/entities/EstadoReserva.js";
+import {UsuarioNoExisteException} from "../src/exceptions/usuarioExceptions.js";
+import {AlojamientoNoExisteException} from "../src/exceptions/alojamientoExceptions.js";
+import {DatosAlojamientoInvalidosException} from "../src/exceptions/alojamientoExceptions.js";
 
 describe("ReservaService", () => {
   let service;

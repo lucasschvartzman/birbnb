@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test, jest } from '@jest/globals';
-import { Reserva } from "../birbnb/models/entities/Reserva.js";
+import { Reserva } from "../src/models/entities/Reserva.js";
 
 describe('Reserva', () => {
     let reserva;
