@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Typography, Button } from '@mui/material';
 import backgroundImage from '../assets/image.png';
 
-const Header = () => {
+const Header = ({ onVerAlojamientosClick }) => {
   return (
     <Box
     sx={{
@@ -49,8 +49,7 @@ const Header = () => {
         },
         color: '#fff',
         mt: 2,
-      }}
-    >Ver alojamientos!
+      }}  onClick={onVerAlojamientosClick}>Ver alojamientos!
     </Button>
   </Box>
     </Box>
