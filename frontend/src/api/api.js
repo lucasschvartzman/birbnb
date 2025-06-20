@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = process.env.API_URL_BASE;
+const API_BASE_URL = process.env.REACT_APP_API_URL_BASE;
 
 export const login = async (email, password) => {
   try {
@@ -8,8 +8,10 @@ export const login = async (email, password) => {
       email: email,
       password: password
     });
-    return response.data.id;
+    console.log(response.data);
+    return response.data;
   } catch (error) {
+    console.log(error);
     throw error;
   }
 }

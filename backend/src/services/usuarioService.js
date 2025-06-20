@@ -10,6 +10,10 @@ export class UsuarioService {
     return await this.usuarioRepository.findById(idUsuario);
   }
 
+  async obtenerUsuarioPorEmailYPassword(email, password) {
+    return this.usuarioRepository.findByEmailAndPassword(email, password);
+  }
+
   async validarExistenciaUsuario(idUsuario) {
     const usuarioExiste = await this.usuarioRepository.existsById(idUsuario);
     if (!usuarioExiste) {

@@ -18,6 +18,8 @@ import { AlojamientoController } from "./controllers/alojamientoController.js";
 import { ReservaController } from "./controllers/reservaController.js";
 import {UsuarioRepository} from "./models/repositories/usuarioRepository.js";
 import {UsuarioService} from "./services/usuarioService.js";
+import {AuthService} from "./services/authService.js";
+import {AuthController} from "./controllers/authController.js";
 
 const DEFAULT_PORT = 3000;
 
@@ -51,15 +53,18 @@ export class App {
         const notificacionService = new NotificacionService(notificacionRepository, alojamientoRepository, usuarioService);
         const reservaService = new ReservaService(reservaRepository, alojamientoRepository,
           notificacionService, usuarioService);
+        const authService = new AuthService(usuarioService);
         // const alojamientoService = new AlojamientoService(alojamientoRepository);
 
         const alojamientoController = new AlojamientoController(alojamientoRepository);
         const notificacionController = new NotificacionController(notificacionService);
         const reservaController = new ReservaController(reservaService);
+        const authController = new AuthController(authService);
 
         this.controllers.set(AlojamientoController, alojamientoController);
         this.controllers.set(NotificacionController, notificacionController);
         this.controllers.set(ReservaController, reservaController);
+        this.controllers.set(AuthController, authController);
     }
 
     configurarServidor() {
