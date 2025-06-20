@@ -42,7 +42,7 @@ const Login = () => {
     <div className="login-page">
       <Box>
         <Paper className="login-paper" elevation={5} sx={{padding:4}}>
-          <img className="logo" src="/images/logo.png" alt="Birbnb"></img>
+          <img className="logo" src="/images/logo-dark.png" alt="Birbnb"></img>
           { loginError &&
             <div className="login-error">
               Acceso inválido. Por favor, inténtelo otra vez.

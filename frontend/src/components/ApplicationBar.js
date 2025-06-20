@@ -45,12 +45,13 @@ const ApplicationBar = () => {
 
     {/* IZQUIERDA: Logo */}
     <div className="logo-section">
-      <img src={logo} alt="BRBNB Logo" className="logo-icon" />
+      <Link to="/">
+        <img src="images/logo-light.png" alt="Birbnb" className="logo-icon" />
+      </Link>
     </div>
 
     {/* CENTRO: Navegación */}
     <div className="nav-center">
-    <Button component={Link} to="/" className="nav-button">Home</Button>
 
     {estaAutenticado && (<>
       <Button component={Link} to="/reservas" className="nav-button">Reservas</Button>
