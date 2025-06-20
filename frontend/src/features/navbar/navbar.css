@@ -1,0 +1,66 @@
+.navbar {
+  background-color: rgb(35, 35, 35) !important;
+  box-shadow: none !important;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo-section {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.logo-icon {
+  max-width: 80px;
+  height: auto;
+  margin-right: 8px;
+}
+
+/* Centro */
+.nav-center {
+  flex: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Derecha */
+.auth-button {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+/* Botones comunes */
+.nav-button {
+  color: #ffffff !important;
+}
+
+.nav-button:hover {
+  color: #b5b5b5 !important;
+  background-color: transparent !important;
+}
+
+/* Drawer */
+.drawer-list {
+  width: 200px;
+  padding: 20px;
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+  .nav-center {
+    display: none;
+  }
+
+  .menu-button {
+    display: block;
+  }
+}
