@@ -10,11 +10,16 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import logo from '../assets/logo.png'; 
 
 const ApplicationBar = () => {
-  const {estaAutenticado, logout} = useAuth();
+  const {estaAutenticado, clearAuthContext} = useAuth();
   const navigate = useNavigate();
 
   const handleLoginClick = () => {
     navigate('/login');
+  }
+
+  const handleLogout = () => {
+    clearAuthContext();
+    navigate('/');
   }
 
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -59,7 +64,7 @@ const ApplicationBar = () => {
     {/* DERECHA: Ingresar */}
     <div className="auth-button">
     {estaAutenticado ? (
-      <Button color="inherit" className="nav-button" onClick={logout}>
+      <Button color="inherit" className="nav-button" onClick={handleLogout}>
        Cerrar sesión
       </Button>
       ) : (
