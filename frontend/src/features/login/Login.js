@@ -3,15 +3,20 @@ import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router';
 import "./Login.css"
 import {Box, Paper, TextField, Button, Typography} from '@mui/material';
-import axios from "axios";
-
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+import {login} from "../../api/api";
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { login } = useAuth();
+  const [loginError, setLoginError] = useState(false);
+  const { setAuthContext } = useAuth();
   const navigate = useNavigate();
+
+  const handleLoginError = () => {
+    setLoginError(true);
+    setEmail('');
+    setPassword('');
+  }
 
   const handleSubmit = async (e) => {
     if (e) {
@@ -25,26 +30,24 @@ const Login = () => {
     }
 
     try {
-      const response = await axios.post(`${API_BASE_URL}/login`, {
-        email: email,
-        password: password
-      });
-      const idUsuario = response.data.idUsuario;
-      login(idUsuario);
+      const idUsuario = await login(email, password);
+      setAuthContext(idUsuario);
       navigate('/');
     } catch (error) {
-      // Siempre va a fallar porque el endpoint no existe, asi que sigo con un ID falso.
-      const idUsuario = 12345;
-      login(idUsuario);
-      navigate('/');
+      handleLoginError();
     }
   };
 
   return (
-    <div className={"login-page"}>
+    <div className="login-page">
       <Box>
-        <Paper elevation={5} sx={{padding:4}}>
-          <Typography align="center">Logo de Birbnb</Typography>
+        <Paper className="login-paper" elevation={5} sx={{padding:4}}>
+          <img className="logo" src="/images/logo.png" alt="Birbnb"></img>
+          { loginError &&
+            <div className="login-error">
+              Acceso inválido. Por favor, inténtelo otra vez.
+            </div>
+          }
           <Box>
             <TextField
               fullWidth
@@ -69,6 +72,7 @@ const Login = () => {
               variant="contained"
               sx={{ marginTop: 2 }}
               onClick={handleSubmit}
+              disabled={!email.trim() || !password.trim()}
             >
               Ingresar
             </Button>

@@ -1,14 +1,15 @@
 import axios from "axios";
 
-const URL_BASE = process.env.API_URL_BASE;
+const API_BASE_URL = process.env.API_URL_BASE;
 
-const obtenerAlojamientos = async (filtrosBusqueda, numeroPagina) => {
+export const login = async (email, password) => {
   try {
-    const response = await axios.get(`${URL_BASE}/alojamientos`,{
-      params: {}
-    })
+    const response = await axios.post(`${API_BASE_URL}/login`, {
+      email: email,
+      password: password
+    });
+    return response.data.id;
   } catch (error) {
+    throw error;
   }
 }
-
-export default obtenerAlojamientos;
