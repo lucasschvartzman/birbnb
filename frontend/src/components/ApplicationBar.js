@@ -1,6 +1,13 @@
+import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
 import {AppBar, Button, Toolbar, Typography} from '@mui/material';
 import {useAuth} from "../context/AuthContext";
 import {useNavigate} from "react-router";
+import '../features/navbar/navbar.css'; // 
+import {IconButton, Badge, Drawer, List, ListItem, ListItemText} from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import logo from '../assets/logo.png'; 
 
 const ApplicationBar = () => {
   const {estaAutenticado} = useAuth();
@@ -10,20 +17,64 @@ const ApplicationBar = () => {
     navigate('/login');
   }
 
-  return (
-    <AppBar position="static">
-      <Toolbar>
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          Birbnb
-        </Typography>
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const toggleDrawer = (open) => () => setDrawerOpen(open);
+  const drawerList = (
+    <List className="drawer-list">
+      <ListItem button component={Link} to="/" onClick={toggleDrawer(false)}>
+        <ListItemText primary="Home" />
+      </ListItem>
+      <ListItem button component={Link} to="/reservas" onClick={toggleDrawer(false)}>
+        <ListItemText primary="Reservas" />
+      </ListItem>
+    </List>
+  );
 
-        {!estaAutenticado && (
-          <Button color="inherit" onClick={handleLoginClick}>
-            Ingresar
-          </Button>
-        )}
-      </Toolbar>
-    </AppBar>
+  return (
+<AppBar position="static" className="navbar">
+  <Toolbar className="toolbar">
+
+    {/* IZQUIERDA: Logo */}
+    <div className="logo-section">
+      <img src={logo} alt="BRBNB Logo" className="logo-icon" />
+    </div>
+
+    {/* CENTRO: Navegación */}
+    <div className="nav-center">
+      <Button component={Link} to="/" className="nav-button">Home</Button>
+      <Button component={Link} to="/reservas" className="nav-button">Reservas</Button>
+      <IconButton className="notif-button">
+        <Badge badgeContent={3} color="error">
+          <NotificationsIcon sx={{ color: '#ffffff' }} />
+        </Badge>
+      </IconButton>
+    </div>
+
+    {/* DERECHA: Ingresar */}
+    <div className="auth-button">
+      {!estaAutenticado && (
+        <Button color="inherit" onClick={handleLoginClick}>
+          Ingresar
+        </Button>
+      )}
+    </div>
+
+    {/* Drawer para mobile */}
+    <IconButton
+      edge="end"
+      className="menu-button"
+      onClick={toggleDrawer(true)}
+    >
+      <MenuIcon sx={{ display: { xs: 'block', md: 'none' }, color: '#ffffff' }} />
+    </IconButton>
+
+  </Toolbar>
+
+  <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer(false)}>
+    {drawerList}
+  </Drawer>
+</AppBar>
+
   );
 }
 

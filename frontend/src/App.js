@@ -6,7 +6,9 @@ import {BrowserRouter, Route, Routes} from "react-router";
 import {createTheme, ThemeProvider} from "@mui/material";
 
 const theme = createTheme({
-
+  typography: {
+    fontFamily: `'Poppins', sans-serif`,
+  },
 });
 
 function App() {
