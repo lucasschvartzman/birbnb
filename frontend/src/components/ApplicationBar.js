@@ -10,7 +10,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import logo from '../assets/logo.png'; 
 
 const ApplicationBar = () => {
-  const {estaAutenticado} = useAuth();
+  const {estaAutenticado, logout} = useAuth();
   const navigate = useNavigate();
 
   const handleLoginClick = () => {
@@ -20,15 +20,19 @@ const ApplicationBar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const toggleDrawer = (open) => () => setDrawerOpen(open);
   const drawerList = (
-    <List className="drawer-list">
-      <ListItem button component={Link} to="/" onClick={toggleDrawer(false)}>
-        <ListItemText primary="Home" />
-      </ListItem>
+  <List className="drawer-list">
+    <ListItem button component={Link} to="/" onClick={toggleDrawer(false)}>
+      <ListItemText primary="Home" />
+    </ListItem>
+
+    {estaAutenticado && (
       <ListItem button component={Link} to="/reservas" onClick={toggleDrawer(false)}>
         <ListItemText primary="Reservas" />
       </ListItem>
-    </List>
+    )}
+  </List>
   );
+
 
   return (
 <AppBar position="static" className="navbar">
@@ -41,23 +45,30 @@ const ApplicationBar = () => {
 
     {/* CENTRO: Navegación */}
     <div className="nav-center">
-      <Button component={Link} to="/" className="nav-button">Home</Button>
+    <Button component={Link} to="/" className="nav-button">Home</Button>
+
+    {estaAutenticado && (<>
       <Button component={Link} to="/reservas" className="nav-button">Reservas</Button>
       <IconButton className="notif-button">
         <Badge badgeContent={3} color="error">
           <NotificationsIcon sx={{ color: '#ffffff' }} />
         </Badge>
-      </IconButton>
+      </IconButton></>)}
     </div>
 
     {/* DERECHA: Ingresar */}
     <div className="auth-button">
-      {!estaAutenticado && (
-        <Button color="inherit" onClick={handleLoginClick}>
-          Ingresar
-        </Button>
-      )}
+    {estaAutenticado ? (
+      <Button color="inherit" className="nav-button" onClick={logout}>
+       Cerrar sesión
+      </Button>
+      ) : (
+      <Button color="inherit"className="nav-button"  onClick={handleLoginClick}>
+       Ingresar
+      </Button>
+    )}
     </div>
+
 
     {/* Drawer para mobile */}
     <IconButton
@@ -67,7 +78,7 @@ const ApplicationBar = () => {
     >
       <MenuIcon sx={{ display: { xs: 'block', md: 'none' }, color: '#ffffff' }} />
     </IconButton>
-
+    
   </Toolbar>
 
   <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer(false)}>

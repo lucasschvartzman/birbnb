@@ -8,6 +8,7 @@ function Home() {
   const handleScrollToSearch = () => {
     searchRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
+  
   return (
     <>
       <Header onVerAlojamientosClick={handleScrollToSearch} />
