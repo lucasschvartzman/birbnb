@@ -1,9 +1,12 @@
+import Header from '../../components/Header';
+import Search from '../../components/Search';
+
 function Home() {
   return (
     <>
-      <h1>Home</h1>
+      <Header/>
     </>
-  )
+  );
 }
 
 export default Home;
