@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router';
 import "./Login.css"
-import {Box, Paper, TextField, Button, Typography} from '@mui/material';
-import {login} from "../../api/api";
+import { Box, Paper, TextField, Button, Typography } from '@mui/material';
+import { login } from "../../api/api";
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -31,19 +31,20 @@ const Login = () => {
 
     try {
       const idUsuario = await login(email, password);
-      setAuthContext(idUsuario);
+      setAuthContext(idUsuario, email); // <-- guardo mail tambien para guardarme la inicial
       navigate('/');
     } catch (error) {
       handleLoginError();
     }
+
   };
 
   return (
     <div className="login-page">
       <Box>
-        <Paper className="login-paper" elevation={5} sx={{padding:4}}>
+        <Paper className="login-paper" elevation={5} sx={{ padding: 4 }}>
           <img className="logo" src="/images/logo-dark.png" alt="Birbnb"></img>
-          { loginError &&
+          {loginError &&
             <div className="login-error">
               Acceso inválido. Por favor, inténtelo otra vez.
             </div>
