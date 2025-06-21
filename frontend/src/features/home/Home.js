@@ -12,7 +12,7 @@ function Home() {
   return (
     <>
       <Header onVerAlojamientosClick={handleScrollToSearch} />
-      <div ref={searchRef}><Search/></div>
+      <div ref={searchRef}><Search/></div> 
     </>
   );
 }

@@ -21,12 +21,18 @@
   margin-right: 1rem;
 }
 
-/* Centro */
-.nav-center {
+.nav-left {
   flex: 2;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: left;
+  align-items: left;
+  gap: 20px;
+}
+.nav-rigth {
+  flex: 2;
+  display: flex;
+  justify-content: right;
+  align-items: right;
   gap: 20px;
 }
 
@@ -54,9 +60,10 @@
   padding: 20px;
 }
 
+
 /* Responsive */
 @media screen and (max-width: 768px) {
-  .nav-center {
+  .nav-left, .nav-right {
     display: none;
   }
 
