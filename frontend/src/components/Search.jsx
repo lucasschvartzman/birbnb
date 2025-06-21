@@ -3,7 +3,6 @@ import { useAuth } from '../context/AuthContext';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import GroupsIcon from '@mui/icons-material/Groups';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-
 import {
   Box, TextField, Button, Typography, Slider,
   Card, CardContent, CardMedia, Grid,

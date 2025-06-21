@@ -7,6 +7,7 @@ import '../features/navbar/navbar.css'; //
 import {IconButton, Badge, Drawer, List, ListItem, ListItemText} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import LogoutIcon from '@mui/icons-material/Logout';
 import logo from '../assets/logo.png'; 
 
 const ApplicationBar = () => {
@@ -24,22 +25,23 @@ const ApplicationBar = () => {
 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const toggleDrawer = (open) => () => setDrawerOpen(open);
+
   const drawerList = (
   <List className="drawer-list">
     <ListItem button component={Link} to="/" onClick={toggleDrawer(false)}>
-      <ListItemText primary="Home" />
+      <ListItemText primary="Home"   primaryTypographyProps={{ style: { color: 'black' } }} />
     </ListItem>
     <ListItem button component={Link} to="/login" onClick={toggleDrawer(false)}>
-      <ListItemText primary="Ingresar" />
+      <ListItemText primary="Ingresar"   primaryTypographyProps={{ style: { color: 'black' } }} />
     </ListItem>
 
     {estaAutenticado && (
       <>
       <ListItem button component={Link} to="/reservas" onClick={toggleDrawer(false)}>
-        <ListItemText primary="Reservas" />
+        <ListItemText primary="Reservas" primaryTypographyProps={{ style: { color: 'black' } }}/>
       </ListItem>
       <ListItem button onClick={handleLogout}>
-       Cerrar sesión
+          <ListItemText primary="Cerrar Sesión"></ListItemText>
      </ListItem>
      </>
     )}
@@ -75,7 +77,7 @@ const ApplicationBar = () => {
       </IconButton>
      <div className='nav-right '>
       <Button color="inherit" className="nav-button" onClick={handleLogout}>
-       Cerrar sesión
+       <LogoutIcon sx={{ color: '#FFFFF' }}/>
       </Button>
       </div>
      
@@ -91,11 +93,12 @@ const ApplicationBar = () => {
 
     {/* Drawer para mobile */}
     <IconButton
-      edge="end"
-      className="menu-button"
-      onClick={toggleDrawer(true)}
+       edge="end"
+       className="menu-button"
+       onClick={toggleDrawer(true)}
+       sx={{ display: { xs: 'block', md: 'none' } }} 
     >
-      <MenuIcon sx={{ display: { xs: 'block', md: 'none' }, color: '#ffffff' }} />
+      <MenuIcon sx={{ color: '#ffffff' }} />
     </IconButton>
   </Toolbar>
 

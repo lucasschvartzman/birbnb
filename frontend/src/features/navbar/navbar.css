@@ -60,6 +60,7 @@
   padding: 20px;
 }
 
+
 /* Responsive */
 @media screen and (max-width: 768px) {
   .nav-left, .nav-right {
