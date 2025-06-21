@@ -31,9 +31,14 @@ const ApplicationBar = () => {
     </ListItem>
 
     {estaAutenticado && (
+      <>
       <ListItem button component={Link} to="/reservas" onClick={toggleDrawer(false)}>
         <ListItemText primary="Reservas" />
       </ListItem>
+      <ListItem button onClick={handleLogout}>
+       Cerrar sesión
+     </ListItem>
+     </>
     )}
   </List>
   );
@@ -48,31 +53,36 @@ const ApplicationBar = () => {
       <Link to="/">
         <img src="images/logo-light.png" alt="Birbnb" className="logo-icon" />
       </Link>
-    </div>
 
-    {/* CENTRO: Navegación */}
-    <div className="nav-center">
-
-    {estaAutenticado && (<>
+      <div className="nav-left">
+       {estaAutenticado && (<>
       <Button component={Link} to="/reservas" className="nav-button">Reservas</Button>
-      <IconButton className="notif-button">
-        <Badge badgeContent={3} color="error">
-          <NotificationsIcon sx={{ color: '#ffffff' }} />
-        </Badge>
-      </IconButton></>)}
+      </>)} 
+      </div>
     </div>
 
     {/* DERECHA: Ingresar */}
     <div className="auth-button">
     {estaAutenticado ? (
+     <>
+     <IconButton className="notif-button" >
+      <Badge badgeContent={3} color="error">
+        <NotificationsIcon sx={{ color: '#ffffff' }} />
+      </Badge>
+      </IconButton>
+     <div className='nav-right '>
       <Button color="inherit" className="nav-button" onClick={handleLogout}>
        Cerrar sesión
       </Button>
-      ) : (
-      <Button color="inherit"className="nav-button"  onClick={handleLoginClick}>
-       Ingresar
-      </Button>
+      </div>
+     
+     </>
+    ) : (
+     <div className='nav-right'>
+      <Button color="inherit" className="nav-button" onClick={handleLoginClick}>Ingresar</Button>
+     </div>
     )}
+
     </div>
 
 
@@ -84,7 +94,6 @@ const ApplicationBar = () => {
     >
       <MenuIcon sx={{ display: { xs: 'block', md: 'none' }, color: '#ffffff' }} />
     </IconButton>
-    
   </Toolbar>
 
   <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer(false)}>
