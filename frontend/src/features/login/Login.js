@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import { useAuth } from '../../context/AuthContext';
-import { useNavigate } from 'react-router';
-import "./Login.css"
-import { Box, Paper, TextField, Button, Typography } from '@mui/material';
-import { login } from "../../api/api";
+import {useState} from 'react';
+import {useAuth} from '../../context/AuthContext';
+import {useNavigate} from 'react-router';
+import {Box, Button, TextField} from '@mui/material';
+import {login} from "../../api/api";
+import {LoginPage, LoginPaper, Logo, ErrorMessage} from './Login.styles';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -31,56 +31,55 @@ const Login = () => {
 
     try {
       const usuario = await login(email, password);
-      setAuthContext(usuario); // <-- guardo mail tambien para guardarme la inicial
+      setAuthContext(usuario);
       navigate('/');
     } catch (error) {
       handleLoginError();
     }
-
   };
 
   return (
-    <div className="login-page">
-      <Box>
-        <Paper className="login-paper" elevation={5} sx={{ padding: 4 }}>
-          <img className="logo" src="/images/logo-dark.png" alt="Birbnb"></img>
-          {loginError &&
-            <div className="login-error">
-              Acceso inválido. Por favor, inténtelo otra vez.
-            </div>
-          }
-          <Box>
-            <TextField
-              fullWidth
-              label="Email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              margin="normal"
-            />
+    <LoginPage>
+      <LoginPaper elevation={5}>
+        <Logo src="/images/logo-dark.png" alt="Birbnb" />
 
-            <TextField
-              fullWidth
-              label="Contraseña"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              margin="normal"
-            />
+        {loginError && (
+          <ErrorMessage variant="body2">
+            Acceso inválido. Por favor, inténtelo otra vez.
+          </ErrorMessage>
+        )}
 
-            <Button
-              fullWidth
-              variant="contained"
-              sx={{ marginTop: 2 }}
-              onClick={handleSubmit}
-              disabled={!email.trim() || !password.trim()}
-            >
-              Ingresar
-            </Button>
-          </Box>
-        </Paper>
-      </Box>
-    </div>
+        <Box sx={{ width: '100%' }}>
+          <TextField
+            fullWidth
+            label="Email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            margin="normal"
+          />
+
+          <TextField
+            fullWidth
+            label="Contraseña"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            margin="normal"
+          />
+
+          <Button
+            fullWidth
+            variant="contained"
+            sx={{ marginTop: 2 }}
+            onClick={handleSubmit}
+            disabled={!email.trim() || !password.trim()}
+          >
+            Ingresar
+          </Button>
+        </Box>
+      </LoginPaper>
+    </LoginPage>
   );
 };
 
