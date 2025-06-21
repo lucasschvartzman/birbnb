@@ -25,7 +25,8 @@ export class AlojamientoMapper {
       moneda: alojamiento.moneda.nombre,
       horarioCheckIn: alojamiento.horarioCheckIn,
       horarioCheckOut: alojamiento.horarioCheckOut,
-      caracteristicas: alojamiento.caracteristicas
+      caracteristicas: alojamiento.caracteristicas,
+      fotos: alojamiento.fotos.map(f => f.path)
     };
   }
 
