@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Typography, Button } from '@mui/material';
-import backgroundImage from '../assets/image.png';
+import backgroundImage from '../assets/image.jpg';
 
 const Header = ({ onVerAlojamientosClick }) => {
   return (
