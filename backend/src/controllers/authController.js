@@ -9,8 +9,8 @@ export class AuthController {
   async iniciarSesion(req, res, next) {
     try {
       AuthValidator.validarCamposRequeridos(req.body);
-      const id = await this.authService.iniciarSesion(req.body.email,req.body.password);
-      res.status(200).json(id);
+      const response = await this.authService.iniciarSesion(req.body.email,req.body.password);
+      res.status(200).json(response);
     } catch (error) {
       next(error);
     }

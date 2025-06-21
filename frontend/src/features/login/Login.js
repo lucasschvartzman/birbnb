@@ -30,8 +30,8 @@ const Login = () => {
     }
 
     try {
-      const idUsuario = await login(email, password);
-      setAuthContext(idUsuario, email); // <-- guardo mail tambien para guardarme la inicial
+      const usuario = await login(email, password);
+      setAuthContext(usuario); // <-- guardo mail tambien para guardarme la inicial
       navigate('/');
     } catch (error) {
       handleLoginError();

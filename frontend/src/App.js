@@ -10,6 +10,28 @@ const theme = createTheme({
   typography: {
     fontFamily: `'Poppins', sans-serif`,
   },
+  palette: {
+    primary: {
+      main: '#232323', // Color de tu navbar
+      light: '#454545',
+      dark: '#1a1a1a',
+      contrastText: '#ffffff',
+    },
+    secondary: {
+      main: '#f48fb1', // Color del avatar
+      light: '#f8bbd9',
+      dark: '#f06292',
+      contrastText: '#ffffff',
+    },
+    background: {
+      default: '#f5f5f5',
+      paper: '#ffffff',
+    },
+    text: {
+      primary: '#333333',
+      secondary: '#666666',
+    },
+  }
 });
 
 function App() {

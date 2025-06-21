@@ -11,6 +11,9 @@ export class AuthService {
     if (!usuario) {
       throw new CredencialesIncorrectasException();
     }
-    return usuario._id;
+    return {
+      id: usuario._id,
+      nombre: usuario.nombre
+    };
   }
 }

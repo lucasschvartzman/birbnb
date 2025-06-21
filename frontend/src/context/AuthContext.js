@@ -3,24 +3,21 @@ import { createContext, useContext, useState } from "react";
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [idUsuario, setIdUsuario] = useState(null);
-  const [email, setEmail] = useState(null); // nuevo estado
+  const [usuario, setUsuario] = useState(null);
 
-  const setAuthContext = (id, emailUsuario) => {
-    setIdUsuario(id);
-    setEmail(emailUsuario); // guardo el email para la inicial
+  const setAuthContext = (usuario) => {
+    setUsuario(usuario);
   };
 
   const clearAuthContext = () => {
-    setIdUsuario(null);
-    setEmail(null);
+    setUsuario(null);
   };
 
-  const estaAutenticado = idUsuario !== null;
+  const estaAutenticado = usuario !== null;
 
   return (
     <AuthContext.Provider
-      value={{ idUsuario, email, setAuthContext, clearAuthContext, estaAutenticado }}
+      value={{ usuario, estaAutenticado, setAuthContext, clearAuthContext}}
     >
       {children}
     </AuthContext.Provider>
