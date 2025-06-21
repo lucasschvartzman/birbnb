@@ -3,9 +3,11 @@ import { useAuth } from '../context/AuthContext';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import GroupsIcon from '@mui/icons-material/Groups';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import PersonIcon from "@mui/icons-material/Person";
 import {
   Box, TextField, Button, Typography, Slider,
   Card, CardContent, CardMedia, Grid,
+  InputAdornment,
 } from '@mui/material';
 
 const alojamientosMock = [
@@ -49,8 +51,6 @@ const Search = () => {
   const { estaAutenticado } = useAuth();
   const [ciudad, setCiudad] = useState('');
   const [pais, setPais] = useState('');
-  const [fechaDesde, setFechaDesde] = useState('');
-  const [fechaHasta, setFechaHasta] = useState('');
   const [huespedes, setHuespedes] = useState(0);
   const [precio, setPrecio] = useState([0, 100000]);
   const [resultados, setResultados] = useState(alojamientosMock);
@@ -59,8 +59,6 @@ const Search = () => {
   const limpiarFiltros = () => {
     setCiudad('');
     setPais('');
-    setFechaDesde('');
-    setFechaHasta('');
     setHuespedes(0);
     setPrecio([0, 100000]);
     setResultados(alojamientosMock);
@@ -81,9 +79,18 @@ const Search = () => {
       <Typography variant="h4" sx={{ fontWeight: 'bold', pb: 3 }}>
         <span style={{ color: '#f48fb1' }}>Alojamientos</span>{' '}Disponibles
       </Typography>
-
-
       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+        <TextField
+          fullWidth
+          label="Buscar por pais"
+          value={pais}
+          onChange={(e) => setPais(e.target.value)}
+          variant="outlined"
+          sx={{
+            backgroundColor: '#fff',
+            width: 190,
+          }}
+        />
         <TextField
           fullWidth
           label="Buscar por ciudad"
@@ -96,20 +103,21 @@ const Search = () => {
             width: 190,
           }}
         />
+        {/* TODO LATITUD, LONGITUD */}
         <TextField
-          fullWidth
-          label="Buscar por pais"
-          value={pais}
-          onChange={(e) => setPais(e.target.value)}
-          variant="outlined"
-          sx={{
-            backgroundColor: '#fff',
-            width: 190,
+          label="Huéspedes"
+          type="number"
+          sx={{maxWidth:100}}
+          slotProps={{
+            input: {
+              startAdornment: (
+                <InputAdornment position="start">
+                  <PersonIcon />
+                </InputAdornment>
+              ),
+            },
           }}
         />
-        <TextField type="date" label="Desde" InputLabelProps={{ shrink: true }} value={fechaDesde} onChange={(e) => setFechaDesde(e.target.value)} />
-        <TextField type="date" label="Hasta" InputLabelProps={{ shrink: true }} value={fechaHasta} onChange={(e) => setFechaHasta(e.target.value)} />
-        <TextField label="Huéspedes" type="number" sx={{ width: 130 }} value={huespedes} onChange={(e) => setHuespedes(e.target.value)} />
         <Box sx={{ width: 200 }}>
           <Typography gutterBottom>Precio por noche</Typography>
           <Slider
@@ -145,6 +153,7 @@ const Search = () => {
       </Box>
 
 
+      {/* FIXME dejar de usar Grid */}
       <Grid container spacing={3} sx={{ mt: 4 }} justifyContent="center">
         {resultados.map((a) => (
           <Grid item xs={12} sm={6} md={4} key={a.id} display="flex" justifyContent="center">
