@@ -31,6 +31,11 @@ const theme = createTheme({
       primary: '#333333',
       secondary: '#666666',
     },
+     reservationStatus: {
+      accepted: '#81c784',   
+      pending: '#ffb74d', 
+      cancelled: '#e57373', 
+    },
   }
 });
 
