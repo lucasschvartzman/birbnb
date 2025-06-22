@@ -3,8 +3,8 @@ import Layout from "./features/layout/Layout";
 import Login from "./features/login/Login";
 import Reservas from "./features/reservas/Reservas";
 
-import {BrowserRouter, Route, Routes} from "react-router";
-import {createTheme, ThemeProvider} from "@mui/material";
+import { BrowserRouter, Route, Routes } from "react-router";
+import { createTheme, ThemeProvider } from "@mui/material";
 
 const theme = createTheme({
   typography: {
@@ -31,27 +31,25 @@ const theme = createTheme({
       primary: '#333333',
       secondary: '#666666',
     },
-     reservationStatus: {
-      accepted: '#81c784',   
-      pending: '#ffb74d', 
-      cancelled: '#e57373', 
-    },
+    success: { main: '#81c784' },
+    warning: { main: '#ffb74d' },
+    error: { main: '#e57373' },
   }
 });
 
 function App() {
   return (
-      <ThemeProvider theme={theme}>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Layout />}>
-              <Route index element={<Home />} />
-              <Route path="/reservas" element={<Reservas />} />
-            </Route>
-            <Route path="/login" element={<Login />}/>
-          </Routes>
-        </BrowserRouter>
-      </ThemeProvider>
+    <ThemeProvider theme={theme}>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path="/reservas" element={<Reservas />} />
+          </Route>
+          <Route path="/login" element={<Login />} />
+        </Routes>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }
 

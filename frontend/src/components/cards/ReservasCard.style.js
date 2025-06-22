@@ -22,7 +22,7 @@ export const ChipContainer = styled('div')(({ theme }) => ({
 }));
 
 export const colorEstado = (theme) => ({
-  Aceptada: theme.palette.success.light,
+  Aceptada: theme.palette.success.main,
   Pendiente: theme.palette.warning.main,
   Cancelada: theme.palette.error.main,
 });
