@@ -1,123 +1,80 @@
-import React, { useState } from 'react';
-import {Pagination } from '@mui/material';
+import React, { useEffect } from 'react';
+import { Typography, Pagination, CircularProgress, Alert } from '@mui/material';
 import SearchFilters from './SearchFilters';
 import SearchResults from './SearchResults';
+import { useFiltros } from "../../hooks/useFiltros";
+import { useAlojamientos} from "../../hooks/useAlojamientos";
 import {
   SearchContainer,
   SearchTitle,
-  PaginationContainer
+  PaginacionContainer
 } from './SearchSection.styles';
 
-const alojamientosMock = [
-  {
-    id: '1',
-    nombre: 'Departamento en Palermo',
-    descripcion: 'Cómodo departamento con wifi y piscina',
-    precioPorNoche: 3500,
-    moneda: 'ARS',
-    direccion: {
-      calle: 'Honduras',
-      altura: 1234,
-      ciudad: 'Buenos Aires',
-    },
-    cantHuespedesMax: 3,
-    caracteristicas: ['Wifi', 'Piscina'],
-    fotos: [
-      { path: 'https://picsum.photos/400/200?random=1', descripcion: 'Foto 1' }
-    ]
-  },
-  {
-    id: '2',
-    nombre: 'Casa en Mar del Plata',
-    descripcion: 'Casa familiar con estacionamiento',
-    precioPorNoche: 5000,
-    moneda: 'ARS',
-    direccion: {
-      calle: 'San Martín',
-      altura: 987,
-      ciudad: 'Mar del Plata',
-    },
-    cantHuespedesMax: 6,
-    caracteristicas: ['Estacionamiento'],
-    fotos: [
-      { path: 'https://picsum.photos/400/200?random=2', descripcion: 'Foto 2' }
-    ]
-  },
-];
-
 const SearchSection = () => {
-  const [filtros, setFiltros] = useState({
-    ciudad: '',
-    pais: '',
-    huespedes: 0,
-    precio: [0, 100000],
-    latitud: '',
-    longitud: '',
-    caracteristicas: []
-  });
 
-  const [resultados, setResultados] = useState(alojamientosMock);
-  const [paginaActual, setPaginaActual] = useState(1);
-  const resultadosPorPagina = 1;
+  const {
+    filtros,
+    paisesDisponibles,
+    ciudadesDisponibles,
+    caracteristicasDisponibles,
+    handleFiltrosChange,
+    cargarPaises,
+    cargarCaracteristicas,
+    resetFiltros,
+    obtenerFiltrosMapeadosParaApi
+  } = useFiltros();
+  
+  const {
+    resultados,
+    paginacion,
+    buscarAlojamientos
+  } = useAlojamientos();
 
-  const handleFiltrosChange = (nuevosFiltros) => {
-    setFiltros(nuevosFiltros);
-  };
-
-  const handleBuscar = () => {
-    console.log(filtros)
-    // TODO: Ejecutar la llamada a la API
-  };
-
-  const limpiarFiltros = () => {
-    const filtrosLimpios = {
-      ciudad: '',
-      pais: '',
-      huespedes: 0,
-      precio: [0, 100000],
-      latitud: '',
-      longitud: '',
-      caracteristicas: []
+  // Cargar los datos mínimos e indispensables para mostrar en home.
+  useEffect(() => {
+    const cargarDatosIniciales = async () => {
+      await cargarPaises();
+      await cargarCaracteristicas();
+      await buscarAlojamientos(); // Sin filtros, paginación por default.
     };
-    setFiltros(filtrosLimpios);
-    setResultados(alojamientosMock);
-    setPaginaActual(1);
+    cargarDatosIniciales();
+  }, []);
+
+  const handleBuscar = async (paginacion) => {
+    await buscarAlojamientos(obtenerFiltrosMapeadosParaApi(), paginacion);
   };
 
-  const handleCambioPagina = (event, value) => {
-    setPaginaActual(value);
+  const handleLimpiarFiltros = async () => {
+    resetFiltros();
+    await handleBuscar();
   };
 
-  const totalPaginas = Math.ceil(resultados.length / resultadosPorPagina);
-  const indiceInicio = (paginaActual - 1) * resultadosPorPagina;
-  const resultadosPaginados = resultados.slice(indiceInicio, indiceInicio + resultadosPorPagina);
+  const handleCambioPagina = async (event, nuevaPagina) => {
+    await handleBuscar({ numeroPagina: nuevaPagina });
+  };
 
   return (
     <SearchContainer>
-      <SearchTitle variant="h4">
-        <span>Alojamientos</span> Disponibles
-      </SearchTitle>
+      <SearchTitle variant="h4" component="h1"> Buscar Alojamientos </SearchTitle>
 
       <SearchFilters
         filtros={filtros}
         onFiltrosChange={handleFiltrosChange}
         onBuscar={handleBuscar}
-        onLimpiar={limpiarFiltros}
+        onLimpiar={handleLimpiarFiltros}
+        paisesDisponibles={paisesDisponibles.map(p => p.nombre)}
+        ciudadesDisponibles={ciudadesDisponibles.map(c => c.nombre)}
+        caracteristicasDisponibles={caracteristicasDisponibles}
       />
 
-      <SearchResults resultados={resultadosPaginados} />
+      <SearchResults resultados={resultados} />
 
-      {totalPaginas > 1 && (
-        <PaginationContainer>
-          <Pagination
-            count={totalPaginas}
-            page={paginaActual}
-            onChange={handleCambioPagina}
-            color="secondary"
-            size="large"
-          />
-        </PaginationContainer>
+      { paginacion.totalPaginas > 1 && (
+        <PaginacionContainer>
+          <Pagination count={paginacion.totalPaginas} page={paginacion.paginaActual} onChange={handleCambioPagina} color="primary" size="large"/>
+        </PaginacionContainer>
       )}
+
     </SearchContainer>
   );
 };

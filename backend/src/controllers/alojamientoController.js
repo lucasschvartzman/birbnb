@@ -16,7 +16,7 @@ export class AlojamientoController {
       const resultadoBusqueda = await this.alojamientoRepository.findAllWithFilters(filtrosBusqueda, pagina, tamanioPagina);
       const respuestaJson = {
         alojamientos: resultadoBusqueda.alojamientos.map(r => AlojamientoMapper.toDto(r)),
-        resultadoPaginacion: resultadoBusqueda.resultadoPaginacion
+        paginacion: resultadoBusqueda.paginacion
       };
       res.json(respuestaJson);
     } catch (error) {
