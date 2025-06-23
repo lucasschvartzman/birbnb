@@ -1,13 +1,16 @@
 import { useState, useEffect } from "react";
 import { getCaracteristicas, getCiudadesPais, getPaises } from "../api/api.js";
 
+export const PRECIO_MINIMO = 0
+export const PRECIO_MAXIMO = 100000
+
 export const useFiltros = () => {
 
   const filtrosIniciales = {
     ciudad: '',
     pais: '',
     huespedes: 0,
-    precio: [0, 100000],
+    precio: [PRECIO_MINIMO, PRECIO_MAXIMO],
     latitud: '',
     longitud: '',
     caracteristicas: []

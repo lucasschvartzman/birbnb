@@ -12,6 +12,7 @@ import CiudadFiltro from "./subcomponents/CiudadFiltro";
 import HuespedesFiltro from "./subcomponents/HuespedesFiltro";
 import CoordenadasFiltro from "./subcomponents/CoordenadasFiltro";
 import CaracteristicasFiltro from "./subcomponents/CaracteristicasFiltro";
+import PrecioFiltro from "./subcomponents/PrecioFiltro";
 
 const SearchFilters = ({
                          filtros,
