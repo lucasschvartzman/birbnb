@@ -101,6 +101,7 @@ export const useFiltros = () => {
       idCiudad: ciudadSeleccionada?.id || undefined,
       latitud: filtros.latitud ? parseFloat(filtros.latitud) : undefined,
       longitud: filtros.longitud ? parseFloat(filtros.longitud) : undefined,
+      huespedes: filtros.huespedes ? parseInt(filtros.huespedes) : undefined,
       precioMinimo: filtros.precio?.[0] || undefined,
       precioMaximo: filtros.precio?.[1] || undefined,
       caracteristicas: filtros.caracteristicas || undefined,

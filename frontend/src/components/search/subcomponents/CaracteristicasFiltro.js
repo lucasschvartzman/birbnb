@@ -1,6 +1,7 @@
 import React from 'react';
 import {FormControl, InputLabel, MenuItem, OutlinedInput, Select} from '@mui/material';
 import {CaracteristicasContainer, StyledChip} from "./CaracteristicasFiltro.styles";
+import {formatCaracteristica} from "../../../utils/format";
 
 export const CaracteristicasFiltro = ({ seleccionadas, caracteristicasDisponibles, onChange }) => (
   <FormControl sx={{ width: 470 }}>
@@ -13,14 +14,14 @@ export const CaracteristicasFiltro = ({ seleccionadas, caracteristicasDisponible
       renderValue={(selected) => (
         <CaracteristicasContainer>
           {selected.map((value) => (
-            <StyledChip key={value} label={value} size="small"/>
+            <StyledChip key={value} label={formatCaracteristica(value)} size="small"/>
           ))}
         </CaracteristicasContainer>
       )}
-    >
-      {caracteristicasDisponibles.map((caracteristica) => (
-        <MenuItem key={caracteristica} value={caracteristica}>
-          {caracteristica}
+     variant={"filled"}>
+      {caracteristicasDisponibles.map((c) => (
+        <MenuItem key={c} value={c}>
+          {formatCaracteristica(c)}
         </MenuItem>
       ))}
     </Select>

@@ -1,14 +1,10 @@
-import React, { useEffect } from 'react';
-import { Typography, Pagination, CircularProgress, Alert } from '@mui/material';
+import React, {useEffect} from 'react';
+import {Pagination} from '@mui/material';
 import SearchFilters from './SearchFilters';
 import SearchResults from './SearchResults';
-import { useFiltros } from "../../hooks/useFiltros";
-import { useAlojamientos} from "../../hooks/useAlojamientos";
-import {
-  SearchContainer,
-  SearchTitle,
-  PaginacionContainer
-} from './SearchSection.styles';
+import {useFiltros} from "../../hooks/useFiltros";
+import {useAlojamientos} from "../../hooks/useAlojamientos";
+import {PaginacionContainer, SearchContainer, SearchTitle} from './SearchSection.styles';
 
 const SearchSection = () => {
 
@@ -23,7 +19,7 @@ const SearchSection = () => {
     resetFiltros,
     obtenerFiltrosMapeadosParaApi
   } = useFiltros();
-  
+
   const {
     resultados,
     paginacion,
@@ -35,7 +31,7 @@ const SearchSection = () => {
     const cargarDatosIniciales = async () => {
       await cargarPaises();
       await cargarCaracteristicas();
-      await buscarAlojamientos(); // Sin filtros, paginación por default.
+      await handleBuscar(); // Sin filtros, paginación por default.
     };
     cargarDatosIniciales();
   }, []);

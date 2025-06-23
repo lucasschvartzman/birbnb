@@ -17,7 +17,7 @@ const calcularTotal = (precioPorNoche, fechaInicio, fechaFin) => {
   return diffDays * precioPorNoche;
 };
 
-const ReservasCard = ({ reserva, onCancelar }) => {
+export const ReservasCard = ({ reserva, onCancelar }) => {
   const theme = useTheme();
 
   return (

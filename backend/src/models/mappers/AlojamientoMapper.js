@@ -22,7 +22,7 @@ export class AlojamientoMapper {
       direccion: alojamiento.direccion ? this.#toDireccionDto(alojamiento.direccion) : undefined,
       precioPorNoche: alojamiento.precioPorNoche,
       cantHuespedesMax: alojamiento.cantHuespedesMax,
-      moneda: alojamiento.moneda.nombre,
+      moneda: alojamiento.moneda,
       horarioCheckIn: alojamiento.horarioCheckIn,
       horarioCheckOut: alojamiento.horarioCheckOut,
       caracteristicas: alojamiento.caracteristicas,

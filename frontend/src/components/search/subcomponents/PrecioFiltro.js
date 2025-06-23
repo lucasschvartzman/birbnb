@@ -3,13 +3,13 @@ import { FormControl, InputLabel, Slider, Box } from '@mui/material';
 import { SliderContainer } from '../SearchFilters.styles';
 import {PRECIO_MAXIMO, PRECIO_MINIMO} from "../../../hooks/useFiltros";
 
-export const PrecioFiltro = ({ valor, onChange }) => (
+export const PrecioFiltro = ({ rango, onChange }) => (
   <SliderContainer>
     <InputLabel shrink>Precio por noche</InputLabel>
     <FormControl sx={{ width: '100%' }}>
       <Box sx={{ px: 1 }}>
         <Slider
-          value={valor}
+          value={rango}
           onChange={(e, newValue) => onChange(newValue)}
           valueLabelDisplay="auto"
           min={PRECIO_MINIMO}
