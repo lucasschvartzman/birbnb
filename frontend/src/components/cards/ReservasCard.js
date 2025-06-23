@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import GroupsIcon from '@mui/icons-material/Groups';
@@ -6,8 +7,8 @@ import EventIcon from '@mui/icons-material/Event';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import Person2Icon from '@mui/icons-material/Person2';
-import { CardContent, CardActions, Typography, Chip, Button } from '@mui/material';
-import { StyledCard, IconText, ChipContainer, colorEstado } from './ReservasCard.style';
+import { CardContent, Typography, Chip, Button } from '@mui/material';
+import { StyledCard, IconText, ChipContainer, colorEstado, StyledCardActions} from './ReservasCard.style';
 
 const calcularTotal = (precioPorNoche, fechaInicio, fechaFin) => {
   const inicio = new Date(fechaInicio);
@@ -69,13 +70,20 @@ const ReservasCard = ({ reserva, onCancelar }) => {
         </ChipContainer>
       </CardContent>
 
-      <CardActions sx={{ justifyContent: 'center' }}>
+      <StyledCardActions>
+      {reserva.estado === 'Pendiente' && (
+        <Button variant="outlined" color="warning" component={Link} to="/modificarReserva"  >
+          Modificar Reserva
+        </Button>
+      )}
+      </StyledCardActions>
+      <StyledCardActions>
         {reserva.estado !== 'Cancelada' && (
           <Button variant="outlined" color="error" onClick={() => onCancelar(reserva.id)}>
             Cancelar Reserva
           </Button>
         )}
-      </CardActions>
+      </StyledCardActions>
     </StyledCard>
   );
 };

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { CardMedia, CardContent, Typography } from '@mui/material';
 import {
   LocationOn as LocationOnIcon,
@@ -72,7 +73,7 @@ const AlojamientoCard = ({ alojamiento }) => {
 
           {estaAutenticado && (
             <ReserveButtonContainer>
-              <ReserveButton variant="contained">
+              <ReserveButton variant="contained" component={Link} to="/modificarReserva" >
                 Reservar
               </ReserveButton>
             </ReserveButtonContainer>
