@@ -6,8 +6,10 @@ import {
   SearchButton,
   ClearButton
 } from './SearchFilters.styles';
+
 import PaisFiltro from "./subcomponents/PaisFiltro";
 import CiudadFiltro from "./subcomponents/CiudadFiltro";
+import HuespedesFiltro from "./subcomponents/HuespedesFiltro";
 
 const SearchFilters = ({
                          filtros,
