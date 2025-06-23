@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import {registerRoutes} from "../routes/index.js";
 import { setSwagger as initializeSwagger } from "../config/swaggerConfig.js";
 import { notFoundHandler } from "../middlewares/notFoundHandler.js";
@@ -14,6 +15,10 @@ export class Server {
         this.#app = app;
         this.#port = port;
         this.#app.use(express.json());
+        this.#app.use(cors({
+            origin: process.env.CLIENT_ORIGIN,
+            credentials: true
+        }))
     }
 
     setController(controllerClass, controller) {

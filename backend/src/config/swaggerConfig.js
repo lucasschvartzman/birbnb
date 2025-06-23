@@ -10,7 +10,7 @@ const swaggerOptions = {
       description: 'Documentación con Swagger',
     },
   },
-  apis: ['backend/routes/*.js'],
+  apis: ['src/routes/*.js'],
 };
 
 const swaggerSpec = swaggerJSDoc(swaggerOptions);

@@ -667,7 +667,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/alojamientos?idCiudad=683dcbacc4f8dbbfa447b70d&idPais=68312ec9b6250fd886ab24f8&latitud=-34.6158&longitud=-58.3734&precioMinimo=15000&precioMaximo=50000&huespedes=3&caracteristicas=WIFI,MASCOTAS_PERMITIDAS",
+									"raw": "{{baseUrl}}/alojamientos?idCiudad=6856c7fee79ac9a18967cc75&idPais=6856c7fee79ac9a18967cc71&latitud=-34.5875&longitud=-58.4025&precioMinimo=10000&precioMaximo=50000&huespedes=3&caracteristicas=WIFI,ESTACIONAMIENTO",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -677,23 +677,23 @@
 									"query": [
 										{
 											"key": "idCiudad",
-											"value": "683dcbacc4f8dbbfa447b70d"
+											"value": "6856c7fee79ac9a18967cc75"
 										},
 										{
 											"key": "idPais",
-											"value": "68312ec9b6250fd886ab24f8"
+											"value": "6856c7fee79ac9a18967cc71"
 										},
 										{
 											"key": "latitud",
-											"value": "-34.6158"
+											"value": "-34.5875"
 										},
 										{
 											"key": "longitud",
-											"value": "-58.3734"
+											"value": "-58.4025"
 										},
 										{
 											"key": "precioMinimo",
-											"value": "15000"
+											"value": "10000"
 										},
 										{
 											"key": "precioMaximo",
@@ -705,7 +705,7 @@
 										},
 										{
 											"key": "caracteristicas",
-											"value": "WIFI,MASCOTAS_PERMITIDAS"
+											"value": "WIFI,ESTACIONAMIENTO"
 										},
 										{
 											"key": "pagina",
@@ -728,7 +728,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/alojamientos?pagina=1&tamanioPagina=1",
+									"raw": "{{baseUrl}}/alojamientos?pagina=1&tamanioPagina=5",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -742,7 +742,7 @@
 										},
 										{
 											"key": "tamanioPagina",
-											"value": "1"
+											"value": "5"
 										}
 									]
 								}
@@ -852,8 +852,91 @@
 							"response": []
 						}
 					]
+				},
+				{
+					"name": "Obtener países",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/paises",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"paises"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener ciudades por país",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/ciudades?id=6856c7fee79ac9a18967cc71",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"ciudades"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "6856c7fee79ac9a18967cc71"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener características",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/caracteristicas",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"caracteristicas"
+							]
+						}
+					},
+					"response": []
 				}
 			]
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\":\"admin\",\r\n    \"password\":\"admin\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/login",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [
