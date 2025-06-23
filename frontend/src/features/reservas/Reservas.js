@@ -39,10 +39,6 @@ const reservasMock = [
 ];
 
 const Reservas = () => {
-  const handleCancelar = (id) => {
-    console.log('Cancelar reserva:', id);
-  };
-
   return (
     <Container>
       <Titulo>
@@ -51,7 +47,7 @@ const Reservas = () => {
 
       <CardsSection>
         {reservasMock.map((reserva) => (
-          <ReservasCard key={reserva.id} reserva={reserva} onCancelar={handleCancelar} />
+          <ReservasCard key={reserva.id} reserva={reserva} />
         ))}
       </CardsSection>
     </Container>
