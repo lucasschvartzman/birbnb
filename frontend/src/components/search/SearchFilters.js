@@ -42,7 +42,7 @@ const caracteristicasDisponibles = [
   'Mascotas permitidas'
 ];
 
-const SearchFilters = ({ filtros, onFiltrosChange, onBuscar, onLimpiar }) => {
+export const SearchFilters = ({ filtros, onFiltrosChange, onBuscar, onLimpiar }) => {
   const handleChange = (campo, valor) => {
     const nuevosFiltros = { ...filtros, [campo]: valor };
 
