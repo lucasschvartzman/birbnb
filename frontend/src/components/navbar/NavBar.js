@@ -1,28 +1,24 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router';
-import { Drawer, ListItemText, ListSubheader, Menu, MenuItem, Typography } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
-import LogoutIcon from '@mui/icons-material/Logout';
 import EditCalendarIcon from '@mui/icons-material/EditCalendar';
-import { useAuth } from "../../context/AuthContext";
-import { confirmLogout } from "../../utils/alerts"
+import LogoutIcon from '@mui/icons-material/Logout';
+import { ListSubheader, Menu, MenuItem, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import { useState } from 'react';
+import { useNavigate } from 'react-router';
+import { Link } from 'react-router-dom';
+import { useAuth } from "../../context/AuthContext";
+import { confirmLogout } from "../../utils/alerts";
 import NotificationsPopper from './NotificationsPopper'; // Importa el nuevo componente
 
 import {
   AuthSection,
-  DrawerList,
   LogoIcon,
   LogoSection,
-  MobileMenuButton,
   NavButton,
   NavRight,
   NotificationButton,
   StyledAvatar,
-  StyledListItem, 
   StyledNavBar,
-  StyledToolbar,
+  StyledToolbar
 } from './NavBar.styles';
 
 const NavBar = () => {
@@ -42,10 +38,6 @@ const NavBar = () => {
   const handleMenuOpen = e => setAnchorEl(e.currentTarget);
   const handleMenuClose = () => setAnchorEl(null);
 
-  // Drawer móvil
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const toggleDrawer = open => () => setDrawerOpen(open);
-
   const handleLoginClick = () => navigate('/login');
   const handleLogout = () =>
     confirmLogout(theme).then(res => {
@@ -54,22 +46,6 @@ const NavBar = () => {
         navigate('/');
       }
     });
-
-  const drawerList = (
-    <DrawerList>
-      {!estaAutenticado && (
-        <StyledListItem button component={Link} to="/login" onClick={toggleDrawer(false)}>
-          <ListItemText primary="Ingresar" />
-        </StyledListItem>
-      )}
-
-      {estaAutenticado && (
-        <StyledListItem button component={Link} to="/reservas" onClick={toggleDrawer(false)}>
-          <ListItemText primary="Reservas" />
-        </StyledListItem>
-      )}
-    </DrawerList>
-  );
 
   return (
     <StyledNavBar position="static">
@@ -117,22 +93,7 @@ const NavBar = () => {
             </NavRight>
           )}
         </AuthSection>
-
-        <MobileMenuButton
-          edge="end"
-          onClick={toggleDrawer(true)}
-        >
-          <MenuIcon />
-        </MobileMenuButton>
       </StyledToolbar>
-
-      <Drawer
-        anchor="right"
-        open={drawerOpen}
-        onClose={toggleDrawer(false)}
-      >
-        {drawerList}
-      </Drawer>
     </StyledNavBar>
   );
 };

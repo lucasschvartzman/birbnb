@@ -1,79 +1,73 @@
-import { styled } from '@mui/material/styles';
-import {AppBar, Toolbar, Button, IconButton, List, Avatar, ListItem,Paper,Box,Typography} from '@mui/material';
+import { styled } from "@mui/material/styles";
+import {
+  AppBar,
+  Toolbar,
+  Button,
+  IconButton,
+  List,
+  Avatar,
+  ListItem,
+  Paper,
+  Box,
+  Typography,
+} from "@mui/material";
 
 export const StyledNavBar = styled(AppBar)(({ theme }) => ({
   backgroundColor: theme.palette.primary.main,
-  boxShadow: 'none',
+  boxShadow: "none",
 }));
 
 export const StyledToolbar = styled(Toolbar)(({ theme }) => ({
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
 }));
 
-export const LogoSection = styled('div')(({ theme }) => ({
+export const LogoSection = styled("div")(({ theme }) => ({
   flex: 1,
-  display: 'flex',
-  alignItems: 'center',
+  display: "flex",
+  alignItems: "center",
 }));
 
-export const LogoIcon = styled('img')(({ theme }) => ({
-  maxWidth: '6rem',
-  height: 'auto',
+export const LogoIcon = styled("img")(({ theme }) => ({
+  maxWidth: "6rem",
+  height: "auto",
   marginRight: theme.spacing(2),
 }));
 
-export const NavLeft = styled('div')(({ theme }) => ({
+export const NavLeft = styled("div")(({ theme }) => ({
   flex: 2,
-  display: 'flex',
-  justifyContent: 'flex-start',
-  alignItems: 'center',
+  display: "flex",
+  justifyContent: "flex-start",
+  alignItems: "center",
   gap: theme.spacing(2.5),
-  [theme.breakpoints.down('md')]: {
-    display: 'none',
+  [theme.breakpoints.down("md")]: {
+    display: "none",
   },
 }));
 
-export const NavRight = styled('div')(({ theme }) => ({
+export const NavRight = styled("div")(({ theme }) => ({
   flex: 2,
-  display: 'flex',
-  justifyContent: 'flex-end',
-  alignItems: 'center',
+  display: "flex",
+  justifyContent: "flex-end",
+  alignItems: "center",
   gap: theme.spacing(2.5),
-  [theme.breakpoints.down('md')]: {
-    display: 'none',
-  },
 }));
 
-export const AuthSection = styled('div')(({ theme }) => ({
+export const AuthSection = styled("div")(({ theme }) => ({
   flex: 1,
-  display: 'flex',
-  justifyContent: 'flex-end',
-  alignItems: 'center',
+  display: "flex",
+  justifyContent: "flex-end",
+  alignItems: "center",
   gap: theme.spacing(1),
 }));
 
 export const NavButton = styled(Button)(({ theme }) => ({
   color: theme.palette.primary.contrastText,
-  '&:hover': {
-    color: '#b5b5b5',
-    backgroundColor: 'transparent',
+  "&:hover": {
+    color: "#b5b5b5",
+    backgroundColor: "transparent",
   },
-}));
-
-export const MobileMenuButton = styled(IconButton)(({ theme }) => ({
-  height: 30,
-  width: 30,
-  color: theme.palette.primary.contrastText,
-  [theme.breakpoints.up('md')]: {
-    display: 'none',
-  },
-}));
-
-export const DrawerList = styled(List)(({ theme }) => ({
-  width: 200,
-  padding: theme.spacing(2.5),
 }));
 
 export const StyledAvatar = styled(Avatar)(({ theme }) => ({
@@ -86,20 +80,10 @@ export const NotificationButton = styled(IconButton)(({ theme }) => ({
   color: theme.palette.primary.contrastText,
 }));
 
-export const StyledListItem = styled(ListItem)(({ theme }) => ({
-  '&:hover': {
-    backgroundColor: theme.palette.action.hover,
-  },
-  '& .MuiListItemText-primary': {
-    color: theme.palette.text.primary,
-    fontWeight: 500,
-    fontSize: '0.95rem',
-  },
-}));
 export const NotificationsPopperContainer = styled(Paper)(({ theme }) => ({
   width: 300,
   maxHeight: 360,
-  overflowY: 'auto',
+  overflowY: "auto",
   padding: theme.spacing(1),
   boxShadow: theme.shadows[3],
 }));
@@ -110,31 +94,32 @@ export const NotificationItem = styled(Box)(({ theme, unread }) => ({
   backgroundColor: unread
     ? theme.palette.action.selected
     : theme.palette.background.paper,
-  cursor: 'pointer',
-  '&:hover': {
+  cursor: "pointer",
+  "&:hover": {
     backgroundColor: theme.palette.action.hover,
   },
 }));
 
 export const NotificationTitle = styled(Typography)(({ theme, unread }) => ({
-  fontWeight: unread ? theme.typography.fontWeightBold : theme.typography.fontWeightRegular,
+  fontWeight: unread
+    ? theme.typography.fontWeightBold
+    : theme.typography.fontWeightRegular,
 }));
 
 export const NotificationMessage = styled(Typography)(({ theme }) => ({
-  fontSize: '0.875rem',
+  fontSize: "0.875rem",
   color: theme.palette.text.secondary,
   marginTop: theme.spacing(0.25),
 }));
 
 export const NotificationTime = styled(Typography)(({ theme }) => ({
-  fontSize: '0.75rem',
+  fontSize: "0.75rem",
   color: theme.palette.text.disabled,
   marginTop: theme.spacing(0.5),
-  textAlign: 'right',
+  textAlign: "right",
 }));
 
-
 export const NotificationsViewAll = styled(Button)(({ theme }) => ({
-  display: 'block',
-  margin: theme.spacing(1, 'auto', 0),
+  display: "block",
+  margin: theme.spacing(1, "auto", 0),
 }));

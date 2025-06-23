@@ -18,7 +18,6 @@ export const login = async (email, password) => {
 export const getAlojamientos = async (filtros = {}, paginacion = {}) => {
   try {
     const queryParameters = construirQueryParameters(filtros, paginacion);
-    console.log(queryParameters);
     const response = await axios.get(`${API_BASE_URL}/alojamientos`, {
       params: queryParameters
     });
