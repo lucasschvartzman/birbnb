@@ -1,18 +1,19 @@
 import React from 'react';
 import { TextField, Autocomplete, FormControl } from '@mui/material';
 
-const PaisFiltro = ({ pais, paisesDisponibles, onChange }) => (
+const CiudadFiltro = ({ ciudad, ciudadesDisponibles, ciudadHabilitada, onChange }) => (
   <FormControl sx={{ width: 190 }}>
     <Autocomplete
-      value={pais || null}
+      value={ciudad || null}
       onChange={(e, newValue) => onChange(newValue ?? '')}
-      options={paisesDisponibles}
-      renderInput={(params) => <TextField {...params} label="País" placeholder="Seleccionar país" />}
+      options={ciudadesDisponibles}
+      renderInput={(params) => <TextField {...params} label="Ciudad" placeholder="Seleccionar ciudad" />}
       isOptionEqualToValue={(option, value) => option === value}
       clearOnEscape
       blurOnSelect
+      disabled={!ciudadHabilitada}
     />
   </FormControl>
 );
 
-export default PaisFiltro;
+export default CiudadFiltro;

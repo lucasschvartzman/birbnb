@@ -7,6 +7,7 @@ import {
   ClearButton
 } from './SearchFilters.styles';
 import PaisFiltro from "./subcomponents/PaisFiltro";
+import CiudadFiltro from "./subcomponents/CiudadFiltro";
 
 const SearchFilters = ({
                          filtros,
@@ -23,15 +24,15 @@ const SearchFilters = ({
       <FilterRow>
         <PaisFiltro
           pais={filtros.pais}
-          paises={paisesDisponibles}
+          paisesDisponibles={paisesDisponibles}
           onChange={nuevoPais => onFiltrosChange({ ...filtros, pais: nuevoPais })}
         />
 
         <CiudadFiltro
           ciudad={filtros.ciudad}
-          onChange={nuevaCiudad => onFiltrosChange({ ...filtros, ciudad: nuevaCiudad })}
+          ciudadesDisponibles={ciudadesDisponibles}
           ciudadHabilitada={Boolean(filtros.pais)}
-          ciudades={ciudadesDisponibles}
+          onChange={nuevaCiudad => onFiltrosChange({ ...filtros, ciudad: nuevaCiudad })}
         />
 
         <HuespedesFiltro
