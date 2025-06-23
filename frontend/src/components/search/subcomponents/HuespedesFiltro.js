@@ -9,13 +9,15 @@ const HuespedesFiltro = ({ cantidad, onChange }) => (
     value={cantidad}
     onChange={(e) => onChange(Math.max(0, parseInt(e.target.value) || 0))}
     sx={{ maxWidth: 120 }}
-    InputProps={{
-      startAdornment: (
-        <InputAdornment position="start">
-          <PersonIcon />
-        </InputAdornment>
-      ),
-      inputProps: { min: 0 }
+    slotProps={{
+      input: {
+        startAdornment: (
+          <InputAdornment position="start">
+            <PersonIcon />
+          </InputAdornment>
+        ),
+        inputProps: { min: 0 }
+      },
     }}
   />
 );

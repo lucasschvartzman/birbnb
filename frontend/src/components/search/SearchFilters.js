@@ -10,6 +10,7 @@ import {
 import PaisFiltro from "./subcomponents/PaisFiltro";
 import CiudadFiltro from "./subcomponents/CiudadFiltro";
 import HuespedesFiltro from "./subcomponents/HuespedesFiltro";
+import CoordenadasFiltro from "./subcomponents/CoordenadasFiltro";
 
 const SearchFilters = ({
                          filtros,
