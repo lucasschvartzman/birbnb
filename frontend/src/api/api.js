@@ -21,7 +21,6 @@ export const getAlojamientos = async (filtros = {}, paginacion = {}) => {
     const response = await axios.get(`${API_BASE_URL}/alojamientos`, {
       params: queryParameters
     });
-    console.log(response)
     return response.data;
   } catch (error) {
     console.log('Error al obtener alojamientos: ', error);
