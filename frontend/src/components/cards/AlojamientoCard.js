@@ -41,7 +41,7 @@ const AlojamientoCard = ({ alojamiento }) => {
             <InfoRow>
               <LocationOnIcon fontSize="small" />
               <Typography variant="body2">
-                {alojamiento.direccion.calle} {alojamiento.direccion.altura}, {alojamiento.direccion.ciudad}
+                {alojamiento.direccion.calle} {alojamiento.direccion.altura}, {alojamiento.direccion.ciudad.nombre}
               </Typography>
             </InfoRow>
 
