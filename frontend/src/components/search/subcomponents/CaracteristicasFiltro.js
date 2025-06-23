@@ -1,7 +1,5 @@
 import React from 'react';
-import {
-  Select, MenuItem, Chip, InputLabel, FormControl, OutlinedInput, Box
-} from '@mui/material';
+import {FormControl, InputLabel, MenuItem, OutlinedInput, Select} from '@mui/material';
 import {CaracteristicasContainer, StyledChip} from "./CaracteristicasFiltro.styles";
 
 export const CaracteristicasFiltro = ({ seleccionadas, caracteristicasDisponibles, onChange }) => (
