@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   TextField,
-  Typography,
   Slider,
   InputAdornment,
   Select,

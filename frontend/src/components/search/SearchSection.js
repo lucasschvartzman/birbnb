@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Typography, Pagination } from '@mui/material';
+import {Pagination } from '@mui/material';
 import SearchFilters from './SearchFilters';
 import SearchResults from './SearchResults';
 import {
