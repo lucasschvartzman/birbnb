@@ -20,6 +20,8 @@ import {UsuarioRepository} from "./models/repositories/usuarioRepository.js";
 import {UsuarioService} from "./services/usuarioService.js";
 import {AuthService} from "./services/authService.js";
 import {AuthController} from "./controllers/authController.js";
+import {CiudadRepository} from "./models/repositories/ciudadRepository.js";
+import {PaisRepository} from "./models/repositories/paisRepository.js";
 
 const DEFAULT_PORT = 3000;
 
@@ -48,6 +50,8 @@ export class App {
         const notificacionRepository = new NotificacionRepository();
         const reservaRepository = new ReservaRepository();
         const usuarioRepository = new UsuarioRepository();
+        const ciudadRepository = new CiudadRepository();
+        const paisRepository = new PaisRepository();
 
         const usuarioService = new UsuarioService(usuarioRepository);
         const notificacionService = new NotificacionService(notificacionRepository, alojamientoRepository, usuarioService);
@@ -56,7 +60,7 @@ export class App {
         const authService = new AuthService(usuarioService);
         // const alojamientoService = new AlojamientoService(alojamientoRepository);
 
-        const alojamientoController = new AlojamientoController(alojamientoRepository);
+        const alojamientoController = new AlojamientoController(alojamientoRepository, paisRepository, ciudadRepository);
         const notificacionController = new NotificacionController(notificacionService);
         const reservaController = new ReservaController(reservaService);
         const authController = new AuthController(authService);

@@ -30,11 +30,11 @@ export class AlojamientoRepository {
     const resultadoAgregacion = await this.#realizarAgregacion(pipeline);
 
     const alojamientos = resultadoAgregacion.datos;
-    const resultadoPaginacion = this.#obtenerResultadoPaginacion(resultadoAgregacion, pagina, tamanioPagina);
+    const paginacion = this.#obtenerResultadoPaginacion(resultadoAgregacion, pagina, tamanioPagina);
 
     return {
       alojamientos,
-      resultadoPaginacion
+      paginacion
     }
   }
 
@@ -47,15 +47,12 @@ export class AlojamientoRepository {
     const totalElementos = resultadoBusqueda?.totalCount?.[0]?.count || 0;
     const totalPaginas = Math.ceil(totalElementos / tamanioPagina);
     return {
-      paginacion: {
-        paginaActual: pagina,
-        tamanioPagina: tamanioPagina,
-        totalElementos,
-        totalPaginas,
-        hayPaginaAnterior: pagina > 1,
-        hayPaginaSiguiente: pagina < totalPaginas
-      }
+      paginaActual: pagina,
+      tamanioPagina: tamanioPagina,
+      totalElementos,
+      totalPaginas,
+      hayPaginaAnterior: pagina > 1,
+      hayPaginaSiguiente: pagina < totalPaginas
     }
   }
-
 }

@@ -1,14 +1,26 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { useTheme } from '@mui/material/styles';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
-import GroupsIcon from '@mui/icons-material/Groups';
-import EventIcon from '@mui/icons-material/Event';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
-import Person2Icon from '@mui/icons-material/Person2';
-import { CardContent, Typography, Chip, Button } from '@mui/material';
-import { StyledCard, IconText, ChipContainer, colorEstado, StyledCardActions} from './ReservasCard.style';
+import React from "react";
+import { useTheme } from "@mui/material/styles";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import GroupsIcon from "@mui/icons-material/Groups";
+import EventIcon from "@mui/icons-material/Event";
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
+import Person2Icon from "@mui/icons-material/Person2";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import {
+  CardContent,
+  CardActions,
+  Typography,
+  Chip,
+  Button,
+} from "@mui/material";
+import {
+  StyledCard,
+  IconText,
+  ChipContainer,
+  colorEstado,
+} from "./ReservasCard.style";
 
 const calcularTotal = (precioPorNoche, fechaInicio, fechaFin) => {
   const inicio = new Date(fechaInicio);
@@ -18,8 +30,16 @@ const calcularTotal = (precioPorNoche, fechaInicio, fechaFin) => {
   return diffDays * precioPorNoche;
 };
 
-const ReservasCard = ({ reserva, onCancelar }) => {
+export const ReservasCard = ({ reserva }) => {
   const theme = useTheme();
+
+  const handleCancelar = (id) => {
+    console.log("Cancelar reserva:", id);
+  };
+
+  const handleModificar = (id) => {
+    console.log("Modificar reserva:", id);
+  };
 
   return (
     <StyledCard variant="outlined">
@@ -45,7 +65,8 @@ const ReservasCard = ({ reserva, onCancelar }) => {
 
         <IconText>
           <GroupsIcon fontSize="small" />
-          {reserva.cantidadHuespedes} huésped{reserva.cantidadHuespedes > 1 ? 'es' : ''}
+          {reserva.cantidadHuespedes} huésped
+          {reserva.cantidadHuespedes > 1 ? "es" : ""}
         </IconText>
 
         <IconText>
@@ -55,35 +76,56 @@ const ReservasCard = ({ reserva, onCancelar }) => {
 
         <IconText>
           <MonetizationOnIcon fontSize="small" />
-          Total: ${calcularTotal(reserva.precioPorNoche, reserva.fechaInicio, reserva.fechaFin)}
+          Total: $
+          {calcularTotal(
+            reserva.precioPorNoche,
+            reserva.fechaInicio,
+            reserva.fechaFin
+          )}
         </IconText>
 
         <ChipContainer>
           <Chip
             label={`Estado: ${reserva.estado}`}
             sx={{
-              bgcolor: colorEstado(theme)[reserva.estado] || theme.palette.grey[400],
+              bgcolor:
+                colorEstado(theme)[reserva.estado] || theme.palette.grey[400],
               color: theme.palette.common.white,
-              fontWeight: 'bold',
+              fontWeight: "bold",
             }}
           />
         </ChipContainer>
       </CardContent>
 
-      <StyledCardActions>
-      {reserva.estado === 'Pendiente' && (
-        <Button variant="outlined" color="warning" component={Link} to="/modificarReserva"  >
-          Modificar Reserva
-        </Button>
-      )}
-      </StyledCardActions>
-      <StyledCardActions>
-        {reserva.estado !== 'Cancelada' && (
-          <Button variant="outlined" color="error" onClick={() => onCancelar(reserva.id)}>
-            Cancelar Reserva
+      {reserva.estado !== "Cancelada" && (
+        <CardActions sx={{ justifyContent: "center", mb: 1.5 }}>
+          <Button
+            variant="outlined"
+            sx={(theme) => ({
+              color: theme.palette.modify.main,
+              borderColor: theme.palette.modify.main,
+              px: 1,
+            })}
+            onClick={() => handleModificar(reserva.id)}
+            component={Link} to="/modificarReserva"
+          >
+            <EditIcon fontSize="small" sx={{ mr: 0.5 }}></EditIcon>
+            Modificar
           </Button>
-        )}
-      </StyledCardActions>
+          <Button
+            variant="outlined"
+            sx={(theme) => ({
+              color: theme.palette.error.main,
+              borderColor: theme.palette.error.main,
+              px: 1,
+            })}
+            onClick={() => handleCancelar(reserva.id)}
+          >
+            <DeleteIcon fontSize="small" sx={{ mr: 0.5 }}></DeleteIcon>
+            Cancelar
+          </Button>
+        </CardActions>
+      )}
     </StyledCard>
   );
 };

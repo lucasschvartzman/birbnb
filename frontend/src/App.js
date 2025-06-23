@@ -13,13 +13,13 @@ const theme = createTheme({
   },
   palette: {
     primary: {
-      main: '#232323', // Color de tu navbar
+      main: '#232323',
       light: '#454545',
       dark: '#1a1a1a',
       contrastText: '#ffffff',
     },
     secondary: {
-      main: '#f48fb1', // Color del avatar
+      main: '#f48fb1',
       light: '#f8bbd9',
       dark: '#f06292',
       contrastText: '#ffffff',
@@ -31,6 +31,9 @@ const theme = createTheme({
     text: {
       primary: '#333333',
       secondary: '#666666',
+    },
+    modify: {
+      main: '#7FB3D5'
     },
     success: { main: '#81c784' },
     warning: { main: '#ffb74d' },
