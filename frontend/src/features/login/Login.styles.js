@@ -25,10 +25,3 @@ export const Logo = styled('img')({
   marginTop: '0.5rem',
   marginBottom: '1rem',
 });
-
-export const ErrorMessage = styled(Typography)(({ theme }) => ({
-  color: theme.palette.error.main,
-  textAlign: 'left',
-  alignSelf: 'flex-start',
-  marginBottom: '1rem',
-}));

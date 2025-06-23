@@ -1,10 +1,10 @@
+import { Button, TextField } from '@mui/material';
 import { useState } from 'react';
-import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router';
-import { Box, Button, TextField } from '@mui/material';
 import { login } from "../../api/api";
-import { LoginPage, LoginPaper, Logo, ErrorMessage } from './Login.styles';
-import { showSuccessLoginAlert, showErrorAlert } from '../../utils/alerts';
+import { useAuth } from '../../context/AuthContext';
+import { showErrorAlert, showSuccessLoginAlert } from '../../utils/alerts';
+import { LoginPage, LoginPaper, Logo } from './Login.styles';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -43,11 +43,6 @@ const Login = () => {
     <LoginPage>
       <LoginPaper elevation={5}>
         <Logo src="/images/logo-dark.png" alt="Birbnb" />
-        {loginError && (
-          <ErrorMessage variant="body2">
-            Acceso inválido. Por favor, inténtelo otra vez.
-          </ErrorMessage>
-        )}
         <form onSubmit={handleFormSubmit} style={{ width: '100%' }} noValidate>
           <TextField
             fullWidth
