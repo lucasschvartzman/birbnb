@@ -11,6 +11,7 @@ import PaisFiltro from "./subcomponents/PaisFiltro";
 import CiudadFiltro from "./subcomponents/CiudadFiltro";
 import HuespedesFiltro from "./subcomponents/HuespedesFiltro";
 import CoordenadasFiltro from "./subcomponents/CoordenadasFiltro";
+import CaracteristicasFiltro from "./subcomponents/CaracteristicasFiltro";
 
 const SearchFilters = ({
                          filtros,
@@ -51,8 +52,8 @@ const SearchFilters = ({
 
         <CaracteristicasFiltro
           seleccionadas={filtros.caracteristicas}
+          caracteristicasDisponibles={caracteristicasDisponibles}
           onChange={nuevas => onFiltrosChange({ ...filtros, caracteristicas: nuevas })}
-          opciones={caracteristicasDisponibles}
         />
 
         <PrecioFiltro
