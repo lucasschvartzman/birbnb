@@ -18,6 +18,7 @@ export const useAlojamientos = () => {
    * Busca alojamientos usando la API
    * @param {Object} filtros - Filtros ya transformados para la API
    * @param {Object} paginacion - Opciones de paginación {numeroPagina, tamañoPagina}
+   * @note Siempre llamar a "obtenerFiltrosMapeadosParaApi" de useFiltros antes.
    */
   const buscarAlojamientos = async (filtros = {}, paginacion = {}) => {
 

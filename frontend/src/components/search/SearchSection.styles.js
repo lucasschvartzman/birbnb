@@ -15,7 +15,7 @@ export const SearchTitle = styled(Typography)(({ theme }) => ({
   }
 }));
 
-export const PaginationContainer = styled(Box)(({ theme }) => ({
+export const PaginacionContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'center',
   marginTop: theme.spacing(4),
