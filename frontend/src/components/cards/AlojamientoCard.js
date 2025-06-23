@@ -18,6 +18,7 @@ import {
   FeatureChip
 } from './AlojamientoCard.styles';
 import {formatCaracteristica, formatMoneda} from "../../utils/format";
+import {Link} from "react-router-dom";
 
 const AlojamientoCard = ({ alojamiento }) => {
   const { estaAutenticado } = useAuth();
@@ -64,7 +65,7 @@ const AlojamientoCard = ({ alojamiento }) => {
 
       {estaAutenticado && (
         <CardActions sx={{ justifyContent: 'center' }}>
-          <Button variant="contained" color="secondary">
+          <Button variant="contained" color="secondary" component={Link} to="/modificarReserva">
             Reservar
           </Button>
         </CardActions>
