@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   CardContent,
   CardActions,
@@ -19,6 +18,7 @@ import {
   FeatureChip
 } from './AlojamientoCard.styles';
 import {formatCaracteristica, formatMoneda} from "../../utils/format";
+import {Link} from "react-router-dom";
 
 const AlojamientoCard = ({ alojamiento }) => {
   const { estaAutenticado } = useAuth();
@@ -53,7 +53,7 @@ const AlojamientoCard = ({ alojamiento }) => {
           <AttachMoneyIcon fontSize="small" />
           {alojamiento.precioPorNoche.toLocaleString()} {formatMoneda(alojamiento.moneda)} por noche
         </IconText>
-
+        
         {alojamiento.caracteristicas?.length > 0 && (
           <ChipContainer>
             {alojamiento.caracteristicas.map((c, i) => (
@@ -65,7 +65,7 @@ const AlojamientoCard = ({ alojamiento }) => {
 
       {estaAutenticado && (
         <CardActions sx={{ justifyContent: 'center' }}>
-          <Button variant="contained" color="secondary">
+          <Button variant="contained" color="secondary" component={Link} to="/modificarReserva">
             Reservar
           </Button>
         </CardActions>

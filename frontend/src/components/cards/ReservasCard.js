@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from 'react-router-dom';
 import { useTheme } from "@mui/material/styles";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import GroupsIcon from "@mui/icons-material/Groups";
@@ -107,6 +108,7 @@ export const ReservasCard = ({ reserva }) => {
               px: 1,
             })}
             onClick={() => handleModificar(reserva.id)}
+            component={Link} to="/modificarReserva"
           >
             <EditIcon fontSize="small" sx={{ mr: 0.5 }}></EditIcon>
             Modificar
