@@ -1,12 +1,14 @@
-import React, {useState} from 'react';
-import {Link} from 'react-router-dom';
-import {useNavigate} from 'react-router';
-import {Badge, Drawer, ListItemText, ListSubheader, Menu, MenuItem, Typography} from '@mui/material';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router';
+import { Badge, Drawer, ListItemText, ListSubheader, Menu, MenuItem, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import LogoutIcon from '@mui/icons-material/Logout';
 import EditCalendarIcon from '@mui/icons-material/EditCalendar';
-import {useAuth} from "../../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
+import { confirmLogout } from "../../utils/alerts"
+import { useTheme } from '@mui/material/styles';
 
 import {
   AuthSection,
@@ -23,8 +25,9 @@ import {
 } from './NavBar.styles';
 
 const NavBar = () => {
-  const {usuario, estaAutenticado, clearAuthContext} = useAuth();
+  const { usuario, estaAutenticado, clearAuthContext } = useAuth();
   const navigate = useNavigate();
+  const theme = useTheme();
 
   const iniciales = usuario ? (() => {
     const nombreCompleto = usuario.nombre.trim().split(' ');
@@ -40,8 +43,12 @@ const NavBar = () => {
   const handleMenuClose = () => setAnchorEl(null);
   const handleLoginClick = () => navigate('/login');
   const handleLogout = () => {
-    clearAuthContext();
-    navigate('/');
+    confirmLogout(theme).then((result) => {
+      if (result.isConfirmed) {
+        clearAuthContext();
+        navigate('/');
+      }
+    });
   };
   const toggleDrawer = (open) => () => setDrawerOpen(open);
 
@@ -90,13 +97,13 @@ const NavBar = () => {
                 disableScrollLock={true}
                 onClose={handleMenuClose}
               >
-                <ListSubheader sx={{m:0.3}}>
+                <ListSubheader sx={{ m: 0.3 }}>
                   <Typography>
                     <strong>{usuario.nombre}</strong>
                   </Typography>
                 </ListSubheader>
                 <MenuItem component={Link} to="/reservas">
-                  <EditCalendarIcon fontSize="small" sx={{ mr: 1 }}/>
+                  <EditCalendarIcon fontSize="small" sx={{ mr: 1 }} />
                   Mis reservas
                 </MenuItem>
                 <MenuItem onClick={() => { handleMenuClose(); handleLogout(); }}>

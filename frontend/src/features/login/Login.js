@@ -1,9 +1,10 @@
-import {useState} from 'react';
-import {useAuth} from '../../context/AuthContext';
-import {useNavigate} from 'react-router';
-import {Box, Button, TextField} from '@mui/material';
-import {login} from "../../api/api";
-import {LoginPage, LoginPaper, Logo, ErrorMessage} from './Login.styles';
+import { useState } from 'react';
+import { useAuth } from '../../context/AuthContext';
+import { useNavigate } from 'react-router';
+import { Box, Button, TextField } from '@mui/material';
+import { login } from "../../api/api";
+import { LoginPage, LoginPaper, Logo, ErrorMessage } from './Login.styles';
+import { showSuccessLoginAlert, showErrorAlert } from '../../utils/alerts';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -16,7 +17,8 @@ const Login = () => {
     setLoginError(true);
     setEmail('');
     setPassword('');
-  }
+    showErrorAlert();
+  };
 
   const handleSubmit = async (e) => {
     if (e) {
@@ -25,13 +27,14 @@ const Login = () => {
     }
 
     if (!email.trim() || !password.trim()) {
-      alert("Por favor, completá todos los campos.");
+      showErrorAlert();
       return;
     }
 
     try {
       const usuario = await login(email, password);
       setAuthContext(usuario);
+      showSuccessLoginAlert(usuario);
       navigate('/');
     } catch (error) {
       handleLoginError();
