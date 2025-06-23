@@ -145,9 +145,11 @@ const NavBar = () => {
                       <NotificationTime>{n.time}</NotificationTime>
                     </NotificationItem>
                   ))}
-                  <NotificationsViewAll size="small" onClick={() => {/* navegar */}}>
+                  <Link to="/notificaciones" style={{ textDecoration: 'none' }}>
+                  <NotificationsViewAll size="small">
                     Ver todas las notificaciones
-                  </NotificationsViewAll>
+                    </NotificationsViewAll>
+                    </Link>
                 </NotificationsPopperContainer>
               </ClickAwayListener>
             </Popper>
