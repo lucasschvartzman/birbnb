@@ -15,9 +15,9 @@ export const login = async (email, password) => {
   }
 }
 
-export const getAlojamientos = async (filtros = {}, opcionesPaginacion = {}) => {
+export const getAlojamientos = async (filtros = {}, paginacion = {}) => {
   try {
-    const queryParameters = construirQueryParameters(filtros, opcionesPaginacion);
+    const queryParameters = construirQueryParameters(filtros, paginacion);
     const response = await axios.get(`${API_BASE_URL}/alojamientos`, {
       params: queryParameters
     });
@@ -77,10 +77,10 @@ export const getCaracteristicas = async () => {
   }
 }
 
-const NUMERO_PAGINA_DEFAULT = 1;
-const TAMAÑO_PAGINA_DEFAULT = 15;
+export const NUMERO_PAGINA_DEFAULT = 1;
+export const TAMANIO_PAGINA_DEFAULT = 15;
 
-const construirQueryParameters = (filtros = {}, { numeroPagina = NUMERO_PAGINA_DEFAULT, tamañoPagina = TAMAÑO_PAGINA_DEFAULT } = {}) => {
+const construirQueryParameters = (filtros = {}, { numeroPagina = NUMERO_PAGINA_DEFAULT, tamanioPagina = TAMANIO_PAGINA_DEFAULT } = {}) => {
   const queryParameters = {};
 
   const { idCiudad, idPais, latitud, longitud, precioMinimo, precioMaximo, huespedes, caracteristicas } = filtros;
@@ -97,7 +97,7 @@ const construirQueryParameters = (filtros = {}, { numeroPagina = NUMERO_PAGINA_D
   }
 
   queryParameters.pagina = numeroPagina;
-  queryParameters.tamanioPagina = tamañoPagina;
+  queryParameters.tamanioPagina = tamanioPagina;
 
   return queryParameters;
 };
