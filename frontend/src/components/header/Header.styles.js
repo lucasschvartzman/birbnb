@@ -2,7 +2,7 @@ import { styled } from '@mui/material/styles';
 import { Box, Button } from '@mui/material';
 
 export const HeaderContainer = styled(Box)(({ theme }) => ({
-  height: '60vh',
+  height: '61vh',
   position: 'relative',
   display: 'flex',
   flexDirection: 'column',
