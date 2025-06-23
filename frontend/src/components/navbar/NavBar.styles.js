@@ -1,5 +1,5 @@
 import { styled } from '@mui/material/styles';
-import {AppBar, Toolbar, Button, IconButton, List, Avatar, ListItem} from '@mui/material';
+import {AppBar, Toolbar, Button, IconButton, List, Avatar, ListItem,Paper,Box,Typography} from '@mui/material';
 
 export const StyledNavBar = styled(AppBar)(({ theme }) => ({
   backgroundColor: theme.palette.primary.main,
@@ -95,4 +95,46 @@ export const StyledListItem = styled(ListItem)(({ theme }) => ({
     fontWeight: 500,
     fontSize: '0.95rem',
   },
+}));
+export const NotificationsPopperContainer = styled(Paper)(({ theme }) => ({
+  width: 300,
+  maxHeight: 360,
+  overflowY: 'auto',
+  padding: theme.spacing(1),
+  boxShadow: theme.shadows[3],
+}));
+
+export const NotificationItem = styled(Box)(({ theme, unread }) => ({
+  padding: theme.spacing(1, 2),
+  marginBottom: theme.spacing(0.5),
+  backgroundColor: unread
+    ? theme.palette.action.selected
+    : theme.palette.background.paper,
+  cursor: 'pointer',
+  '&:hover': {
+    backgroundColor: theme.palette.action.hover,
+  },
+}));
+
+export const NotificationTitle = styled(Typography)(({ theme, unread }) => ({
+  fontWeight: unread ? theme.typography.fontWeightBold : theme.typography.fontWeightRegular,
+}));
+
+export const NotificationMessage = styled(Typography)(({ theme }) => ({
+  fontSize: '0.875rem',
+  color: theme.palette.text.secondary,
+  marginTop: theme.spacing(0.25),
+}));
+
+export const NotificationTime = styled(Typography)(({ theme }) => ({
+  fontSize: '0.75rem',
+  color: theme.palette.text.disabled,
+  marginTop: theme.spacing(0.5),
+  textAlign: 'right',
+}));
+
+
+export const NotificationsViewAll = styled(Button)(({ theme }) => ({
+  display: 'block',
+  margin: theme.spacing(1, 'auto', 0),
 }));

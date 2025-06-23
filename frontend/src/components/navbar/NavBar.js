@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router';
-import { Badge, Drawer, ListItemText, ListSubheader, Menu, MenuItem, Typography } from '@mui/material';
+import { Drawer, ListItemText, ListSubheader, Menu, MenuItem, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import LogoutIcon from '@mui/icons-material/Logout';
 import EditCalendarIcon from '@mui/icons-material/EditCalendar';
 import { useAuth } from "../../context/AuthContext";
 import { confirmLogout } from "../../utils/alerts"
 import { useTheme } from '@mui/material/styles';
+import NotificationsPopper from './NotificationsPopper'; // Importa el nuevo componente
 
 import {
   AuthSection,
@@ -20,7 +20,8 @@ import {
   NavRight,
   NotificationButton,
   StyledAvatar,
-  StyledListItem, StyledNavBar,
+  StyledListItem, 
+  StyledNavBar,
   StyledToolbar,
 } from './NavBar.styles';
 
@@ -36,21 +37,23 @@ const NavBar = () => {
     return nombre + apellido;
   })() : "";
 
+  // Menú de usuario
   const [anchorEl, setAnchorEl] = useState(null);
-  const [drawerOpen, setDrawerOpen] = useState(false);
-
-  const handleMenuOpen = (event) => setAnchorEl(event.currentTarget);
+  const handleMenuOpen = e => setAnchorEl(e.currentTarget);
   const handleMenuClose = () => setAnchorEl(null);
+
+  // Drawer móvil
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const toggleDrawer = open => () => setDrawerOpen(open);
+
   const handleLoginClick = () => navigate('/login');
-  const handleLogout = () => {
-    confirmLogout(theme).then((result) => {
-      if (result.isConfirmed) {
+  const handleLogout = () =>
+    confirmLogout(theme).then(res => {
+      if (res.isConfirmed) {
         clearAuthContext();
         navigate('/');
       }
     });
-  };
-  const toggleDrawer = (open) => () => setDrawerOpen(open);
 
   const drawerList = (
     <DrawerList>
@@ -81,36 +84,30 @@ const NavBar = () => {
         <AuthSection>
           {estaAutenticado ? (
             <>
-              <NotificationButton>
-                <Badge badgeContent={3} color="error">
-                  <NotificationsIcon />
-                </Badge>
-              </NotificationButton>
-
+              <NotificationsPopper params={iniciales}/>
               <NotificationButton onClick={handleMenuOpen}>
                 <StyledAvatar>{iniciales}</StyledAvatar>
               </NotificationButton>
-
               <Menu
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
-                disableScrollLock={true}
                 onClose={handleMenuClose}
+                disableScrollLock
               >
-                <ListSubheader sx={{ m: 0.3 }}>
-                  <Typography>
-                    <strong>{usuario.nombre}</strong>
-                  </Typography>
-                </ListSubheader>
-                <MenuItem component={Link} to="/reservas">
-                  <EditCalendarIcon fontSize="small" sx={{ mr: 1 }} />
-                  Mis reservas
-                </MenuItem>
-                <MenuItem onClick={() => { handleMenuClose(); handleLogout(); }}>
-                  <LogoutIcon fontSize="small" sx={{ mr: 1 }} />
-                  Cerrar sesión
-                </MenuItem>
-              </Menu>
+                  <ListSubheader sx={{ m: 0.3 }}>
+                    <Typography>
+                      <strong>{usuario.nombre}</strong>
+                    </Typography>
+                  </ListSubheader>
+                  <MenuItem component={Link} to="/reservas">
+                    <EditCalendarIcon fontSize="small" sx={{ mr: 1 }} />
+                    Mis reservas
+                  </MenuItem>
+                  <MenuItem onClick={() => { handleMenuClose(); handleLogout(); }}>
+                    <LogoutIcon fontSize="small" sx={{ mr: 1 }} />
+                    Cerrar sesión
+                  </MenuItem>
+                </Menu>
             </>
           ) : (
             <NavRight>
