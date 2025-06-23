@@ -17,12 +17,13 @@ export class AlojamientoMapper {
 
   static toDto(alojamiento) {
     return {
+      id: alojamiento._id,
       nombre: alojamiento.nombre,
       descripcion: alojamiento.descripcion,
       direccion: alojamiento.direccion ? this.#toDireccionDto(alojamiento.direccion) : undefined,
       precioPorNoche: alojamiento.precioPorNoche,
       cantHuespedesMax: alojamiento.cantHuespedesMax,
-      moneda: alojamiento.moneda.nombre,
+      moneda: alojamiento.moneda,
       horarioCheckIn: alojamiento.horarioCheckIn,
       horarioCheckOut: alojamiento.horarioCheckOut,
       caracteristicas: alojamiento.caracteristicas,

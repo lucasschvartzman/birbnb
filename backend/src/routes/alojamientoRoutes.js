@@ -109,4 +109,16 @@ export function registerAlojamiento(app, getController) {
   app.get("/alojamientos", (req, res, next) => {
     controller.buscarAlojamientosConFiltros(req, res, next);
   });
+
+  app.get("/paises", (req, res, next) => {
+    controller.obtenerPaises(req, res, next);
+  })
+
+  app.get("/ciudades", (req, res, next) => {
+    controller.obtenerCiudadesPais(req, res, next);
+  })
+
+  app.get("/caracteristicas", (req, res, next) => {
+    controller.obtenerCaracteristicas(req, res, next);
+  })
 }

@@ -1,10 +1,25 @@
 import { styled } from '@mui/material/styles';
-import { Card } from '@mui/material';
+import { Card,CardActions } from '@mui/material';
 
 export const StyledCard = styled(Card)(({ theme }) => ({
   height: '100%',
   display: 'flex',
   flexDirection: 'column',
+  borderRadius: 12,
+  boxShadow: '0 4px 8px rgba(0,0,0,0.05)',
+  transition: 'all 0.3s ease',
+  '&:hover': {
+    transform: 'translateY(-4px)',
+    boxShadow: '0 6px 12px rgba(0,0,0,0.1)',
+    
+  },
+}));
+
+export const StyledCardActions = styled(CardActions)(({ theme }) => ({
+  justifyContent: 'center',
+  gap: theme.spacing(1),
+  paddingTop: 0,
+  paddingBottom: 8,
 }));
 
 export const IconText = styled('div')(({ theme }) => ({
@@ -13,6 +28,7 @@ export const IconText = styled('div')(({ theme }) => ({
   gap: theme.spacing(1),
   marginTop: theme.spacing(1),
   color: theme.palette.text.secondary,
+  fontSize: '0.95rem',
 }));
 
 export const ChipContainer = styled('div')(({ theme }) => ({

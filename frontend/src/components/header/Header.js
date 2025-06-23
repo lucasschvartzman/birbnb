@@ -7,7 +7,7 @@ import {
   HeaderButton
 } from './Header.styles';
 
-const Header = ({ onVerAlojamientosClick }) => {
+export const Header = ({ onVerAlojamientosClick }) => {
   return (
     <HeaderContainer>
       <HeaderOverlay />
