@@ -1,6 +1,6 @@
 import React from 'react';
 import ReservasCard from '../../components/cards/ReservasCard';  
-import { Container, Titulo, CardsSection } from '../../components/reservas/reservas.styles';
+import { Container, Titulo, CardsSection } from '../../features/reservas/reservas.styles';
 
 const reservasMock = [
   {
