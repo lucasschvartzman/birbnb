@@ -22,22 +22,22 @@ export function registerAlojamiento(app, getController) {
    *         type: integer
    *         description: El numero de resultados por pagina
    *     - in: query
-   *       name: pais
+   *       name: idPais
    *       schema:
    *         type: string
-   *         description: El pais del alojamiento
+   *         description: El id hexadecimal del pais del alojamiento
    *     - in: query
-   *       name: ciudad
+   *       name: idCiudad
    *       schema:
    *         type: string
-   *         description: La ciudad del alojamiento
+   *         description: El id hexadecimal de la ciudad del alojamiento
    *     - in: query
-   *       name: coordLatitud
+   *       name: latitud
    *       schema:
    *         type: number
    *         description: La latitud de las coordenadas del alojamiento
    *     - in: query
-   *       name: coordLongitud
+   *       name: longitud
    *       schema:
    *         type: number
    *         description: La longitud de las coordenadas del alojamiento
