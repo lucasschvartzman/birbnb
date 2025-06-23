@@ -20,17 +20,15 @@ const Login = () => {
     showErrorAlert();
   };
 
-  const handleSubmit = async (e) => {
-    if (e) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
     if (!email.trim() || !password.trim()) {
       showErrorAlert();
       return;
     }
-
+    
     try {
       const usuario = await login(email, password);
       setAuthContext(usuario);
@@ -45,14 +43,12 @@ const Login = () => {
     <LoginPage>
       <LoginPaper elevation={5}>
         <Logo src="/images/logo-dark.png" alt="Birbnb" />
-
         {loginError && (
           <ErrorMessage variant="body2">
             Acceso inválido. Por favor, inténtelo otra vez.
           </ErrorMessage>
         )}
-
-        <Box sx={{ width: '100%' }}>
+        <form onSubmit={handleFormSubmit} style={{ width: '100%' }} noValidate>
           <TextField
             fullWidth
             label="Email"
@@ -60,8 +56,8 @@ const Login = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             margin="normal"
+            autoComplete="email"
           />
-
           <TextField
             fullWidth
             label="Contraseña"
@@ -69,18 +65,18 @@ const Login = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             margin="normal"
+            autoComplete="current-password"
           />
-
           <Button
             fullWidth
             variant="contained"
+            type="submit"
             sx={{ marginTop: 2 }}
-            onClick={handleSubmit}
             disabled={!email.trim() || !password.trim()}
           >
             Ingresar
           </Button>
-        </Box>
+        </form>
       </LoginPaper>
     </LoginPage>
   );
