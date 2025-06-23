@@ -60,7 +60,7 @@ export const useFiltros = () => {
   const cargarPaises = async () => {
     try {
       const paises = await getPaises();
-      setPaisesDisponibles(paisesDisponibles);
+      setPaisesDisponibles(paises);
     } catch (error) {
       console.error('Error cargando los paises disponibles:', error);
     }
