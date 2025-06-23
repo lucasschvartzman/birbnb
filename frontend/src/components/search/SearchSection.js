@@ -65,6 +65,7 @@ const SearchSection = () => {
   };
 
   const handleBuscar = () => {
+    console.log(filtros)
     // TODO: Ejecutar la llamada a la API
   };
 

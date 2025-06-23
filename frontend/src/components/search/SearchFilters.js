@@ -8,7 +8,8 @@ import {
   FormControl,
   InputLabel,
   Chip,
-  OutlinedInput, Box
+  OutlinedInput, Box,
+  Autocomplete
 } from '@mui/material';
 import { Person as PersonIcon } from '@mui/icons-material';
 import {
@@ -46,8 +47,8 @@ const SearchFilters = ({ filtros, onFiltrosChange, onBuscar, onLimpiar }) => {
     const nuevosFiltros = { ...filtros, [campo]: valor };
 
     // Si se cambia la ciudad, resetear el país
-    if (campo === 'ciudad') {
-      nuevosFiltros.pais = '';
+    if (campo === "pais") {
+      nuevosFiltros.ciudad = '';
     }
 
     onFiltrosChange(nuevosFiltros);
@@ -57,49 +58,55 @@ const SearchFilters = ({ filtros, onFiltrosChange, onBuscar, onLimpiar }) => {
 
   return (
     <FiltersContainer>
-    <FilterRow>
+      <FilterRow>
         <FilterGroup>
           <FormControl sx={{ width: 190 }}>
-            <InputLabel>País</InputLabel>
-            <Select
-              value={filtros.pais}
-              label="País"
-              onChange={(e) => handleChange('pais', e.target.value)}
+            <Autocomplete 
+              onChange={(event, newValue) =>
+                handleChange("pais", newValue || '')
+              }
+              //disablePortal
+              options={paisesDisponibles}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Pais"
+                  placeholder="Seleccionar pais"
+                />
+              )}
+              isOptionEqualToValue={(option, value) => option === value}
+              clearOnEscape
+              blurOnSelect
               sx={{
-                '&.Mui-disabled': {
-                  backgroundColor: 'rgba(0, 0, 0, 0.04)',
-                }
+                "&.Mui-disabled": {
+                  backgroundColor: "rgba(0, 0, 0, 0.04)",
+                },
               }}
-            >
-              <MenuItem value="">
-                <em>Seleccionar país</em>
-              </MenuItem>
-              {paisesDisponibles.map((pais) => (
-                <MenuItem key={pais} value={pais}>
-                  {pais}
-                </MenuItem>
-              ))}
-            </Select>
+            />
           </FormControl>
         </FilterGroup>
 
         <FilterGroup>
           <FormControl sx={{ width: 190 }} disabled={!filtros.pais}>
-            <InputLabel>Ciudad</InputLabel>
-            <Select
-              value={filtros.ciudad}
-              label="Ciudad"
-              onChange={(e) => handleChange('ciudad', e.target.value)}
-            >
-              <MenuItem value="">
-                <em>Seleccionar ciudad</em>
-              </MenuItem>
-              {ciudadesDisponibles.map((ciudad) => (
-                <MenuItem key={ciudad} value={ciudad}>
-                  {ciudad}
-                </MenuItem>
-              ))}
-            </Select>
+            <Autocomplete
+              disabled={!filtros.pais}
+              value={filtros.ciudad || null}
+              onChange={(event, newValue) =>
+                handleChange("ciudad", newValue || '')
+              }
+              //disablePortal
+              options={ciudadesDisponibles}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Ciudad"
+                  placeholder="Seleccionar ciudad"
+                />
+              )}
+              isOptionEqualToValue={(option, value) => option === value}
+              clearOnEscape
+              blurOnSelect
+            />
           </FormControl>
         </FilterGroup>
 
