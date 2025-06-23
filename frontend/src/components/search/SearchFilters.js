@@ -6,6 +6,7 @@ import {
   SearchButton,
   ClearButton
 } from './SearchFilters.styles';
+import PaisFiltro from "./subcomponents/PaisFiltro";
 
 const SearchFilters = ({
                          filtros,
@@ -22,8 +23,8 @@ const SearchFilters = ({
       <FilterRow>
         <PaisFiltro
           pais={filtros.pais}
-          onChange={nuevoPais => onFiltrosChange({ ...filtros, pais: nuevoPais })}
           paises={paisesDisponibles}
+          onChange={nuevoPais => onFiltrosChange({ ...filtros, pais: nuevoPais })}
         />
 
         <CiudadFiltro
@@ -63,7 +64,7 @@ const SearchFilters = ({
         </ButtonsContainer>
       </FilterRow>
     </FiltersContainer>
-  );
+  )
 };
 
 export default SearchFilters;
