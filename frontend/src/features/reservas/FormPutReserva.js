@@ -7,7 +7,13 @@ import {
   showErrorReservation,
   showSuccessReservation,
 } from "../../utils/alerts";
-import { StyledCard, FormContainer, ButtonsContainer, Title } from "./FormPutReserva.styles";
+import {
+  StyledCard,
+  FormContainer,
+  ButtonsContainer,
+  Title,
+} from "./FormPutReserva.styles";
+import { useState } from "react";
 
 export const FormPutReserva = () => {
   const theme = useTheme();
@@ -40,6 +46,24 @@ export const FormPutReserva = () => {
     //showErrorReservation(theme)
   };
 
+  const [errorCantidadHuespedes, setErrorCantidadHuespedes] = useState("");
+
+  const validarCantidadHuespedes = (valor) => {
+    const num = parseInt(valor);
+    if (isNaN(num) || num < 1) {
+      setErrorCantidadHuespedes("Debe ingresar al menos 1 huésped");
+      return false;
+    }
+    if (num > alojamientoSeleccionado.cantHuespedesMax) {
+      setErrorCantidadHuespedes(
+        `Máximo ${alojamientoSeleccionado.cantHuespedesMax} huéspedes`
+      );
+      return false;
+    }
+    setErrorCantidadHuespedes("");
+    return true;
+  };
+
   const precioTotal = calcularPrecioTotal();
   console.log(alojamientoSeleccionado);
   return (
@@ -53,8 +77,17 @@ export const FormPutReserva = () => {
           type="number"
           fullWidth
           value={datosReserva.cantidadHuespedes}
-          onChange={(e) =>
-            handleInputChange("cantidadHuespedes", parseInt(e.target.value))
+          onChange={(e) => {
+            handleInputChange(
+              "cantidadHuespedes",
+              parseInt(e.target.value) || ""
+            );
+            validarCantidadHuespedes(e.target.value);
+          }}
+          error={!!errorCantidadHuespedes}
+          helperText={
+            errorCantidadHuespedes ||
+            `Máximo ${alojamientoSeleccionado.cantHuespedesMax} huéspedes`
           }
           InputProps={{
             inputProps: {
@@ -62,7 +95,6 @@ export const FormPutReserva = () => {
               max: alojamientoSeleccionado.cantHuespedesMax,
             },
           }}
-          helperText={`Máximo ${alojamientoSeleccionado.cantHuespedesMax} huéspedes`}
         />
 
         <TextField
@@ -126,7 +158,11 @@ export const FormPutReserva = () => {
             variant="contained"
             color="secondary"
             onClick={handleGuardarCambios}
-            disabled={!(precioTotal > 0)}
+            disabled={
+              !(precioTotal > 0) ||
+              datosReserva.cantidadHuespedes >
+                alojamientoSeleccionado.cantHuespedesMax
+            }
           >
             Confirmar Reserva
           </Button>
