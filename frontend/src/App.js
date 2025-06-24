@@ -7,6 +7,8 @@ import ModificarReserva from "./features/reservas/modificarReserva";
 
 import { BrowserRouter, Route, Routes } from "react-router";
 import { createTheme, ThemeProvider } from "@mui/material";
+import { ReservaProvider } from "./context/ReservaContext";
+import CrearReserva from "./features/reservas/CrearReserva";
 
 const theme = createTheme({
   typography: {
@@ -45,16 +47,20 @@ const theme = createTheme({
 function App() {
   return (
     <ThemeProvider theme={theme}>
+      
       <BrowserRouter>
+      <ReservaProvider>
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
             <Route path="/reservas" element={<Reservas />} />
             <Route path="/notificaciones" element={<NotificationsPage />} />
             <Route path="/modificarReserva" element={<ModificarReserva />} />
+            <Route path="/crearReserva" element={<CrearReserva />} />
           </Route>
           <Route path="/login" element={<Login />} />
         </Routes>
+      </ReservaProvider>
       </BrowserRouter>
     </ThemeProvider>
   );

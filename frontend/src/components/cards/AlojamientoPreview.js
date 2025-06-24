@@ -1,39 +1,24 @@
-import { useNavigate } from 'react-router-dom';
 import {
   CardMedia,
   CardContent,
-  CardActions,
   Typography,
-  Button,
 } from '@mui/material';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import GroupsIcon from '@mui/icons-material/Groups';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import { useAuth } from '../../context/AuthContext';
-import { useReserva } from '../../context/ReservaContext'; // Importar el contexto
 import {
   StyledCard,
   IconText,
   ChipContainer,
   FeatureChip,
-} from './AlojamientoCard.styles';
+} from './AlojamientoPreview.styles';
 import { formatCaracteristica, formatMoneda } from '../../utils/format';
 
-const AlojamientoCard = ({ alojamiento }) => {
-  const { estaAutenticado } = useAuth();
-  const { seleccionarAlojamiento } = useReserva();
-  const navigate = useNavigate();
-
-  const handleReservar = () => {
-    seleccionarAlojamiento(alojamiento);
-    navigate('/crearReserva');
-  };
-  
+const AlojamientoPreview = ({ alojamiento }) => {
   return (
     <StyledCard>
       <CardMedia
         component="img"
-        height="140"
         image={alojamiento.fotos[0]}
       />
       <CardContent>
@@ -68,22 +53,8 @@ const AlojamientoCard = ({ alojamiento }) => {
           </ChipContainer>
         )}
       </CardContent>
-
-      {estaAutenticado && (
-        <CardActions sx={{ justifyContent: 'center' }}>
-          <Button
-            sx={{mb:1.3}}
-            variant="contained" 
-            color="secondary" 
-            onClick={handleReservar}
-            
-          >
-            Reservar
-          </Button>
-        </CardActions>
-      )}
     </StyledCard>
   );
 };
 
-export default AlojamientoCard;
+export default AlojamientoPreview;

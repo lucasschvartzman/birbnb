@@ -1,17 +1,39 @@
-import React from 'react';
-import {
-  TextField,
-  Button,
-} from '@mui/material';
+import { TextField, Button, useTheme } from "@mui/material";
 import {
   FormContainer,
   PageContainer,
   StyledPaper,
   ButtonsContainer,
   Title,
-} from './modificarReserva.styles';
+} from "./modificarReserva.styles";
+import {
+  confirmCancelReservationForm,
+  showSuccessReservation,
+} from "../../utils/alerts";
+import { useNavigate } from "react-router";
 
 const ModificarReservaPage = () => {
+  const theme = useTheme();
+  const navigate = useNavigate();
+
+  const handleCancelar = () => {
+    confirmCancelReservationForm(theme).then((res) => {
+      if (res.isConfirmed) {
+        navigate("/reservas");
+      }
+    });
+  };
+
+  const handleGuardarCambios = () => {
+    //TODO
+    //GUARDAR RESERVA AL BACKEND
+
+    //if se pudo guardar
+    showSuccessReservation(theme);
+    navigate("/reservas");
+    //else
+    //showErrorReservation(theme)
+  };
   return (
     <PageContainer>
       <StyledPaper elevation={3}>
@@ -40,10 +62,24 @@ const ModificarReservaPage = () => {
           />
 
           <ButtonsContainer>
-            <Button variant="outlined" color="inherit">
+            <Button
+              variant="outlined"
+              sx={{
+                backgroundColor: theme.palette.text.secondary,
+                color: theme.palette.background.paper,
+                "&:hover": {
+                  backgroundColor: theme.palette.text.primary,
+                },
+              }}
+              onClick={handleCancelar}
+            >
               Cancelar
             </Button>
-            <Button variant="contained" color="primary">
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={handleGuardarCambios}
+            >
               Guardar Cambios
             </Button>
           </ButtonsContainer>
