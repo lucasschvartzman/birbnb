@@ -113,8 +113,10 @@ export class AlojamientoPipelineBuilder {
   }
 
   #agregarFiltroCoordenadas(match, filtrosBusqueda) {
-    if (filtrosBusqueda.latitud !== undefined && filtrosBusqueda.longitud !== undefined) {
+    if (filtrosBusqueda.latitud !== undefined ) {
       match["direccion.latitud"] = filtrosBusqueda.latitud;
+    }
+    if (filtrosBusqueda.longitud !== undefined) {
       match["direccion.longitud"] = filtrosBusqueda.longitud;
     }
   }
