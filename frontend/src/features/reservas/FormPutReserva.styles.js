@@ -1,5 +1,6 @@
 import { styled } from '@mui/material/styles';
-import { Card } from '@mui/material';
+import { Card, Paper, Typography } from '@mui/material';
+import { Box } from '@mui/system';
 
 export const StyledCard = styled(Card)(({ theme }) => ({
   width: 400,
