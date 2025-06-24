@@ -2,8 +2,7 @@ import { styled } from '@mui/material/styles';
 import { Card, Chip } from '@mui/material';
 
 export const StyledCard = styled(Card)(({ theme }) => ({
-  justifyContent: 'space-between',
-  width: 320,
+  width: 400,
   display: 'flex',
   flexDirection: 'column',
   backgroundColor: theme.palette.background.paper,

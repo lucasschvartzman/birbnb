@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from 'react-router-dom';
 import { useTheme } from "@mui/material/styles";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
@@ -22,6 +22,7 @@ import {
   ChipContainer,
   colorEstado,
 } from "./ReservasCard.style";
+import { confirmDropReservation } from "../../utils/alerts";
 
 const calcularTotal = (precioPorNoche, fechaInicio, fechaFin) => {
   const inicio = new Date(fechaInicio);
@@ -32,10 +33,18 @@ const calcularTotal = (precioPorNoche, fechaInicio, fechaFin) => {
 };
 
 export const ReservasCard = ({ reserva }) => {
+
+  const [estado, setEstado] = useState(reserva.estado)
   const theme = useTheme();
 
   const handleCancelar = (id) => {
-    console.log("Cancelar reserva:", id);
+    //window.confirm("¿Seguro que desea cancelar la reserva?")
+    confirmDropReservation(theme).then(res => {
+      if (res.isConfirmed) {
+        setEstado('Cancelada')
+        console.log("Cancelar reserva:", id);
+      }
+    });
   };
 
   const handleModificar = (id) => {
@@ -87,10 +96,10 @@ export const ReservasCard = ({ reserva }) => {
 
         <ChipContainer>
           <Chip
-            label={`Estado: ${reserva.estado}`}
+            label={`Estado: ${estado}`}
             sx={{
               bgcolor:
-                colorEstado(theme)[reserva.estado] || theme.palette.grey[400],
+                colorEstado(theme)[estado] || theme.palette.grey[400],
               color: theme.palette.common.white,
               fontWeight: "bold",
             }}
@@ -98,7 +107,7 @@ export const ReservasCard = ({ reserva }) => {
         </ChipContainer>
       </CardContent>
 
-      {reserva.estado !== "Cancelada" && (
+      {estado !== "Cancelada" && (
         <CardActions sx={{ justifyContent: "center", mb: 1.5 }}>
           <Button
             variant="outlined"
@@ -129,6 +138,7 @@ export const ReservasCard = ({ reserva }) => {
       )}
     </StyledCard>
   );
-};
+}
+
 
 export default ReservasCard;
