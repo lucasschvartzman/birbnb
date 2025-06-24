@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import {useEffect} from 'react';
 import {Pagination} from '@mui/material';
 import SearchFilters from './SearchFilters';
 import SearchResults from './SearchResults';
@@ -51,7 +51,7 @@ const SearchSection = () => {
 
   return (
     <SearchContainer>
-      <SearchTitle variant="h4" component="h1"> Buscar Alojamientos </SearchTitle>
+      <SearchTitle variant="h4" component="h1"> Buscar <span>Alojamientos</span></SearchTitle>
 
       <SearchFilters
         filtros={filtros}
