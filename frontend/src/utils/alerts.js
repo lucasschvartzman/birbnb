@@ -26,7 +26,6 @@ export const showSuccessReservation = (theme) => {
     showConfirmButton: true,
     confirmButtonColor: theme.palette.secondary.main,
     showCloseButton: true,
-    showConfirmButton: true,
     allowOutsideClick: true,
     didOpen: (popup) => {
       popup.addEventListener('click', () => {
@@ -44,7 +43,6 @@ export const showSuccessAlterReservation = (theme) => {
     showConfirmButton: true,
     confirmButtonColor: theme.palette.secondary.main,
     showCloseButton: true,
-    showConfirmButton: true,
     allowOutsideClick: true,
     didOpen: (popup) => {
       popup.addEventListener('click', () => {
