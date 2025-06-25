@@ -9,6 +9,9 @@ import { BrowserRouter, Route, Routes } from "react-router";
 import { createTheme, ThemeProvider } from "@mui/material";
 import { ReservaProvider } from "./context/ReservaContext";
 import CrearReserva from "./features/reservas/CrearReserva";
+import { useEffect } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const theme = createTheme({
   typography: {
@@ -45,6 +48,13 @@ const theme = createTheme({
 });
 
 function App() {
+    useEffect(() => {
+    AOS.init({
+      duration: 800,
+      once: true   
+    });
+    
+  }, []);
   return (
     <ThemeProvider theme={theme}>
       

@@ -30,7 +30,7 @@ const AlojamientoCard = ({ alojamiento }) => {
   };
   
   return (
-    <StyledCard>
+    <StyledCard data-aos="zoom-in">
       <CardMedia
         component="img"
         height="140"
