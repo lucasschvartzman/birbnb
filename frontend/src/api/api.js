@@ -56,7 +56,7 @@ export const getCaracteristicas = async () => {
 }
 
 export const NUMERO_PAGINA_DEFAULT = 1;
-export const TAMANIO_PAGINA_DEFAULT = 15;
+export const TAMANIO_PAGINA_DEFAULT = 10;
 
 const construirQueryParameters = (filtros = {}, { numeroPagina = NUMERO_PAGINA_DEFAULT, tamanioPagina = TAMANIO_PAGINA_DEFAULT } = {}) => {
   const queryParameters = {};
