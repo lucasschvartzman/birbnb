@@ -16,7 +16,7 @@ export class Server {
         this.#port = port;
         this.#app.use(express.json());
         this.#app.use(cors({
-            origin: process.env.CLIENT_ORIGIN,
+            origin: process.env.FRONTEND_URL,
             credentials: true
         }))
     }
