@@ -20,10 +20,10 @@ describe("ReservaService", () => {
     valida: {
       alojamiento: "alojamiento-123",
       rangoFechas: {
-        desde: new Date("2025-07-01"),
-        hasta: new Date("2025-07-03"),
-        fechaInicio: new Date("2025-07-01"),
-        fechaFin: new Date("2025-07-03"),
+        desde: new Date("2026-07-10"),
+        hasta: new Date("2026-07-12"),
+        fechaInicio: new Date("2026-07-10"),
+        fechaFin: new Date("2026-07-12"),
         calcularCantidadDias: () => 2,
       },
       huespedReservador: "usuario-456",
