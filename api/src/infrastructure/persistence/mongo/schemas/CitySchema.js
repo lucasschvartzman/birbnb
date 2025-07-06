@@ -21,3 +21,5 @@ const CitySchema = new mongoose.Schema(
 );
 
 CitySchema.loadClass(City);
+
+export const CityModel = mongoose.model("City", CitySchema);
