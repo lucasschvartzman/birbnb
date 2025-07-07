@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 import { Place } from "../../../../domain/entities/Place";
 import { Feature } from "../../../../domain/enums/Feature";
+
 import { AddressSchema } from "./AddressSchema";
 
 const PlaceSchema = new mongoose.Schema(

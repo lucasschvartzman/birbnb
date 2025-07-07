@@ -1,6 +1,5 @@
-import { CityModel } from "../schemas/CitySchema";
-
 import { ICityRepository } from "../../../../domain/repositories/ICityRepository";
+import { CityModel } from "../schemas/CitySchema";
 
 export class CityMongoRepository extends ICityRepository {
   constructor() {

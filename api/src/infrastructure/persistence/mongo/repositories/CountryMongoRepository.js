@@ -1,6 +1,5 @@
-import { CountryModel } from "../schemas/CountrySchema";
-
 import { ICountryRepository } from "../../../../domain/repositories/ICountryRepository";
+import { CountryModel } from "../schemas/CountrySchema";
 
 export class CountryMongoRepository extends ICountryRepository {
   constructor() {

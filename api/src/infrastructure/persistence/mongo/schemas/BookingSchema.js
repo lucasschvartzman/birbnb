@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 import { Booking } from "../../../../domain/entities/Booking";
 import { BookingStatus } from "../../../../domain/enums/BookingStatus";
+
 import { DateRangeSchema } from "./DateRangeSchema";
 
 const BookingSchema = new mongoose.Schema(
