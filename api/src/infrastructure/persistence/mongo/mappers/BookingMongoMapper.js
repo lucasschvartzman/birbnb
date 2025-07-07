@@ -24,8 +24,8 @@ export const BookingMongoMapper = {
     }
     return {
       _id: entity.id,
-      place: entity.place?.id || entity.place,
-      guest: entity.guest?.id || entity.guest,
+      place: entity.place?.id,
+      guest: entity.guest?.id,
       totalGuests: entity.totalGuests,
       price: entity.price,
       createdAt: entity.createdAt,
