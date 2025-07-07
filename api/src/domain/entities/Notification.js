@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 /**
  * Represents a Notification.
  * @class
@@ -6,13 +7,15 @@ export class Notification {
   /**
    * Creates an instance of Notification.
    * @constructor
+   * @param {string} id - Unique identifier for the notification. Generated as UUID v4 when not provided.
    * @param {Guest} guest
    * @param {string} message
    * @param {Date} createdAt
    * @param {boolean} read
    * @param {Date} readAt
    */
-  constructor(guest, message, createdAt, read, readAt) {
+  constructor(id, guest, message, createdAt, read, readAt) {
+    this.id = id || uuidv4();
     this.guest = guest;
     this.message = message;
     this.createdAt = createdAt;

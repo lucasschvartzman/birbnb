@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid';
+
 /**
  * Represents a Booking.
  * @class
@@ -6,6 +8,7 @@ export class Booking {
   /**
    * Creates an instance of Booking.
    * @constructor
+   * @param {string} id - Unique identifier for the booking. Generated as UUID v4 when not provided.
    * @param {Place} place
    * @param {Guest} guest
    * @param {number} totalGuests
@@ -14,7 +17,8 @@ export class Booking {
    * @param {DateRange} dateRange
    * @param {BookingStatus} status
    */
-  constructor(place, guest, totalGuests, price, createdAt, dateRange, status) {
+  constructor(id, place, guest, totalGuests, price, createdAt, dateRange, status) {
+    this.id = id || uuidv4();
     this.place = place;
     this.guest = guest;
     this.totalGuests = totalGuests;

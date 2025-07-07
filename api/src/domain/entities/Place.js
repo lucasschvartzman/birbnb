@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 /**
  * Represents a Place.
  * @class
@@ -6,6 +7,7 @@ export class Place {
   /**
    * Creates an instance of Place.
    * @constructor
+   * @param {string} id - Unique identifier for the place. Generated as UUID v4 when not provided.
    * @param {string} name
    * @param {string} description
    * @param {number} price
@@ -17,7 +19,8 @@ export class Place {
    * @param {Booking[]} bookings
    * @param {string[]} photos
    */
-  constructor(name, description, price, checkInTime, checkOutTime, address, capacity, features, bookings, photos) {
+  constructor(id, name, description, price, checkInTime, checkOutTime, address, capacity, features, bookings, photos) {
+    this.id = id || uuidv4();
     this.name = name;
     this.description = description;
     this.price = price;
