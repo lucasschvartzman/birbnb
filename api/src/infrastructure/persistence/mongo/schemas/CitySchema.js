@@ -9,7 +9,7 @@ const CitySchema = new mongoose.Schema(
       required: true,
     },
     country: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: String,
       ref: "Country",
       required: true,
     },

@@ -5,7 +5,7 @@ import { Notification } from "../../../../domain/entities/Notification";
 const NotificationSchema = new mongoose.Schema(
   {
     guest: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: String,
       ref: "Guest",
       required: true,
     },

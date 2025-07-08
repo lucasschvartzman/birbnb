@@ -12,7 +12,7 @@ export const AddressSchema = new mongoose.Schema({
     required: true,
   },
   city: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: String,
     ref: "City",
     required: true,
   },

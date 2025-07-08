@@ -8,12 +8,12 @@ import { DateRangeSchema } from "./DateRangeSchema";
 const BookingSchema = new mongoose.Schema(
   {
     place: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: String,
       ref: "Place",
       required: true,
     },
     guest: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: String,
       ref: "Guest",
       required: true,
     },

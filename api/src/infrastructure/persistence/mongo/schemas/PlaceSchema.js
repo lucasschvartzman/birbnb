@@ -42,7 +42,7 @@ const PlaceSchema = new mongoose.Schema(
       enum: Feature.getAllAsString(),
     },
     bookings: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: String,
       ref: "Booking",
     },
     photos: {
