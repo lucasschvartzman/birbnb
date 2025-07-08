@@ -24,13 +24,13 @@ export const BookingMongoMapper = {
     }
     return {
       _id: entity.id,
-      place: entity.place?.id,
-      guest: entity.guest?.id,
+      place: entity.place.id,
+      guest: entity.guest.id,
       totalGuests: entity.totalGuests,
       price: entity.price,
       createdAt: entity.createdAt,
       dateRange: entity.dateRange,
-      status: entity.status,
+      status: entity.status.value,
     }
   }
 }
