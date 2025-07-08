@@ -1,4 +1,4 @@
-import { DEFAULT_PAGE_NUMBER, DEFAULT_PAGE_SIZE } from "../constants/Pagination";
+import { DEFAULT_PAGE_NUMBER, DEFAULT_PAGE_SIZE } from "../constants/pagination";
 
 /**
  * Data Transfer Object for pagination options (input)
@@ -9,7 +9,7 @@ export class PaginationOptionsDTO {
    * @param {number} pageNumber
    * @param {number} pageSize
    *
-   * @note See application/constants/Pagination.js for default values
+   * @note See application/constants/pagination.js for default values
    */
   constructor({ pageNumber = DEFAULT_PAGE_NUMBER, pageSize = DEFAULT_PAGE_SIZE } = {}) {
     this.pageNumber = pageNumber;

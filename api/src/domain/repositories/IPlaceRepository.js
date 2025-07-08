@@ -48,7 +48,7 @@ export class IPlaceRepository {
    * @returns {Promise<FindAllResult>} An array of FindAllResult (with empty array of places if none found).
    * @throws {NotImplementedException} When called without implementation.
    *
-   * @note See application/constants/Pagination.js for default pagination option values
+   * @note See application/constants/pagination.js for default pagination option values
    */
   async findAll(filters, paginationOptions) {
     throw new NotImplementedException(this.constructor.name);
