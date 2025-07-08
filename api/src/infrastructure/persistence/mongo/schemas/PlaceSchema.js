@@ -54,3 +54,7 @@ const PlaceSchema = new mongoose.Schema(
     collection: "places",
   }
 );
+
+PlaceSchema.loadClass(Place);
+
+export const PlaceModel = mongoose.model("Place", PlaceSchema);
